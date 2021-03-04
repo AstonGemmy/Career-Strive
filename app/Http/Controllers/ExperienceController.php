@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 use App\Models\Experience;
 
@@ -16,10 +17,18 @@ class ExperienceController extends Controller
      */
     public function index()
     {
-        if (Experience::all()) {
-            return response(Experience::all()->jsonSerialize(), Response::HTTP_OK);
+        if (Experience::all()->count()) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'contents available!',
+                'data' => Experience::all()->jsonSerialize()
+            ], Response::HTTP_OK);
         } else {
-            return response(json_encode(['status' => 'failed']), Response::HTTP_OK);
+            return response()->json([
+                'status' => 'success',
+                'message' => 'no contents available!',
+                'data' => ''
+            ], Response::HTTP_OK);
         }
     }
 
@@ -55,9 +64,17 @@ class ExperienceController extends Controller
         $experience->qualification = $request->qualification;
 
         if ($experience->save()) {
-            return response(json_encode(['status' => 'success']), Response::HTTP_CREATED);
+            return response()->json([
+                'status' => 'success',
+                'message' => 'contents saved!',
+                'data' => ''
+            ], Response::HTTP_CREATED);
         } else {
-            return response(json_encode(['status' => 'failed']), Response::HTTP_OK);
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'contents not saved!',
+                'data' => $request->all()
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -69,10 +86,24 @@ class ExperienceController extends Controller
      */
     public function show($id)
     {
-        if (Experience::find($id)) {
-            return response(Experience::findOrFail($id)->jsonSerialize(), Response::HTTP_OK);
-        } else {
-            return response(json_encode(['status' => 'failed']), Response::HTTP_OK);
+        try {
+
+            $experience = Experience::findOrFail($id);
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'contents available!',
+                'data' => $experience->jsonSerialize()
+            ], Response::HTTP_OK);
+
+        } catch(ModelNotFoundException) {
+            
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'contents not available!',
+                'data' => ''
+            ], Response::HTTP_NOT_FOUND);
+
         }
     }
 
@@ -96,15 +127,40 @@ class ExperienceController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $experience = Experience::findOrFail($id);
-        $experience->job = $request->job;
-        $experience->duration = $request->duration;
-        $experience->qualification = $request->qualification;
+        try {
 
-        if ($experience->save()) {
-            return response(json_encode(['status' => 'success']), Response::HTTP_OK);
-        } else {
-            return response(json_encode(['status' => 'failed']), Response::HTTP_OK);
+            $experience = Experience::findOrFail($id);
+
+            $experience->job = $request->job;
+            $experience->duration = $request->duration;
+            $experience->qualification = $request->qualification;
+
+            if ($experience->save()) {
+
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'contents updated!',
+                    'data' => ''
+                ], Response::HTTP_OK);
+
+            } else {
+
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => 'contents could not be updated!',
+                    'data' => $request->all()
+                ], Response::HTTP_INTERNAL_SERVER_ERROR);
+
+            }
+        
+        } catch(ModelNotFoundException) {
+
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'target not found!',
+                'data' => $request->all()
+            ], Response::HTTP_NOT_FOUND);
+
         }
     }
 
@@ -117,9 +173,17 @@ class ExperienceController extends Controller
     public function destroy($id)
     {
         if (Experience::destroy($id)) {
-            return response(json_encode(['status' => 'success']), Response::HTTP_OK);
+            return response()->json([
+                'status' => 'success',
+                'message' => 'model destroyed!',
+                'data' => ''
+            ], Response::HTTP_OK);
         } else {
-            return response(json_encode(['status' => 'failed']), Response::HTTP_OK);
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'model not destroyed!',
+                'data' => ''
+            ], Response::HTTP_NOT_FOUND);
         }
     }
 }

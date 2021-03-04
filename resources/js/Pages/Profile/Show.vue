@@ -197,11 +197,11 @@
                                             <i class="fa fa-user text-yellow-500"></i>
                                         </span>
                                         <span class="text-blue-700 text-xl">
-                                            Personal Details {{ objectAvailability(output.personal) }}
+                                            Personal Details
                                         </span>
                                     </h1>
 
-                                    <div class="row-span-4">
+                                    <div v-if="objectAvailability(output.personal)" class="row-span-4">
                                         <div v-for="(value, key) in output.personal" :key="key" class="px-6 pt-4">
                                             <div v-if="value">
                                                 <div class="text-xl text-gray-600">
@@ -317,7 +317,7 @@
                                             <i class="fa fa-brain text-green-600"></i>
                                         </span>
                                         <span class="text-blue-700 text-xl">
-                                            Skills Level {{ objectAvailability(output.skills) }}
+                                            Skills Level
                                         </span>
                                     </h1>
                                 

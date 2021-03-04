@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Hash;
 use Faker\Generator;
 use App\Models\User;
 use Illuminate\Auth\Events\Registered;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 class UserController extends Controller
 {
@@ -20,10 +21,18 @@ class UserController extends Controller
      */
     public function index()
     {
-        if (User::all()) {
-            return response(User::all()->jsonSerialize(), Response::HTTP_OK);
+        if (User::all()->count()) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'contents available!',
+                'data' => User::all()->jsonSerialize()
+            ], Response::HTTP_OK);
         } else {
-            return response(json_encode(['status' => 'failed']), Response::HTTP_OK);
+            return response()->json([
+                'status' => 'success',
+                'message' => 'no contents available!',
+                'data' => ''
+            ], Response::HTTP_OK);
         }
     }
 
@@ -59,9 +68,17 @@ class UserController extends Controller
         if ($user->save()) {
             // Trigger Registration Complete Event to Send Verification Mail
             event(new Registered($user));
-            return response(json_encode(['status' => 'success']), Response::HTTP_CREATED);
+            return response()->json([
+                'status' => 'success',
+                'message' => 'contents saved!',
+                'data' => ''
+            ], Response::HTTP_CREATED);
         } else {
-            return response(json_encode(['status' => 'failed']), Response::HTTP_OK);
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'contents not saved!',
+                'data' => $request->all()
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -73,27 +90,35 @@ class UserController extends Controller
      */
     public function show($id)
     {
-        $user = User::findOrFail($id);
-
-        if ($user) {
-            $response = [
-                'bio' => $user->bio,
-                'name' => $user->name,
-                'email' => $user->email,
-                'gender' => $user->gender,
-                'status' => $user->status,
-                'date_of_birth' => $user->date_of_birth,
-                'cover_photo_path' =>   $user->cover_photo_path,
-                'profile_photo_path' => $user->profile_photo_path
-            ];
-            return response(json_encode($response), Response::HTTP_OK);
-        } else {
-            return response(json_encode(['status' => 'failed']), Response::HTTP_OK);
-        }
-
         
+        try {
+            
+            $user = User::findOrFail($id);
 
-        return response(json_encode($response), Response::HTTP_OK);
+            return response()->json([
+                'status' => 'success',
+                'message' => 'contents available!',
+                'data' => [
+                    'bio' => $user->bio,
+                    'name' => $user->name,
+                    'email' => $user->email,
+                    'gender' => $user->gender,
+                    'status' => $user->status,
+                    'date_of_birth' => $user->date_of_birth,
+                    'cover_photo_path' =>   $user->cover_photo_path,
+                    'profile_photo_path' => $user->profile_photo_path
+                ]
+            ], Response::HTTP_OK);
+
+        } catch(ModelNOtFoundException) {
+            
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'contents not available!',
+                'data' => ''
+            ], Response::HTTP_NOT_FOUND);
+
+        }
     }
 
     /**
@@ -116,18 +141,43 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $user = User::findOrFail($id);
-        $user->bio = $request->bio;
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->gender = $request->gender;
-        $user->status = $request->status;
-        $user->date_of_birth = $request->date_of_birth;
+        try {
+
+            $user = User::findOrFail($id);
+
+            $user->bio = $request->bio;
+            $user->name = $request->name;
+            $user->email = $request->email;
+            $user->gender = $request->gender;
+            $user->status = $request->status;
+            $user->date_of_birth = $request->date_of_birth;
+
+            if ($user->save()) {
+                
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'user updated!',
+                    'data' => ''
+                ], Response::HTTP_OK);
+
+            } else {
+
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => 'user could not be updated!',
+                    'data' => $request->all()
+                ], Response::HTTP_INTERNAL_SERVER_ERROR);
+
+            }
         
-        if ($user->save()) {
-            return response(json_encode(['status' => 'success']), Response::HTTP_OK);
-        } else {
-            return response(json_encode(['status' => 'failed']), Response::HTTP_OK);
+        } catch (ModelNotFoundException) {
+
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'user not found!',
+                'data' => $request->all()
+            ], Response::HTTP_NOT_FOUND);
+
         }
     }
 
@@ -140,9 +190,17 @@ class UserController extends Controller
     public function destroy($id)
     {
         if (User::destroy($id)) {
-            return response(json_encode(['status' => 'success']), Response::HTTP_OK);
+            return response()->json([
+                'status' => 'success',
+                'message' => 'model destroyed!',
+                'data' => ''
+            ], Response::HTTP_OK);
         } else {
-            return response(json_encode(['status' => 'failed']), Response::HTTP_OK);
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'model not destroyed!',
+                'data' => ''
+            ], Response::HTTP_NOT_FOUND);
         }
     }
 }

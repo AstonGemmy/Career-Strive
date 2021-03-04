@@ -4,7 +4,9 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
+use App\Models\User;
 use App\Models\Contact;
 
 class ContactController extends Controller
@@ -16,10 +18,18 @@ class ContactController extends Controller
      */
     public function index()
     {
-        if (Contact::all()) {
-            return response(Contact::all()->jsonSerialize(), Response::HTTP_OK);
+        if (Contact::all()->count()) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'contents available!',
+                'data' => Contact::all()->jsonSerialize()
+            ], Response::HTTP_OK);
         } else {
-            return response(json_encode(['status' => 'failed']), Response::HTTP_OK);
+            return response()->json([
+                'status' => 'success',
+                'message' => 'no contents available!',
+                'data' => ''
+            ], Response::HTTP_OK);
         }
     }
 
@@ -57,9 +67,17 @@ class ContactController extends Controller
         $contact->phone = $request->phone;
 
         if ($contact->save()) {
-            return response(json_encode(['status' => 'success']), Response::HTTP_CREATED);
+            return response()->json([
+                'status' => 'success',
+                'message' => 'contents saved!',
+                'data' => ''
+            ], Response::HTTP_CREATED);
         } else {
-            return response(json_encode(['status' => 'failed']), Response::HTTP_OK);
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'contents not saved!',
+                'data' => $request->all()
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -71,10 +89,24 @@ class ContactController extends Controller
      */
     public function show($id)
     {
-        if (Contact::findOrFail($id)) {
-            return response(Contact::findOrFail($id)->jsonSerialize(), Response::HTTP_OK);
-        } else {
-            return response(json_encode(['status' => 'failed']), Response::HTTP_OK);
+        try {
+
+            $contact = Contact::findOrFail($id);
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'contents available!',
+                'data' => $contact->jsonSerialize()
+            ], Response::HTTP_OK);
+
+        } catch(ModelNotFoundException) {
+
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'contents not available!',
+                'data' => ''
+            ], Response::HTTP_NOT_FOUND);
+
         }
     }
 
@@ -98,16 +130,43 @@ class ContactController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $contact = Contact::findOrFail($id);
-        $contact->country = $request->country;
-        $contact->state = $request->state;
-        $contact->address = $request->address;
-        $contact->phone = $request->phone;
+        try {
 
-        if ($contact->save()) {
-            return response(json_encode(['status' => 'success']), Response::HTTP_OK);
-        } else {
-            return response(json_encode(['status' => 'failed']), Response::HTTP_OK);
+            // $user = User::findOrFail($id);
+            
+            $contact = Contact::findOrFail($id);
+
+            $contact->country = $request->country;
+            $contact->state = $request->state;
+            $contact->address = $request->address;
+            $contact->phone = $request->phone;
+
+            if ($contact->save()) {
+                
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'contents updated!',
+                    'data' => ''
+                ], Response::HTTP_OK);
+            
+            } else {
+                
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => 'contents could not be updated!',
+                    'data' => $request->all()
+                ], Response::HTTP_INTERNAL_SERVER_ERROR);
+
+            }
+
+        } catch(ModelNotFoundException) {
+
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'target not found!',
+                'data' => $request->all()
+            ], Response::HTTP_NOT_FOUND);
+
         }
     }
 
@@ -120,9 +179,17 @@ class ContactController extends Controller
     public function destroy($id)
     {
         if (Contact::destroy($id)) {
-            return response(json_encode(['status' => 'success']), Response::HTTP_OK);
+            return response()->json([
+                'status' => 'success',
+                'message' => 'model destroyed!',
+                'data' => ''
+            ], Response::HTTP_OK);
         } else {
-            return response(json_encode(['status' => 'failed']), Response::HTTP_OK);
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'model not destroyed!',
+                'data' => ''
+            ], Response::HTTP_NOT_FOUND);
         }
     }
 }

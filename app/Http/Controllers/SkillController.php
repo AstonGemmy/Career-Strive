@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 use App\Models\Skill;
 
@@ -16,10 +17,18 @@ class SkillController extends Controller
      */
     public function index()
     {
-        if (Skill::all()) {
-            return response(Skill::all()->jsonSerialize(), Response::HTTP_OK);
+        if (Skill::all()->count()) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'contents available!',
+                'data' => Skill::all()->jsonSerialize()
+            ], Response::HTTP_OK);
         } else {
-            return response(json_encode(['status' => 'failed']), Response::HTTP_OK);
+            return response()->json([
+                'status' => 'success',
+                'message' => 'no contents available!',
+                'data' => ''
+            ], Response::HTTP_OK);
         }
     }
 
@@ -57,9 +66,17 @@ class SkillController extends Controller
         $skill->customer_service = $request->customer_service;
 
         if ($skill->save()) {
-            return response(json_encode(['status' => 'success']), Response::HTTP_CREATED);
+            return response()->json([
+                'status' => 'success',
+                'message' => 'contents saved!',
+                'data' => ''
+            ], Response::HTTP_CREATED);
         } else {
-            return response(json_encode(['status' => 'failed']), Response::HTTP_OK);
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'contents not saved!',
+                'data' => $request->all()
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -71,10 +88,24 @@ class SkillController extends Controller
      */
     public function show($id)
     {
-        if (Skill::findOrFail($id)) {
-            return response(Skill::findOrFail($id)->jsonSerialize(), Response::HTTP_OK);
-        } else {
-            return response(json_encode(['status' => 'failed']), Response::HTTP_OK);
+        try {
+
+            $skill = Skill::findOrFail($id);
+            
+            return response()->json([
+                'status' => 'success',
+                'message' => 'contents available!',
+                'data' => $skill->jsonSerialize()
+            ], Response::HTTP_OK);
+    
+        } catch(ModelNotFoundException) {
+
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'contents not available!',
+                'data' => ''
+            ], Response::HTTP_NOT_FOUND);
+
         }
     }
 
@@ -98,16 +129,41 @@ class SkillController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $skill = Skill::findOrFail($id);
-        $skill->time_management = $request->time_management;
-        $skill->team_work = $request->team_work;
-        $skill->problem_solving = $request->problem_solving;
-        $skill->customer_service = $request->customer_service;
+        try {
+            
+            $skill = Skill::findOrFail($id);
 
-        if ($skill->save()) {
-            return response(json_encode(['status' => 'success']), Response::HTTP_OK);
-        } else {
-            return response(json_encode(['status' => 'failed']), Response::HTTP_OK);
+            $skill->time_management = $request->time_management;
+            $skill->team_work = $request->team_work;
+            $skill->problem_solving = $request->problem_solving;
+            $skill->customer_service = $request->customer_service;
+
+            if ($skill->save()) {
+                
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'contents updated!',
+                    'data' => ''
+                ], Response::HTTP_OK);
+
+            } else {
+                
+                return response()->json([
+                    'status' => 'failed',
+                    'message' => 'contents could not updated!',
+                    'data' => $request->all()
+                ], Response::HTTP_INTERNAL_SERVER_ERROR);
+
+            }
+
+        } catch(ModelNotFoundException) {
+
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'target not found!',
+                'data' => $request->all()
+            ], Response::HTTP_NOT_FOUND);
+
         }
     }
 
@@ -120,9 +176,17 @@ class SkillController extends Controller
     public function destroy($id)
     {
         if (Skill::destroy($id)) {
-            return response(json_encode(['status' => 'success']), Response::HTTP_OK);
+            return response()->json([
+                'status' => 'success',
+                'message' => 'model destroyed!',
+                'data' => ''
+            ], Response::HTTP_OK);
         } else {
-            return response(json_encode(['status' => 'failed']), Response::HTTP_OK);
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'model not destroyed!',
+                'data' => ''
+            ], Response::HTTP_NOT_FOUND);
         }
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 
 use App\Models\Test;
 
@@ -18,10 +19,18 @@ class TestController extends Controller
      */
     public function index()
     {
-        if (Test::all()) {
-            return response(Test::all()->jsonSerialize(), Response::HTTP_OK);
+        if (Test::all()->count()) {
+            return response()->json([
+                'status' => 'success',
+                'message' => 'contents available!',
+                'data' => Test::all()->jsonSerialize()
+            ], Response::HTTP_OK);
         } else {
-            return response(json_encode(['status' => 'failed']), Response::HTTP_OK);
+            return response()->json([
+                'status' => 'success',
+                'message' => 'no contents available!',
+                'data' => ''
+            ], Response::HTTP_OK);
         }
     }
 
@@ -61,9 +70,17 @@ class TestController extends Controller
         $test->score = $request->score;
 
         if ($test->save()) {
-            return response(json_encode(['status' => 'success']), Response::HTTP_CREATED);
+            return response()->json([
+                'status' => 'success',
+                'message' => 'contents saved!',
+                'data' => ''
+            ], Response::HTTP_CREATED);
         } else {
-            return response(json_encode(['status' => 'failed']), Response::HTTP_OK);
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'contents not saved!',
+                'data' => $request->all()
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
 
@@ -75,10 +92,24 @@ class TestController extends Controller
      */
     public function show($id)
     {
-        if (Test::findOrFail($id)) {
-            return response(Test::findOrFail($id)->jsonSerialize(), Response::HTTP_OK);
-        } else {
-            return response(json_encode(['status' => 'failed']), Response::HTTP_OK);
+        try {
+                
+            $test = Test::findOrFail($id);
+
+            return response()->json([
+                'status' => 'success',
+                'message' => 'contents available!',
+                'data' => $test->jsonSerialize()
+            ], Response::HTTP_OK);
+
+        } catch(ModelNotFoundException) {
+            
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'contents not available!',
+                'data' => ''
+            ], Response::HTTP_NOT_FOUND);
+
         }
     }
 
@@ -102,7 +133,11 @@ class TestController extends Controller
      */
     public function update(Request $request, $id)
     {
-        return response(json_encode(['status' => 'forbidden']), Response::HTTP_OK);
+        return response()->json([
+            'status' => 'failed',
+            'message' => 'action forbidden!',
+            'data' => $request->all()
+        ], Response::HTTP_FORBIDDEN);
     }
 
     /**
@@ -114,9 +149,17 @@ class TestController extends Controller
     public function destroy($id)
     {
         if (Test::destroy($id)) {
-            return response(json_encode(['status' => 'success']), Response::HTTP_OK);
+            return response()->json([
+                'status' => 'success',
+                'message' => 'model destroyed!',
+                'data' => ''
+            ], Response::HTTP_OK);
         } else {
-            return response(json_encode(['status' => 'failed']), Response::HTTP_OK);
+            return response()->json([
+                'status' => 'failed',
+                'message' => 'model not destroyed!',
+                'data' => ''
+            ], Response::HTTP_NOT_FOUND);
         }
     }
 }
