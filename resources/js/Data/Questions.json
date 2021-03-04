@@ -1,0 +1,68 @@
+[
+    {
+        "id": 1,
+        "question": "What is the name of Facebook's CEO?",
+        "options": {
+            "a": "Mark Joe",
+            "b": "John Doe",
+            "c": "Mark Zuckerberg",
+            "d": "Rango Stark",
+            "e": "None of the above"
+        }
+    },
+    {
+        "id": 2,
+        "question": "Who is Jeff Bezos?",
+        "options": {
+            "a": "Web Developer",
+            "b": "Freelancer",
+            "c": "Software Engineer",
+            "d": "Owner of Amazon",
+            "e": "None of the above"
+        }
+    },
+    {
+        "id": 3,
+        "question": "Which of these has the largest users database currently?",
+        "options": {
+            "a": "Facebook",
+            "b": "Google LLC",
+            "c": "Amazon",
+            "d": "Twitter",
+            "e": "None of the above"
+        }
+    },
+    {
+        "id": 4,
+        "question": "What is the current president of the United States of America?",
+        "options": {
+            "a": "Donald Trump",
+            "b": "Biden Moe",
+            "c": "George Bush",
+            "d": "Joe Biden",
+            "e": "None of the above"
+        }
+    },
+    {
+        "id": 5,
+        "question": "What is the square root of 49?",
+        "options": {
+            "a": 23.5,
+            "b": 9.4,
+            "c": 7.0,
+            "d": 5,
+            "e": "None of the above"
+        }
+    },
+    {
+        "id": 6,
+        "question": "What best describes CSS?",
+        "options": {
+            "a": "Design Tool",
+            "b": "Hardware Programming Language",
+            "c": "Machine Learning Stack Language",
+            "d": "A pack of Colours and Motion",
+            "e": "None of the above"
+        }
+    }
+]

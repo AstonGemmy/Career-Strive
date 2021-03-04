@@ -1,9 +1,7 @@
 <template>
     <div>
-        
         <GlobalAlert />
         <slot />
-
     </div>
 </template>
 

@@ -21,11 +21,10 @@ use App\Http\Controllers\ContactController;
 |
 */
 
+Route::resource('/test', TestController::class);
 Route::resource('/users', UserController::class);
-
 Route::resource('/skill', SkillController::class);
 Route::resource('/contact', ContactController::class);
-Route::resource('/test', TestController::class);
 Route::resource('/experience', ExperienceController::class);
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {

@@ -21,49 +21,82 @@ use App\Http\Controllers\FileUploadController;
 |
 */
 
-Route::get('/', function () {
-    return Inertia::render('Welcome');
-})->name('index');
+Route::name('page.')->group(function () {
 
-Route::get('/profile', function () {
-    return Inertia::render('Profile/Show');
-})->name('profile');
+    Route::get('/', function () {
+        return Inertia::render('Welcome');
+    })->name('index');
 
-Route::get('/register', function () {
-    return Redirect::route('login');
-})->name('register');
+    Route::get('/register', function () {
+        return Redirect::route('login');
+    })->name('register');
 
-Route::get('/login', function () {
-    return Inertia::render('Auth/Login');
-})->name('login');
+    Route::get('/login', function () {
+        return Redirect::route('authenticate');
+    })->name('login');
 
-Route::get('/authenticate', function () {
-    return Inertia::render('Auth/Login');
-})->name('authenticate');
+    Route::get('/authenticate', function () {
+        return Inertia::render('Auth/Login');
+    })->name('authenticate');
 
-Route::post('/auth-check', [AuthController::class, 'isAuthenticated']);
-Route::post('/authenticate', [AuthController::class, 'authenticate']);
-Route::post('/logout', [AuthController::class, 'logout']);
+    Route::get('/profile', function () {
+        return Inertia::render('Profile/Show');
+    })->name('profile');
 
-Route::post('/upload/profile-photo/{id}', [FileUploadController::class, 'profilePhotoUpload']);
-Route::post('/upload/cover-photo/{id}', [FileUploadController::class, 'coverPhotoUpload']);
+    Route::get('/test-portal', function () {
+        return Inertia::render('Test/TestPortal');
+    })->name('test');
+    
+});
 
-Route::get('/email/verify', function () {
-    return Inertia::render('Auth/VerifyEmail');
-})->middleware('auth')->name('verification.notice');
+Route::name('authentication.')->group(function () {
 
-Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
-    $request->fulfill();
+    Route::post('/auth-check', [
+        AuthController::class, 'isAuthenticated'
+    ])->name('check');
 
-    return Redirect::route('index');
-})->middleware(['auth', 'signed'])->name('verification.verify');
+    Route::post('/authenticate', [
+        AuthController::class, 'authenticate'
+    ])->name('authentication');
 
-Route::post('/email/verification-notification', function (Request $request) {
-    $request->user()->sendEmailVerificationNotification();
+    Route::post('/logout', [
+        AuthController::class, 'logout'
+    ])->name('destroy');
 
-    return back()->with('message', 'Verification link sent!');
-})->middleware(['auth', 'throttle:6,1'])->name('verification.send');
+});
+
+Route::name('upload.')->group(function () {
+
+    Route::post('/upload/profile-photo/{id}',[
+        FileUploadController::class, 'profilePhotoUpload'
+    ])->name('profile-photo');
+
+    Route::post('/upload/cover-photo/{id}', [
+        FileUploadController::class, 'coverPhotoUpload'
+    ])->name('cover-photo');
+
+});
+
+Route::name('verification.')->group(function () {
+
+    Route::get('/email/verify', function () {
+        return Inertia::render('Auth/VerifyEmail');
+    })->middleware('auth')->name('notice');
+
+    Route::get('/email/verify/{id}/{hash}', function (EmailVerificationRequest $request) {
+        $request->fulfill();
+
+        return Redirect::route('index');
+    })->middleware(['auth', 'signed'])->name('verify');
+
+    Route::post('/email/verification-notification', function (Request $request) {
+        $request->user()->sendEmailVerificationNotification();
+
+        return back()->with('message', 'Verification link sent!');
+    })->middleware(['auth', 'throttle:6,1'])->name('send');
+
+});
 
 Route::middleware(['auth:sanctum', 'verified'])->get('/dashboard', function () {
-    return Inertia::render('Dashboard');
+    return Inertia::render('Welcome');
 })->name('dashboard');
