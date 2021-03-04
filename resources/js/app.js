@@ -9,7 +9,7 @@ import Store from './Store/Index';
 import { mapActions, mapMutations } from 'vuex';
 import store from './Store/Index';
 
-import GlobalAlert from './Components/Common/GlobalAlert.vue'
+import Layout from './Layouts/AppLayout.vue'
 
 const el = document.getElementById('app');
 
@@ -17,7 +17,13 @@ createApp({
     render: () => 
         h(InertiaApp, {
             initialPage: JSON.parse(el.dataset.page),
-            resolveComponent: (name) => require(`./Pages/${name}`).default,
+            resolveComponent: (name) => import(`./Pages/${name}`)
+            .then(({ default: page }) => {
+                if (page.layout === undefined) {
+                  page.layout = Layout
+                }
+                return page
+            })
         }),
         computed: {
             ...mapMutations([
@@ -41,7 +47,6 @@ createApp({
     
 })
     .mixin({ methods: { route } })
-    .component('global-alert', GlobalAlert)
     .use(InertiaPlugin)
     .use(Store)
     .mount(el);

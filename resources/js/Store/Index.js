@@ -972,10 +972,10 @@ const store = createStore({
             if (def_val == 0) {
                context.dispatch('redirectTo', {intended: '/test-portal'})
             } else {
-               context.commit('setFeedbackStyleError', 'global_alert');
                context.commit('setGlobalAlert', {
                   message: 'You are not eligible to take tests. Update all mandatory informatioin to be eligible.'
                })
+               context.commit('setFeedbackStyleError', 'global_alert');
                context.commit('resetFeedbackStyle', 'global_alert');
                context.commit('resetFeedbackMessage', 'global_alert')
             }
