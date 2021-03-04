@@ -565,7 +565,7 @@ const store = createStore({
             let formData = new FormData();
             formData.append('profile_photo_path', files[0]);
 
-            context.commit('setLoader', true)
+            // context.commit('setLoader', true)
             const update_profile_photo = await window.axios.post(`/upload/profile-photo/${this.state.authUser.id}`, formData)
             .then(response => {
                if (response.status == 200 && response.data.status == 'success') {
@@ -590,7 +590,7 @@ const store = createStore({
                   message: 'Profile photo update error!'
                });
             });
-            context.commit('setLoader', false)
+            // context.commit('setLoader', false)
             context.commit('resetFeedbackStyle', 'global_alert');
             context.commit('resetFeedbackMessage', 'global_alert')
          },
@@ -605,7 +605,7 @@ const store = createStore({
             let formData = new FormData();
             formData.append('cover_photo_path', files[0]);
 
-            context.commit('setLoader', true)
+            // context.commit('setLoader', true)
             const update_cover_photo = await window.axios.post(`/upload/cover-photo/${this.state.authUser.id}`, formData)
             .then(response => {
                if (response.status == 200 && response.data.status == 'success') {
@@ -630,7 +630,7 @@ const store = createStore({
                   message: 'Cover photo update error!'
                });
             });
-            context.commit('setLoader', false)
+            // context.commit('setLoader', false)
             context.commit('resetFeedbackStyle', 'global_alert');
             context.commit('resetFeedbackMessage', 'global_alert')
          },

@@ -5,8 +5,10 @@ use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 use Illuminate\Http\Request;
-use App\Http\Controllers\AuthController;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
+
+use App\Http\Controllers\AuthController;
+use App\Http\Controllers\FileUploadController;
 
 /*
 |--------------------------------------------------------------------------
@@ -43,6 +45,8 @@ Route::post('/auth-check', [AuthController::class, 'isAuthenticated']);
 Route::post('/authenticate', [AuthController::class, 'authenticate']);
 Route::post('/logout', [AuthController::class, 'logout']);
 
+Route::post('/upload/profile-photo/{id}', [FileUploadController::class, 'profilePhotoUpload']);
+Route::post('/upload/cover-photo/{id}', [FileUploadController::class, 'coverPhotoUpload']);
 
 Route::get('/email/verify', function () {
     return Inertia::render('Auth/VerifyEmail');
