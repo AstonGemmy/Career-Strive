@@ -29,6 +29,7 @@
     },
     "dependencies": {
         "@babel/runtime": "^7.13.9",
+        "vue-loading-overlay": "^3.4.2",
         "vue-router": "^3.5.1",
         "vuex": "^4.0.0"
     }

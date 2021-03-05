@@ -4,9 +4,19 @@
         
         <div class="relative w-4/5 md:w-3/5 lg:w-2/5 bg-gray-100 mx-auto shadow rounded-xl overflow-hidden">                       
             
-            <h1 class="relative px-4 py-2 text-pink-800 text-2xl">
-                Welcome to Career Strive
-            </h1>
+            <div class="relative flex justify-between px-6 py-5 text-pink-800 text-2xl">
+                
+                <h1>
+                    Welcome to Career Strive
+                </h1>
+
+                <div class="">
+                    <inertia-link href="/" title="Home" class="flex justify-center items-center">
+                        <i class="fa fa-globe"></i>
+                    </inertia-link>
+                </div>
+
+            </div>
             
             <div class="relative flex flex-col md:flex-row justify-between items-start h-auto">
 
@@ -36,8 +46,8 @@
                     <a class="text-pink-800" href="fpass.php">Forgot Password?</a>
                     
                     <div class="mt-4">                        
-                        <button type="submit" name="btn-login" id="loginBtn" class="bg-white text-pink-800 px-5 py-2 text-xl rounded-md border-white shadow">
-                            <i class="far fa-sign-in"></i>
+                        <button type="submit" class="bg-white text-pink-800 px-5 py-2 text-xl rounded-md border-white shadow">
+                            <i id="login_loader" class="fa fa-spinner mr-4 hidden animate-spin"></i>
                             <span class="">Log In</span>
                         </button>                    
                     </div>
@@ -82,8 +92,9 @@
                     
                     <div class="mt-8">
                         
-                        <button type="submit" name="btn-signup" class="bg-white text-pink-800 px-5 py-2 text-xl rounded-md border-white shadow">
-                            <i class="fa fa-spinner"></i>  <span class="">Register</span>
+                        <button type="submit" class="bg-white text-pink-800 px-5 py-2 text-xl rounded-md border-white shadow">
+                            <i id="register_loader" class="fa fa-spinner mr-4 animate-spin hidden"></i>
+                            <span class="">Register</span>
                         </button>
                     
                     </div>
@@ -142,10 +153,11 @@
         methods: {
 
             ...mapActions([
+                'addLoader',
                 'loginUser',
                 'registerUser',
                 'redirectAuthenticated'
-            ])
+            ]),
 
         },
 

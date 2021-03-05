@@ -219,6 +219,7 @@ const store = createStore({
          // Authenticate User
          async loginUser(context, {login}) {
             // context.commit('setLoader', true)
+            context.dispatch('addLoader', 'login_loader')
             const attempt_login = await window.axios.post('/authenticate', login)
             .then(response => {
                if (response.data.status == 'success') {
@@ -248,6 +249,7 @@ const store = createStore({
                });
             })
             // context.commit('setLoader', false)
+            context.dispatch('removeLoader', 'login_loader')
             context.commit('resetFeedbackStyle', 'login');
             context.commit('resetFeedbackMessage', 'login')
          },
@@ -259,6 +261,7 @@ const store = createStore({
          // Registers new user
          async registerUser(context, {register}) {
             // context.commit('setLoader', true)
+            context.dispatch('addLoader', 'register_loader')
             const attempt_registration = await window.axios.post('/api/users', register)
             .then(response => {
                if (response.data.status == 'success') {
@@ -283,6 +286,7 @@ const store = createStore({
                });
             });
             // context.commit('setLoader', false)
+            context.dispatch('removeLoader', 'register_loader')
             context.commit('resetFeedbackStyle', 'register');
             context.commit('resetFeedbackMessage', 'register')
          },
@@ -1158,6 +1162,14 @@ const store = createStore({
             })
 
          },
+
+         addLoader(context, e) {
+            document.querySelector(`#${e}`).classList.remove('hidden')
+         },
+
+         removeLoader(context, e) {
+            document.querySelector(`#${e}`).classList.add('hidden')
+         }
 
       // OTHER GLOBAL UTILITIES ENDS
 

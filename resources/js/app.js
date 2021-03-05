@@ -51,4 +51,4 @@ createApp({
     .use(Store)
     .mount(el);
 
-InertiaProgress.init({ color: '#4B5563' });
+InertiaProgress.init({ color: 'rgba(157, 23, 77, 1)' });
