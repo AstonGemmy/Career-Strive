@@ -251,15 +251,11 @@
             'output',
             'contact',
             'testAccessories'
-        ]),
-        ...mapGetters([
-            
         ])
     },
 
     methods: {
         ...mapActions([
-            // 'startTimer',
             'logoutUser',
             'fetchTests',
             'protectedRouteRedirect'

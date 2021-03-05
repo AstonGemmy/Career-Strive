@@ -112,17 +112,9 @@
 
 <script>
 
-    import { mapState, mapGetters, mapActions } from 'vuex'    
+    import { mapState, mapActions } from 'vuex'    
 
     export default {
-        components: {
-           
-        },
-
-        props: {
-            // canResetPassword: Boolean,
-            // status: String
-        },
 
         data() {
             return {
@@ -153,7 +145,6 @@
         methods: {
 
             ...mapActions([
-                'addLoader',
                 'loginUser',
                 'registerUser',
                 'redirectAuthenticated'

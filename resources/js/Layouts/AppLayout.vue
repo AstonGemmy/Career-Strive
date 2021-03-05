@@ -8,7 +8,6 @@
 <script>
 
     import { mapActions } from 'vuex'
-
     import GlobalAlert from '../Components/Common/GlobalAlert.vue'
 
     export default {
@@ -19,7 +18,7 @@
                 'setInputOnBlur',
                 'setInputOnFocus',
                 'setAllInputsProperly',
-                'setOnClick',
+                'setOnClick'
             ]),
         },
 
@@ -49,8 +48,32 @@
 
         },
 
-        updated() {
+        unmounted() {
+
             this.setAllInputsProperly()
+
+            document.querySelector('#globalLayoutCover').removeEventListener('blur', (event) => {
+                this.setInputOnBlur(event)
+            }, true)
+
+            document.querySelector('#globalLayoutCover').removeEventListener('focus', (event) => {
+                this.setInputOnFocus(event)
+            }, true)
+
+            document.querySelector('#globalLayoutCover').removeEventListener('click', (event) => {
+                this.setOnClick(event)
+            }, true)
+
+            document.querySelector('#globalLayoutCover').removeEventListener('mousedown', (event) => {
+                this.setOnMouseDown(event)
+            }, true)
+
+        },
+
+        created() {
+
+            this.setAllInputsProperly()
+
         }
 
     }

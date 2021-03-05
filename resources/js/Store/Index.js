@@ -1,11 +1,12 @@
 import { createStore } from 'vuex';
+import { useLoading } from 'vue3-loading-overlay';
 
 const store = createStore({
    
    state: {
       authUser: window.AuthUser,
       loginState: false,
-      isLoading: false,
+      isLoading: useLoading(),
       output: {
          personal: {},
          skills: {},
@@ -92,7 +93,12 @@ const store = createStore({
       },
 
       setLoader(state, val) {
-         state.isLoading = val
+         state.isLoading.hide()
+         if (val) {
+            state.isLoading.show()
+         } else {
+            state.isLoading.hide()
+         }
       },
 
       setLoginState(state, val) {
@@ -218,7 +224,7 @@ const store = createStore({
 
          // Authenticate User
          async loginUser(context, {login}) {
-            // context.commit('setLoader', true)
+            context.commit('setLoader', true)
             context.dispatch('addLoader', 'login_loader')
             const attempt_login = await window.axios.post('/authenticate', login)
             .then(response => {
@@ -248,7 +254,7 @@ const store = createStore({
                   message: 'Login error!'
                });
             })
-            // context.commit('setLoader', false)
+            context.commit('setLoader', false)
             context.dispatch('removeLoader', 'login_loader')
             context.commit('resetFeedbackStyle', 'login');
             context.commit('resetFeedbackMessage', 'login')
@@ -260,7 +266,7 @@ const store = createStore({
 
          // Registers new user
          async registerUser(context, {register}) {
-            // context.commit('setLoader', true)
+            context.commit('setLoader', true)
             context.dispatch('addLoader', 'register_loader')
             const attempt_registration = await window.axios.post('/api/users', register)
             .then(response => {
@@ -285,7 +291,7 @@ const store = createStore({
                   message: 'Registration error!'
                });
             });
-            // context.commit('setLoader', false)
+            context.commit('setLoader', false)
             context.dispatch('removeLoader', 'register_loader')
             context.commit('resetFeedbackStyle', 'register');
             context.commit('resetFeedbackMessage', 'register')
@@ -358,7 +364,7 @@ const store = createStore({
 
          // Fetch user skills
          async fetchSkills(context) {
-            // context.commit('setLoader', true)
+            context.commit('setLoader', true)
             const fetch_skills = await window.axios.get(`/api/skill/${this.state.authUser.id}`)
             .then(response => {
                if (response.status == 200 && response.data.data.length !== 0) {
@@ -371,12 +377,12 @@ const store = createStore({
             .catch(error => {
                context.commit('setSkills', {})
             })
-            // context.commit('setLoader', false)
+            context.commit('setLoader', false)
          },
 
          // Fetch user test data and history
          async fetchTests(context) {
-            // context.commit('setLoader', true)
+            context.commit('setLoader', true)
             const fetch_tests = await window.axios.get(`/api/test/${this.state.authUser.id}`)
             .then(response => {
                if (response.status == 200 && response.data.data.length !== 0) {
@@ -388,12 +394,12 @@ const store = createStore({
             .catch(error => {
                context.commit('setTest', {})
             })
-            // context.commit('setLoader', false)
+            context.commit('setLoader', false)
          },
 
          // Fetch user's personal information
          async fetchPersonal(context) {
-            // context.commit('setLoader', true)
+            context.commit('setLoader', true)
             const fetch_personal = await window.axios.get(`/api/users/${this.state.authUser.id}`)
             .then(response => {
                if (response.status == 200 && response.data.data.length !== 0) {
@@ -406,12 +412,12 @@ const store = createStore({
             .catch(error => {
                context.commit('setPersonal', {})
             })
-            // context.commit('setLoader', false)
+            context.commit('setLoader', false)
          },
 
          // Fetch user contacts details
          async fetchContacts(context) {
-            // context.commit('setLoader', true)
+            context.commit('setLoader', true)
             const fetch_contacts = await window.axios.get(`/api/contact/${this.state.authUser.id}`)
             .then(response => {
                if (response.status == 200 && response.data.data.length !== 0) {
@@ -424,7 +430,7 @@ const store = createStore({
             .catch(error => {
                context.commit('setContact', {})
             })
-            // context.commit('setLoader', false)
+            context.commit('setLoader', false)
          },
 
          // Fetch user experience data
@@ -442,7 +448,7 @@ const store = createStore({
             .catch(error => {
                context.commit('setExperiences', {})
             })
-            // context.commit('setLoader', false)
+            context.commit('setLoader', false)
          },
 
       // FETCHES ENDS
@@ -451,7 +457,7 @@ const store = createStore({
 
          // Updates user skills data
          async updateSkills(context) {
-            // context.commit('setLoader', true)
+            context.commit('setLoader', true)
 
             // On first(after account creation) attempt, add skills
             if (this.state.update_status.skills == false) {
@@ -483,14 +489,14 @@ const store = createStore({
                   message: 'Skill update error!'
                });
             });
-            // context.commit('setLoader', false)
+            context.commit('setLoader', false)
             context.commit('resetFeedbackStyle', 'skills');
             context.commit('resetFeedbackMessage', 'skills')
          },
 
          // Updates user contact data
          async updateContacts(context) {
-            // context.commit('setLoader', true)
+            context.commit('setLoader', true)
             
             // On first(after account creation) attempt, add contacts
             if (this.state.update_status.contact == false) {
@@ -522,14 +528,14 @@ const store = createStore({
                   message: 'Contact update error!'
                });
             });
-            // context.commit('setLoader', false)
+            context.commit('setLoader', false)
             context.commit('resetFeedbackStyle', 'contact');
             context.commit('resetFeedbackMessage', 'contact')
          },
 
          // Updates user's personal data
          async updatePersonal(context) {
-            // context.commit('setLoader', true)
+            context.commit('setLoader', true)
             const update_personal = await window.axios.put(`/api/users/${this.state.authUser.id}`, this.state.personal)
             .then(response => {
                if (response.status == 200 && response.data.status == 'success') {
@@ -554,7 +560,7 @@ const store = createStore({
                   message: 'Personal update error!'
                });
             });
-            // context.commit('setLoader', false)
+            context.commit('setLoader', false)
             context.commit('resetFeedbackStyle', 'personal');
             context.commit('resetFeedbackMessage', 'personal')
          },
@@ -569,7 +575,7 @@ const store = createStore({
             let formData = new FormData();
             formData.append('profile_photo_path', files[0]);
 
-            // context.commit('setLoader', true)
+            context.commit('setLoader', true)
             const update_profile_photo = await window.axios.post(`/upload/profile-photo/${this.state.authUser.id}`, formData)
             .then(response => {
                if (response.status == 200 && response.data.status == 'success') {
@@ -594,7 +600,7 @@ const store = createStore({
                   message: 'Profile photo update error!'
                });
             });
-            // context.commit('setLoader', false)
+            context.commit('setLoader', false)
             context.commit('resetFeedbackStyle', 'global_alert');
             context.commit('resetFeedbackMessage', 'global_alert')
          },
@@ -609,7 +615,7 @@ const store = createStore({
             let formData = new FormData();
             formData.append('cover_photo_path', files[0]);
 
-            // context.commit('setLoader', true)
+            context.commit('setLoader', true)
             const update_cover_photo = await window.axios.post(`/upload/cover-photo/${this.state.authUser.id}`, formData)
             .then(response => {
                if (response.status == 200 && response.data.status == 'success') {
@@ -634,14 +640,14 @@ const store = createStore({
                   message: 'Cover photo update error!'
                });
             });
-            // context.commit('setLoader', false)
+            context.commit('setLoader', false)
             context.commit('resetFeedbackStyle', 'global_alert');
             context.commit('resetFeedbackMessage', 'global_alert')
          },
 
          // Updates user experience data
          async updateExperiences(context) {
-            // context.commit('setLoader', true)
+            context.commit('setLoader', true)
 
             // On first(after account creation) attempt, add experiences
             if (this.state.update_status.experiences == false) {
@@ -665,7 +671,6 @@ const store = createStore({
                      message: 'Experience not successfully updated!'
                   })
                }
-               // context.commit('setLoader', false)
             })
             .catch(error => {
                context.commit('setFeedbackStyleError', 'experiences');
@@ -673,8 +678,8 @@ const store = createStore({
                   target: 'experiences',
                   message: 'Experience update error!'
                });
-               // context.commit('setLoader', false)
             });
+            context.commit('setLoader', false)
             context.commit('resetFeedbackStyle', 'experiences');
             context.commit('resetFeedbackMessage', 'experiences')
          },
@@ -685,7 +690,7 @@ const store = createStore({
          
          // Adds contact data
          async addContacts(context) {
-            // context.commit('setLoader', true)
+            context.commit('setLoader', true)
             this.state.contact.id = this.state.authUser.id;
             const add_contacts = await window.axios.post('/api/contact', this.state.contact)
             .then(response => {
@@ -711,14 +716,14 @@ const store = createStore({
                   message: 'Contact upload error!'
                });
             });
-            // context.commit('setLoader', false)
+            context.commit('setLoader', false)
             context.commit('resetFeedbackStyle', 'contact');
             context.commit('resetFeedbackMessage', 'contact')
          },
 
          // Adds skills data
          async addSkills(context) {
-            // context.commit('setLoader', true)
+            context.commit('setLoader', true)
 
             this.state.skills.id = this.state.authUser.id;
 
@@ -746,14 +751,14 @@ const store = createStore({
                   message: 'Skills upload error!'
                });
             });
-            // context.commit('setLoader', false)
+            context.commit('setLoader', false)
             context.commit('resetFeedbackStyle', 'skills');
             context.commit('resetFeedbackMessage', 'skills')
          },
 
          // Adds experience data
          async addExperiences(context) {
-            // context.commit('setLoader', true)
+            context.commit('setLoader', true)
 
             this.state.experiences.id = this.state.authUser.id;
 
@@ -773,7 +778,6 @@ const store = createStore({
                      message: 'Experience not successfully saved!'
                   })
                }
-               // context.commit('setLoader', false)
             })
             .catch(error => {
                context.commit('setFeedbackStyleError', 'experiences');
@@ -781,8 +785,8 @@ const store = createStore({
                   target: 'experiences',
                   message: 'Experience upload error!'
                });
-               // context.commit('setLoader', false)
             });
+            context.commit('setLoader', false)
             context.commit('resetFeedbackStyle', 'experiences');
             context.commit('resetFeedbackMessage', 'experiences')
          },
@@ -810,7 +814,6 @@ const store = createStore({
                      message: 'Test not successfully deleted!'
                   })
                }
-               context.commit('setLoader', false)
             })
             .catch(error => {
                context.commit('setFeedbackStyleError', 'test');
@@ -818,8 +821,8 @@ const store = createStore({
                   target: 'test',
                   message: 'Test delete error!'
                });
-               context.commit('setLoader', false)
             });
+            context.commit('setLoader', false)
          },
 
          // Deletes skills data
@@ -841,7 +844,6 @@ const store = createStore({
                      message: 'Skill not successfully deleted!'
                   })
                }
-               context.commit('setLoader', false)
             })
             .catch(error => {
                context.commit('setFeedbackStyleError', 'skills');
@@ -849,8 +851,8 @@ const store = createStore({
                   target: 'skills',
                   message: 'Skill delete error!'
                });
-               context.commit('setLoader', false)
             });
+            context.commit('setLoader', false)
          },
 
          // Deletes contact data
@@ -872,7 +874,6 @@ const store = createStore({
                      message: 'Contact not successfully deleted!'
                   })
                }
-               context.commit('setLoader', false)
             })
             .catch(error => {
                context.commit('setFeedbackStyleError', 'contact');
@@ -880,8 +881,8 @@ const store = createStore({
                   target: 'contact',
                   message: 'Contact delete error!'
                });
-               context.commit('setLoader', false)
             });
+            context.commit('setLoader', false)
          },
 
          // Deletes personal data
@@ -903,7 +904,6 @@ const store = createStore({
                      message: 'Personal not successfully deleted!'
                   })
                }
-               context.commit('setLoader', false)
             })
             .catch(error => {
                context.commit('setFeedbackStyleError', 'personal');
@@ -911,8 +911,8 @@ const store = createStore({
                   target: 'personal',
                   message: 'Personal delete error!'
                });
-               context.commit('setLoader', false)
             });
+            context.commit('setLoader', false)
          },
 
          // Deletes experience data
@@ -934,7 +934,6 @@ const store = createStore({
                      message: 'Experience not successfully deleted!'
                   })
                }
-               context.commit('setLoader', false)
             })
             .catch(error => {
                context.commit('setFeedbackStyleError', 'experiences');
@@ -942,8 +941,8 @@ const store = createStore({
                   target: 'experiences',
                   message: 'Experience delete error!'
                });
-               context.commit('setLoader', false)
             });
+            context.commit('setLoader', false)
          },
 
       // DELETES ENDS
@@ -1116,10 +1115,8 @@ const store = createStore({
                || (event_target.nodeName.toLowerCase() == 'input' && event_target.type == 'password')
                || (event_target.nodeName.toLowerCase() == 'select')
                || event_target.nodeName.toLowerCase() == 'textarea') {
-                  
-               if (event_target.value == '') {
-                  selected_field_label.style.top = '-1.5em'
-               }
+
+               selected_field_label.style.top = '-1.5em'
 
             }
 
