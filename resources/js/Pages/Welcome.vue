@@ -6,12 +6,12 @@
       <div class="relative flex flex-col lg:flex-row justify-between items-start p-4 lg:p-16">
 
           <div class="relative w-full lg:w-2/4">	
-              <div class="px-16">
+              <div class="px-16 overflow-hidden rounded-xl">
                   <img src="images/intro-cover.jpg" class="" width="100%" height="100%">
               </div>
           </div>
           
-          <div class="relative w-full lg:w-2/4">
+          <div class="relative w-full lg:w-2/4 bg-red-300">
 
               <div class="relative text-center w-full mb-8" data-section-card-header>
                   <h1 class="text-pink-800 text-4xl">Job Opening</h1>
@@ -99,7 +99,7 @@
           <div class="relative my-8 text-2xl poppins text-gray-500">
               At career strive we care about your potential so we provide generous job opportunities for candidates to explore.
           </div>
-          <inertia-link to="/login" href="/login" class="relative inline-block bg-pink-800 mt-8 text-white rounded-md py-4 px-6 box-shadow-3xl font-bold text-xl">
+          <inertia-link href="/authenticate" class="ripple-node relative inline-block bg-pink-800 mt-8 text-white rounded-md py-4 px-6 box-shadow-3xl font-bold text-xl">
               Get started
           </inertia-link>
 

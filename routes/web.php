@@ -28,11 +28,11 @@ Route::name('page.')->group(function () {
     })->name('index');
 
     Route::get('/register', function () {
-        return Redirect::route('login');
+        return Redirect::route('page.authenticate');
     })->name('register');
 
     Route::get('/login', function () {
-        return Redirect::route('authenticate');
+        return Redirect::route('page.authenticate');
     })->name('login');
 
     Route::get('/authenticate', function () {

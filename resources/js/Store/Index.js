@@ -1020,76 +1020,142 @@ const store = createStore({
 
       // OTHER GLOBAL UTILITIES
 
-         // Creates accordion effect on elements
-         accordion(context) {
-
-            //ACCORDION CONTROLLER
+         setOnClick(context, e) {
+            
+            // ACCORDION EFFECT
+            // All marked selectors for accordion effect
             const accordions = document.querySelectorAll('.accordion');
-            alert(accordions.length);
 
-            accordions.forEach(accordion => {
-               accordion.addEventListener('click', () => {
-                  alert('gghghns')
-                  accordion.classList.toggle('accordion-active');
-                  const panel = accordion.nextElementSibling;
-                  if (panel.style.maxHeight) {      
-                     panel.style.maxHeight = null;
-                     panel.style.padding = '0px 18px';          
-                  } else {          
-                     panel.style.maxHeight = (panel.scrollHeight + 20) + 'px';
-                     panel.style.padding = '10px 18px';          
+            // Targetted element
+            const event_target = e.target;
+
+            // Clear target selector's identifier
+            event_target.classList.add('selected')            
+
+            // If targetted selector is really among marked selectors
+            if (event_target.className.includes('accordion'))  {
+
+               // Run desired effect for targetted selector
+               event_target.classList.toggle('accordion-active');
+               const panel = event_target.nextElementSibling;
+               if (panel.style.maxHeight) {      
+                  panel.style.maxHeight = null;
+                  panel.style.padding = '0px 18px';          
+               } else {          
+                  panel.style.maxHeight = (panel.scrollHeight + 20) + 'px';
+                  panel.style.padding = '10px 18px';          
+               }
+
+               // Remove effect for all marked selectors besides selected target
+               accordions.forEach(accordion => {
+                  if (!accordion.className.includes('selected')) {
+                     accordion.classList.remove('accordion-active')
+                     const panel = accordion.nextElementSibling;
+                     if (panel.style.maxHeight) {
+                        panel.style.maxHeight = null;
+                        panel.style.padding = '0px 18px';
+                     }
                   }
-               })  
-            });
+               });
+
+               // Clear target selector's identifier
+               event_target.classList.remove('selected')
+               
+            }
 
          },
 
-         // Creates ripple effect on button click
-         rippleEffect(context) {
-            // // Button Effect
-            // const buttons = document.querySelectorAll('.button, button, .ripple-node');
-            // buttons.forEach(button => {
-            //   button.addEventListener('mousedown', (e) => {
-            //     const target = e.target;
-            //     const rect = target.getBoundingClientRect();
-            //     let ripple = target.querySelector('.ripple');				
-            //     if (ripple) {
-            //       ripple.remove();
-            //     }				
-            //     ripple = document.createElement('span');
-            //     ripple.className = 'ripple';
-            //     ripple.style.height = ripple.style.width = Math.max(rect.width/3, rect.height/3) + 'px';
-            //     target.appendChild(ripple);
-            //     const top = e.pageY - rect.top - ripple.offsetHeight / 2 - document.documentElement.scrollTop;
-            //     const left = e.pageX - rect.left - ripple.offsetWidth / 2 - document.documentElement.scrollLeft;
-            //     ripple.style.top = top + 'px';
-            //     ripple.style.left = left + 'px';
-            //     return false;
-            //   })
-            // });
+         setOnMouseDown(context, e) {
+
+            // RIPPLE EFFECT
+
+            // Targetted selector
+            const event_target = e.target;
+
+            // If targetted button is a desired selector type for which effect should be applied
+            if (event_target.className.includes('ripple-node')
+               || event_target.className.includes('button')
+               || event_target.nodeName.toLowerCase() == 'button')  {
+            
+               const rect = event_target.getBoundingClientRect();
+               let ripple = event_target.querySelector('.ripple');				
+               
+               if (ripple) {
+                  ripple.remove();
+               }				
+               
+               ripple = document.createElement('span');
+               ripple.className = 'ripple';
+               ripple.style.height = ripple.style.width = Math.max(rect.width, rect.height) + 'px';
+               event_target.appendChild(ripple);
+               const top = e.pageY - rect.top - ripple.offsetHeight / 2 - document.documentElement.scrollTop;
+               const left = e.pageX - rect.left - ripple.offsetWidth / 2 - document.documentElement.scrollLeft;
+               ripple.style.top = top + 'px';
+               ripple.style.left = left + 'px';
+               return false;
+            
+            }
 
          },
 
-         inputEffect(context) {
+         setInputOnFocus(context, e) {
 
-            // // Input fields control
-            // const inputs = document.querySelectorAll('input[type="text"], input[type="email"], input[type="password"], input[type="select"], textarea');
-            // inputs.forEach(input => {
-            //   if (input.value !== '') {
-            //     const inputLabel = input.previousElementSibling;
-            //     inputLabel.style.top = '-1.5em'
-            //   }    
-            //   input.addEventListener('focus', () => {
-            //     const inputLabel = input.previousElementSibling;
-            //     inputLabel.style.top = '-1.5em'
-            //   })
-            //   input.addEventListener('blur', () => {
-            //     if (input.value == '') {
-            //       const inputLabel = input.previousElementSibling;
-            //       inputLabel.style.top = '0em'
-            //     }
-            //   })
-            // })
+            // Targetted selector
+            const event_target = e.target;
+
+            // Targetted selector label
+            const selected_field_label = event_target.previousElementSibling;
+
+            // If targetted button is really among marked selectors
+            if ( (event_target.nodeName.toLowerCase() == 'input' && event_target.type == 'text')
+               || (event_target.nodeName.toLowerCase() == 'input' && event_target.type == 'email')
+               || (event_target.nodeName.toLowerCase() == 'input' && event_target.type == 'password')
+               || (event_target.nodeName.toLowerCase() == 'select')
+               || event_target.nodeName.toLowerCase() == 'textarea') {
+                  
+               if (event_target.value == '') {
+                  selected_field_label.style.top = '-1.5em'
+               }
+
+            }
+
+         },
+
+         setInputOnBlur(context, e) {
+
+            // Targetted selector
+            const event_target = e.target;
+
+            // Targetted selector label
+            const selected_field_label = event_target.previousElementSibling;
+                  
+            // If targetted button is really among marked selectors
+            if ( (event_target.nodeName.toLowerCase() == 'input' && event_target.type == 'text')
+               || (event_target.nodeName.toLowerCase() == 'input' && event_target.type == 'email')
+               || (event_target.nodeName.toLowerCase() == 'input' && event_target.type == 'password')
+               || (event_target.nodeName.toLowerCase() == 'select')
+               || event_target.nodeName.toLowerCase() == 'textarea') {
+            
+               if (event_target.value !== '') {
+                  selected_field_label.style.top = '-1.5em'
+               } else {
+                  selected_field_label.style.top = '0em'
+               }
+
+            }
+
+         },
+
+         setAllInputsProperly(context, e) {
+
+            // Marked input selectors
+            const inputs = document.querySelectorAll('input[type="text"], input[type="email"], input[type="password"], select, textarea');
+            
+            inputs.forEach(input => {
+               if (input.value !== '') {
+                  input.previousElementSibling.style.top = '-1.5em'
+               }
+            })
 
          },
 

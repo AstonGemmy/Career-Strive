@@ -32905,6 +32905,7 @@ code {
 
 .accordion {
   position:relative;
+  overflow:hidden;
   cursor: pointer;
   width: 100%;
   border: none;
@@ -32985,6 +32986,7 @@ code {
 
 .ripple-node {
   position: relative;
+  overflow:hidden;
 }
 
 @-webkit-keyframes ripple {
@@ -193270,4 +193272,3 @@ input:-webkit-autofill, input:-webkit-autofill:hover, input:-webkit-autofill:foc
             animation: bounce 1s infinite;
   }
 }
-
