@@ -22,7 +22,7 @@
                             Overview
                         </h1>
 
-                        <inertia-link to="/" href="/">
+                        <inertia-link href="/">
                             <div class="bg-gradient-to-r hover:border-blue-400 border-transparent border-l-4 hover:from-blue-100 hover:to-transparent hover:text-blue-600 text-gray-600 py-4 pl-16 pr-4 flex items-center text-xl transition-all duration-700">
                                 <span class="flex justify-center items-center mr-8 w-8 h-8 rounded-full shadow">
                                     <i class="fa fa-globe"></i>

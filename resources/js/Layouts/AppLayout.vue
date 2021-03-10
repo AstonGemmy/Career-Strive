@@ -95,6 +95,10 @@
 
             this.setAllInputsProperly()
 
+        },
+
+        updated() {
+            this.closeModal()
         }
 
     }
