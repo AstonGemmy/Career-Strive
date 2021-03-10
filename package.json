@@ -29,6 +29,8 @@
     },
     "dependencies": {
         "@babel/runtime": "^7.13.9",
+        "moment": "^2.29.1",
+        "vue-moment": "^4.1.0",
         "vue-router": "^3.5.1",
         "vue3-loading-overlay": "0.0.0",
         "vuex": "^4.0.0"

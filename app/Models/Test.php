@@ -17,4 +17,5 @@ class Test extends Model
     ];
 
     public $timestamps = false;
+
 }

@@ -1,5 +1,8 @@
 <template>
     <div id="globalLayoutCover">
+        <!-- Global Warning Modal -->
+        <ConfirmationModal id="modal" :confirmation="confirmation_modal" @setResponse="getResponse" class="hidden" />
+        <!-- Global Response Alert -->
         <GlobalAlert />
         <slot />
     </div>
@@ -7,10 +10,21 @@
 
 <script>
 
-    import { mapActions } from 'vuex'
+    import { mapActions, mapState } from 'vuex'
     import GlobalAlert from '../Components/Common/GlobalAlert.vue'
+    import ConfirmationModal from '../Components/Common/ConfirmationModal.vue'
 
     export default {
+
+        props: {
+            confirmation: Object
+        },
+
+        computed: {
+            ...mapState([
+                'confirmation_modal'
+            ])
+        },
 
         methods: {
             ...mapActions([
@@ -18,12 +32,19 @@
                 'setInputOnBlur',
                 'setInputOnFocus',
                 'setAllInputsProperly',
-                'setOnClick'
+                'setOnClick',
+                'closeModal',
             ]),
+
+            getResponse(confirmed) {
+                this.confirmation_modal.triggered = confirmed
+            },
+
         },
 
         components: {
-            GlobalAlert
+            GlobalAlert,
+            ConfirmationModal
         },
 
         mounted() {

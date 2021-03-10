@@ -14,7 +14,9 @@ const store = createStore({
          experiences: {},
       },
       skills: {},
-      test: {},
+      test: {
+         score: 0
+      },
       contact: {},
       personal: {},
       experiences: {},
@@ -67,9 +69,32 @@ const store = createStore({
       experience_level: ['Not experienced','Less experienced','Reasonably experienced','Experienced','Very experienced','Expert'],
       experience_strength: ['Low','Good','Very Good','Excellent'],
       gender: ['Select', 'Male', 'Female'],
+      confirmation_modal: {
+         source: null,
+         triggered: null,
+         heading: null,
+         message: null,
+         action: null,
+         closeable: false,
+         close: false
+      },
       testAccessories: {
-         timer: "01:02",
-         message: 'Enough time remaining!'
+         timer: "00:25",
+         timer_loop: '',
+         timer_alert_message: 'Enough time remaining!',
+         submission_is_disabled: false,
+         all_questions_answered: false,
+         questions: null,
+         answered_questions: 0,
+         total_questions: 0,
+         answerPayload: {
+            question_one: null,
+            question_two: null,
+            question_three: null,
+            question_four: null,
+            question_five: null,
+            question_six: null,
+         }
       }
 
    },
@@ -565,6 +590,20 @@ const store = createStore({
             context.commit('resetFeedbackMessage', 'personal')
          },
 
+         // Updates a user to eligible status
+         async updateUserStatus(context, status) {
+            this.state.personal.status = status
+            const update_user_status = await window.axios.put(`/api/users/${this.state.authUser.id}`, this.state.personal)
+            .then(response => {
+               if (response.status == 200 && response.data.status == 'success') {
+                  context.dispatch('fetchPersonal')
+               }
+            })
+            .catch(error => {
+
+            })
+         },
+
          // Updates user profile photo
          async updateProfilePhoto(context, e) {
 
@@ -754,6 +793,26 @@ const store = createStore({
             context.commit('setLoader', false)
             context.commit('resetFeedbackStyle', 'skills');
             context.commit('resetFeedbackMessage', 'skills')
+         },
+
+         // Adds test records
+         async addTest(context) {
+            context.commit('setLoader', true)
+
+            this.state.test.id = this.state.authUser.id;
+
+            const add_test = await window.axios.post('/api/test/', this.state.test)
+            .then(response => {
+               if (response.status == 201 && response.data.status == 'success') {
+                  
+               } else {
+                  
+               }
+            })
+            .catch(error => {
+               
+            });
+            context.commit('setLoader', false)
          },
 
          // Adds experience data
@@ -953,12 +1012,19 @@ const store = createStore({
          async checkUpdateStatus(context, target) {
             let def_val = 0;
             Object.keys(this.state[target]).forEach(key => {
-               if (this.state[target][key] == '' || this.state[target][key] == undefined) {
+               if ( (this.state[target][key] == '' && key !== 'status') || (this.state[target][key] == undefined && key !== 'status') ) {
                   def_val = 1;
                }
             })
             if (def_val == 0) {
                await context.commit('setUpdateStatus', {target: target, value: true})
+               if (this.state.personal.status == false) {
+                  context.dispatch('updateUserStatus', true)
+               }
+            } else {
+               if (this.state.personal.status == true) {
+                  context.dispatch('updateUserStatus', false)
+               }
             }
          },
 
@@ -1000,6 +1066,17 @@ const store = createStore({
             })
          },
 
+         // Displays confirmation modal      
+         showModal(context) {
+            
+            const modal = document.querySelector('#modal');
+            if (modal.style.display == 'none' || modal.style.display == '') {
+               modal.style.display = 'block'            
+            } else {
+               modal.style.display = 'none'
+            }
+         },
+
       // DISPLAYS ENDS
 
       // REMOVERS
@@ -1013,11 +1090,48 @@ const store = createStore({
             })
          },
 
+         // Removes confirmation modal
+         closeModal(context) {
+            const modal = document.querySelector('#modal');
+            modal.style.display = 'none'
+            context.commit('setLoader', false)
+
+            this.state.confirmation_modal.can_close = false
+         },
+
       // REMOVERS ENDS
 
       // HELPERS
 
-         // Test portal timer
+         calculateScore(context, total_questions) {
+            context.commit('setLoader', true)
+            let correct_answer = 0
+            const Answers = require('../Data/Answers.json')
+            Object.keys(this.state.testAccessories.answerPayload).forEach(answer => {            
+               if (this.state.testAccessories.answerPayload[answer] == Answers[answer]) {
+                  correct_answer = correct_answer + 1
+               }
+            })
+            const score = correct_answer / total_questions
+            context.dispatch('showScore', score)
+         },
+         
+         fetchQuestions(context) {
+            context.commit('setLoader', true)
+            const Questions = require('../Data/Questions.json')
+            this.state.testAccessories.questions = Questions
+            this.state.testAccessories.total_questions = Object.keys(Questions).length
+            context.commit('setLoader', false)
+         },
+         
+         showScore(context, score) {
+            this.state.test.score = `${Math.trunc(score * 100)}`;
+            this.state.test.status = "true"
+            setTimeout(() => {
+               context.commit('setLoader', false)
+            }, 5000)
+            context.dispatch('addTest', score)
+         },
       
       // HELPERS ENDS
 
@@ -1078,10 +1192,10 @@ const store = createStore({
             // If targetted button is a desired selector type for which effect should be applied
             if (event_target.className.includes('ripple-node')
                || event_target.className.includes('button')
-               || event_target.nodeName.toLowerCase() == 'button')  {
+               || event_target.nodeName.toLowerCase() == 'button') {
             
                const rect = event_target.getBoundingClientRect();
-               let ripple = event_target.querySelector('.ripple');				
+               let ripple = document.querySelector('.ripple');
                
                if (ripple) {
                   ripple.remove();

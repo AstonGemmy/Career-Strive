@@ -106,7 +106,8 @@ class UserController extends Controller
                     'status' => $user->status,
                     'date_of_birth' => $user->date_of_birth,
                     'cover_photo_path' =>   $user->cover_photo_path,
-                    'profile_photo_path' => $user->profile_photo_path
+                    'profile_photo_path' => $user->profile_photo_path,
+                    'created_at' => $user->created_at
                 ]
             ], Response::HTTP_OK);
 

@@ -123,42 +123,47 @@
                                     
                                     <div class="flex mx-8 lg:ml-56">
 
-                                        <div class="flex p-2 bg-blue-100 rounded-full">
+                                        <div class="flex p-2 bg-blue-100 rounded-full transition ease-in-out">
 
                                             <span class="flex justify-center flex-col px-4 text-black bg-blue-400 rounded-full mr-4">
                                                 <span class="text-white font-medium uppercase text-center">
                                                     Test Scores
                                                 </span>
                                             </span>
-                                            
-                                            <span class="flex justify-center flex-col w-12 h-12 bg-blue-300 rounded-full mr-4">
-                                                <span class="text-blue-800 text-center">
-                                                    <span v-if="test.score">
-                                                        {{ test.score }}
+
+                                            <span v-for="value in testsScores" :key="value.started_at">
+                                                <span v-if="value.score > 75" class="flex justify-center flex-col w-12 h-12 bg-blue-300 rounded-full mr-4">
+                                                    <span class="text-blue-800 text-center">
+                                                        <span>
+                                                            {{ value.score }}%
+                                                        </span>
+                                                    </span>
+                                                </span>
+                                                <span v-if="value.score > 50 && value.score < 76" class="flex justify-center flex-col w-12 h-12 bg-green-300 rounded-full mr-4">
+                                                    <span class="text-green-800 text-center">
+                                                        <span>
+                                                            {{ value.score }}%
+                                                        </span>
+                                                    </span>
+                                                </span>
+                                                <span v-if="value.score > 25 && value.score < 51" class="flex justify-center flex-col w-12 h-12 bg-yellow-300 rounded-full mr-4">
+                                                    <span class="text-yellow-800 text-center">
+                                                        <span>
+                                                            {{ value.score }}%
+                                                        </span>
+                                                    </span>
+                                                </span>
+                                                <span v-if="value.score < 26" class="flex justify-center flex-col w-12 h-12 bg-red-300 rounded-full mr-4">
+                                                    <span class="text-red-800 text-center">
+                                                        <span>
+                                                            {{ value.score }}%
+                                                        </span>
                                                     </span>
                                                 </span>
                                             </span>
 
-                                            <span class="flex justify-center flex-col w-12 h-12 bg-red-300 rounded-full mr-4">
-                                                <span class="text-red-800 text-center">
-                                                    100
-                                                </span>
-                                            </span>
-
-                                            <span class="flex justify-center flex-col w-12 h-12 bg-yellow-300 rounded-full mr-4">
-                                                <span class="text-yellow-800 text-center">
-                                                    120
-                                                </span>
-                                            </span>
-
-                                            <span class="flex justify-center flex-col w-12 h-12 bg-green-300 rounded-full mr-4">
-                                                <span class="text-green-800 text-center">
-                                                    150
-                                                </span>
-                                            </span>
-
-                                            <span class="flex justify-center flex-col text-2xl w-12 h-12 text-white bg-blue-400 rounded-full">
-                                                <i class="fa fa-plus text-center"></i>
+                                            <span class="flex justify-center flex-col cursor-pointer text-2xl w-12 h-12 text-white bg-blue-400 rounded-full">
+                                                <i @click="toggleTestsScores" class="fa fa-plus text-center"></i>
                                             </span>
 
                                         </div>
@@ -201,7 +206,7 @@
                                         </span>
                                     </h1>
 
-                                    <div v-if="objectAvailability(output.personal)" class="row-span-4">
+                                    <div class="row-span-4">
                                         <div v-for="(value, key) in output.personal" :key="key" class="px-6 pt-4">
                                             <div v-if="value">
                                                 <div class="text-xl text-gray-600">
@@ -508,6 +513,13 @@
 
   export default {
 
+    data() {
+        return {
+            testsScores: null,
+            score_counts: null
+        }
+    },
+
     computed: {
         ...mapState([
             'test',
@@ -517,9 +529,6 @@
             'experiences',
             'contact',
             'update_status'
-        ]),
-        ...mapGetters([
-            
         ])
     },
 
@@ -563,6 +572,37 @@
                 }).join(" ");
                 return value
             }
+        },
+
+        showTestsScores() {
+            
+            this.score_counts = 2
+            this.testsScores = setTimeout(() => {
+                this.testsScores = Object.keys(this.test).slice(0, this.score_counts).reduce((result, key) => {
+                    result[key] = this.test[key]
+                    return result
+                }, {})
+            }, 500)
+          
+        },
+
+        toggleTestsScores(e) {
+            
+            if (this.score_counts == 2) {
+                this.score_counts = null
+                this.testsScores = this.test
+                e.target.classList.remove('fa-plus')
+                e.target.classList.add('fa-minus')
+            } else if (this.score_counts == null) {
+                this.score_counts = 2
+                this.testsScores = Object.keys(this.test).slice(0, this.score_counts).reduce((result, key) => {
+                    result[key] = this.test[key]
+                    return result
+                }, {})
+                e.target.classList.remove('fa-minus')
+                e.target.classList.add('fa-plus')
+            }
+
         }
 
     },
@@ -574,6 +614,7 @@
         this.fetchExperiences()
         this.fetchPersonal()
         this.fetchContacts()
+        this.showTestsScores()
     },
 
     components: {

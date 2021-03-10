@@ -1,5 +1,4 @@
 <template>
-    <!-- CV Box -->
     <div>
         
         <div class="relative flex justify-between px-6 py-3 border-b-2 border-gray-100 text-blue-600 text-xl uppercase">

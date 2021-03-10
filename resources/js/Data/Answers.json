@@ -1,32 +1,8 @@
-[
-    {
-        "id": 1,
-        "question": "What is the name of Facebook's CEO?",
-        "answer": "Mark Zuckerberg"
-    },
-    {
-        "id": 2,
-        "question": "Who is Jeff Bezos?",
-        "answer": "Owner of Amazon"
-    },
-    {
-        "id": 3,
-        "question": "Which of these has the largest users database currently?",
-        "answer": "Facebook"
-    },
-    {
-        "id": 4,
-        "question": "What is the current president of the United States of America?",
-        "answer": "Joe Biden"
-    },
-    {
-        "id": 5,
-        "question": "What is the square root of 49?",
-        "answer": 7.0
-    },
-    {
-        "id": 6,
-        "question": "What best describes CSS?",
-        "answer": "Design Tool"
-    }
-]
+{
+    "question_one": "c",
+    "question_two": "d",
+    "question_three": "a",
+    "question_four": "d",
+    "question_five": "c",
+    "question_six": "a"
+}

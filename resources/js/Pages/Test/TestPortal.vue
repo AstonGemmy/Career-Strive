@@ -1,11 +1,6 @@
 <template>
     <div class="bg-gray-100 bg-contain">
 
-        <!-- Update Field -->
-        <div id="updates" style="z-index:9999" class="fixed z-50 left-2/4 top-16 transform -translate-x-2/4 w-full lg:w-4/12 bg-white rounded-lg overflow-hidden shadow-2xl">
-            <!-- <personal-update class="update personal hidden" /> -->
-        </div>
-
         <div class="relative overflow-x-hidden lg:overflow-hidden lg:grid grid-flow-col grid-cols-5 gap-0 w-screen lg:h-screen h-auto">
 
             <div class="fixed top-0 left-0 w-3/5 p-4 h-screen z-50 lg:z-0 lg:w-full lg:relative hidden lg:block">
@@ -97,7 +92,7 @@
             
             <div class="relative p-4 lg:h-screen h-auto col-span-3">
 
-                <div class="relative h-full">
+                <div class="relative pb-16 h-full">
 
                     <div class="relative invisible-scrollbar overflow-y-auto h-full">
                         
@@ -120,7 +115,7 @@
                                 <div class="relative flex justify-between w-full px-8 py-4 lg:py-4">
                                     
                                     <div class="text-lg">
-                                        Score <span class="ml-4 text-gray-600">70%</span>
+                                        Score <span class="ml-4 text-gray-600"> {{ test.score }}% </span>
                                     </div>
 
                                     <div class="text-lg">
@@ -128,7 +123,7 @@
                                     </div>
 
                                     <div class="text-lg">
-                                        Status message: <span class="ml-4 text-gray-600">{{ testAccessories.message}}</span>
+                                        Status message: <span class="ml-4 text-gray-600">{{ testAccessories.timer_alert_message}}</span>
                                     </div>
 
                                 </div>
@@ -138,11 +133,11 @@
                                                 
                         </div>
 
-                        <div class="relative">
+                        <div v-if="testAccessories.questions" class="relative">
 
                             <div class="relative lg:grid grid-flow-row grid-cols-2 grid-rows-auto gap-4 w-full h-auto px-1 py-4 my-2 mx-auto">
                                 
-                                <div v-for="question in questions" :key="question.id" class="grid grid-flow-rows grid-cols-1 grid-rows-auto items-stretch gap-4 lg:mt-0 mt-8 overflow-hidden relative rounded-xl shadow bg-white">
+                                <div v-for="question in testAccessories.questions" :key="question.id" class="grid grid-flow-rows grid-cols-1 grid-rows-auto items-stretch gap-4 lg:mt-0 mt-8 overflow-hidden relative rounded-xl shadow bg-white">
                                     
                                     <div class="p-4 text-lg">
                                         
@@ -150,8 +145,8 @@
                                         <div class="mt-4">
                                             <span class="">Options</span>
                                             <p class="p-4">
-                                                <label v-for="option in question.options" :key="option" v-bind:for="question.options[2]" class="cursor-pointer text-gray-600 p-4 bg-gray-100 my-2 flex items-center rounded-full">
-                                                    <input v-bind:id="question.options[2]" v-bind:name="question.question" type="radio" class="mr-4 rounded-full border-4 border-blue-500"> {{ option }}
+                                                <label v-for="(option, key) in question.options" :key="option" v-bind:for="question.tag.concat(key)" class="cursor-pointer text-gray-600 p-4 bg-gray-100 my-2 flex items-center rounded-full">
+                                                    <input v-bind:id="question.tag.concat(key)" v-model="testAccessories.answerPayload[question.tag]" v-bind:value="key" v-bind:name="question.tag" type="radio" class="mr-4 rounded-full border-4 border-blue-500 border-opacity-50 checked:border-opacity-100"> {{ option }}
                                                 </label>                                    
                                             </p>
                                         </div>
@@ -165,6 +160,18 @@
 
                         </div>
 
+                    </div>
+
+                    <div v-if="testAccessories.questions" class="absolute bottom-0 w-full z-50 bg-white rounded-xl overflow-hidden shadow">
+
+                        <div class="flex items-center justify-between py-2 px-8 bg-white shadow">
+                            
+                            <button v-bind:disabled="testAccessories.submission_is_disabled" @click="setSubmissionConfirmationMessage" class="ripple-node text-xl bg-blue-600 px-6 py-3 rounded-xl font-bold uppercase text-blue-200">
+                                Submit
+                            </button>
+
+                        </div>                            
+                                            
                     </div>
 
                 </div>
@@ -214,7 +221,7 @@
 
                                 <div class="relative my-4 mx-4 py-2 px-4">
                                     
-                                    <span class="text-red"> 0 / 4 answered</span>
+                                    <span class="text-red"> {{ `${testAccessories.answered_questions} / ${testAccessories.total_questions}` }} answered</span>
 
                                 </div>
 
@@ -234,22 +241,15 @@
 
 <script>
 
-  import { mapState, mapGetters, mapActions } from 'vuex'
-  import Questions from '../../Data/Questions.json'
+  import { mapState, mapGetters, mapActions, mapMutations } from 'vuex'
+  import moment from 'moment/moment'
 
   export default {
-
-    data() {
-        return {
-            questions: Questions
-        }
-    },
 
     computed: {
         ...mapState([
             'test',
-            'output',
-            'contact',
+            'confirmation_modal',
             'testAccessories'
         ])
     },
@@ -257,7 +257,10 @@
     methods: {
         ...mapActions([
             'logoutUser',
-            'fetchTests',
+            'showModal',
+            'calculateScore',
+            'fetchQuestions',
+            'getCurrentDateTime',
             'protectedRouteRedirect'
         ]),
 
@@ -286,44 +289,141 @@
             const time_array = available_time.split(/[:]+/);
             let minutes = time_array[0];
             let seconds = this.formatSeconds(time_array[1] - 1)
-            
             // Save timer value everytime
             // $.post('testTimer_update.php', {minutes: minutes, seconds: seconds}, function(timer_return) {
                 
             // });
 
             if (minutes < 3) {
-                this.testAccessories.message = 'Buckle up!'
+                this.testAccessories.timer_alert_message = 'Buckle up!'
             }
             
             if (seconds == 59) {minutes = (minutes - 1)} // Reduce minute everytime seconds counts down to 0            
             if (minutes == 0 && seconds == 0) { // If both minutes and seconds are equal to 0, then countdown is done                
                 this.testAccessories.timer = '00:00' // Reset available time to 0
-                clearTimeout(this.startTimer);  // Clear timeout for counter
-                this.testAccessories.message = 'Time is up!' // Reset timer message                
+                clearTimeout(this.testAccessories.timer_loop);  // Clear timeout for counter
+                this.testAccessories.timer_alert_message = 'Time is up!' // Reset timer message
             } else {
                 const formatted_minutes = this.formatMinutes(minutes); // Check if minutes is less than 10 and apped a 0 to it
                 this.testAccessories.timer = `${formatted_minutes}:${seconds}` // Set available time            
-                setTimeout(this.updateTestTimer, 1000); // Run timer again after a second                
+                this.testAccessories.timer_loop = setTimeout(this.updateTestTimer, 1000); // Run timer again after a second                
             }
                 
         },
 
         formatSeconds(sec) {            
             if (sec < 10 && sec >= 0) {sec = "0" + sec}; // Append a zero to seconds
-            if (sec < 0) {sec = "59"}; //   Reset seconds
+            if (sec < 0) {sec = "59"}; // Reset seconds
             return sec;
         },
 
         formatMinutes(min) {
             return min.toString().length < 2 ? '0' + min : min
+        },
+
+        allAnswered() {
+            this.testAccessories.all_questions_answered = true;
+        },
+
+        setSubmissionConfirmationMessage() {
+            
+            this.confirmation_modal.heading = 'Test Submission Notice'
+            this.confirmation_modal.source = 'submit'
+            this.confirmation_modal.closeable = true
+            if (this.testAccessories.all_questions_answered) {
+                this.confirmation_modal.message = 'Are you sure you are ready to submit?'
+            } else {
+                this.confirmation_modal.message = 'You have not answered all questions, do wish to submit?'
+            }
+            this.showModal()
+
+        },
+
+        submitTest() {
+            
+            this.testAccessories.submission_is_disabled = true
+            clearTimeout(this.testAccessories.timer_loop);  // Clear timeout for counter
+            this.testAccessories.timer = '00:00' // Reset available time to 0
+            this.calculateScore(this.testAccessories.total_questions)
+
+        },
+
+        testInitialization() {
+            
+            this.confirmation_modal.source = 'init'
+            this.confirmation_modal.message = `You are about to begin your test and you have ${this.testAccessories.timer} minutes for this test.
+            If you are ready, you can continue.`
+            this.confirmation_modal.heading = 'Test Initialization Notice'
+            this.confirmation_modal.action = 'Yes, I am ready'
+
+            this.showModal()
+
+        },
+
+        autoSubmissionAlert() {
+            
+            this.confirmation_modal.source = 'submit'
+            this.confirmation_modal.message = `Your time is up and test will be automatically submitted now.`
+            this.confirmation_modal.heading = 'Auto Submission Notice'
+            this.confirmation_modal.action = ''
+            this.showModal()
+
+            const auto_submission_timeout = setTimeout(() => {
+                this.submitTest()
+                clearTimeout(auto_submission_timeout)
+            }, 2000)
+            const auto_close_modal_timeout = setTimeout(() => {
+                this.confirmation_modal.close = true
+                clearTimeout(auto_close_modal_timeout)
+            }, 6000)
+
         }
 
     },
 
     created() {
         this.protectedRouteRedirect()
-        this.updateTestTimer()
+        setTimeout(this.testInitialization, 1000)
+    },
+
+    watch: {
+        '$store.state.testAccessories.answerPayload': {    
+            deep: true,
+            handler(oldState, newState) {
+                const total_questions = Object.keys(newState).length
+                let answered = 0
+                Object.keys(newState).forEach(question => {
+                    if (newState[question] !== null) {
+                        answered = answered + 1
+                    }
+                })
+                this.testAccessories.answered_questions = answered
+                
+                if (this.testAccessories.answered_questions == this.testAccessories.total_questions) {
+                    this.allAnswered()
+                }
+            }
+        },
+        '$store.state.testAccessories.timer': {
+            handler(oldTimer, newTimer) {
+                if (newTimer == '00:01') {
+                    this.autoSubmissionAlert()
+                }
+            }
+        },
+        '$store.state.confirmation_modal.triggered': {
+            handler(newAction, oldAction) {
+                if (newAction == 'init') {
+                    this.fetchQuestions()
+                    this.updateTestTimer()
+                    this.test.started_at = moment().format()
+
+                }
+                if (newAction == 'submit') {
+                    this.submitTest()
+                }
+            }
+        }
     }
 
   }

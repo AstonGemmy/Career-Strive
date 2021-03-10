@@ -5,7 +5,6 @@ import { createApp, h, ref } from 'vue';
 import { App as InertiaApp, plugin as InertiaPlugin } from '@inertiajs/inertia-vue3';
 import { InertiaProgress } from '@inertiajs/progress';
 
-import Store from './Store/Index';
 import { mapActions, mapMutations, mapState } from 'vuex';
 import store from './Store/Index';
 
@@ -45,12 +44,12 @@ createApp({
             store.commit('setFeedbackStyleState')
         },
         mounted() {         
-        } 
+        }
     
 })
     .mixin({ methods: { route } })
     .use(InertiaPlugin)
-    .use(Store)
+    .use(store)
     .mount(el);
 
 InertiaProgress.init({ color: 'rgba(157, 23, 77, 1)' });

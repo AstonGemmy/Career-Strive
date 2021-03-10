@@ -56,16 +56,15 @@ class TestController extends Controller
             'id' => 'required',
             'status' => 'required',
             'started_at' => 'required',
-            'submitted_at' => 'required',
             'score' => 'required'
         ]);
         
-        $date = Carbon::now()->toDateTimeString();
+        $date = Carbon::now()->toW3cString();
 
         $test = new Test();
         $test->id = $request->id;
         $test->status = $request->status;
-        $test->started_at = $date;
+        $test->started_at = $request->started_at;
         $test->submitted_at = $date;
         $test->score = $request->score;
 
@@ -94,7 +93,7 @@ class TestController extends Controller
     {
         try {
                 
-            $test = Test::findOrFail($id);
+            $test = Test::where('id', $id)->orderBy('submitted_at', 'desc')->get();
 
             return response()->json([
                 'status' => 'success',
