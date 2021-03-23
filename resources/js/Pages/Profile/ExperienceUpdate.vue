@@ -14,11 +14,11 @@
 
         <div class="relative text-center w-full" v-bind:class="{ 'text-green-700 bg-green-200 px-8 py-2': feedbackStyle.experiences.success, 'text-red-700 bg-red-200 px-8 py-2': feedbackStyle.experiences.error }">{{ feedbackMessages.experiences }}</div>
         
-        <form method="POST" @submit.prevent="updateExperiences" class="relative px-8 h-full">
+        <form method="POST" @submit.prevent="updateExperiences" class="relative md:px-8 h-full">
             
-            <div class="relative bg-red-30 p-8 h-full">
+            <div class="relative py-8 md:p-8 h-full">
                 
-                <div class="relative top-auto left-auto pt-4 p-8 overflow-x-hidden overflow-y-auto invisible-scrollbar h-144 mx-4 text-pink-800">
+                <div class="relative top-auto left-auto pt-4 px-0 md:p-8 overflow-x-hidden overflow-y-auto invisible-scrollbar h-144 mx-4 text-pink-800">
                     
                     <div class="w-full mb-2 mx-auto text-xl text-blue-600">
                     

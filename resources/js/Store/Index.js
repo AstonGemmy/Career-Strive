@@ -27,6 +27,12 @@ const store = createStore({
          personal: false,
          experiences: false
       },
+      update_before: {
+         skills: false,
+         contact: false,
+         personal: false,
+         experiences: false
+      },
       feedbackMessages: {
          login: null,
          register: null,
@@ -200,6 +206,10 @@ const store = createStore({
 
       setUpdateStatus(state, {target, value}) {
          state.update_status[target] = value
+      },
+
+      setUpdatedBefore(state, {target, value}) {
+         state.update_before[target] = value
       },
 
       setProfilePhotoPath(state, path) {
@@ -402,6 +412,7 @@ const store = createStore({
             .catch(error => {
                context.commit('setSkills', {})
             })
+            context.dispatch('checkAllMandatoryFields')
             context.commit('setLoader', false)
          },
 
@@ -419,6 +430,7 @@ const store = createStore({
             .catch(error => {
                context.commit('setTest', {})
             })
+            context.dispatch('checkAllMandatoryFields')
             context.commit('setLoader', false)
          },
 
@@ -437,6 +449,7 @@ const store = createStore({
             .catch(error => {
                context.commit('setPersonal', {})
             })
+            context.dispatch('checkAllMandatoryFields')
             context.commit('setLoader', false)
          },
 
@@ -455,6 +468,7 @@ const store = createStore({
             .catch(error => {
                context.commit('setContact', {})
             })
+            context.dispatch('checkAllMandatoryFields')
             context.commit('setLoader', false)
          },
 
@@ -473,6 +487,7 @@ const store = createStore({
             .catch(error => {
                context.commit('setExperiences', {})
             })
+            context.dispatch('checkAllMandatoryFields')
             context.commit('setLoader', false)
          },
 
@@ -485,7 +500,7 @@ const store = createStore({
             context.commit('setLoader', true)
 
             // On first(after account creation) attempt, add skills
-            if (this.state.update_status.skills == false) {
+            if (this.state.update_before.skills == false) {
                context.dispatch('addSkills')
                return;
             }
@@ -524,7 +539,7 @@ const store = createStore({
             context.commit('setLoader', true)
             
             // On first(after account creation) attempt, add contacts
-            if (this.state.update_status.contact == false) {
+            if (this.state.update_before.contact == false) {
                context.dispatch('addContacts')
                return;
             }
@@ -689,7 +704,7 @@ const store = createStore({
             context.commit('setLoader', true)
 
             // On first(after account creation) attempt, add experiences
-            if (this.state.update_status.experiences == false) {
+            if (this.state.update_before.experiences == false) {
                context.dispatch('addExperiences')
                return;
             }
@@ -1010,19 +1025,48 @@ const store = createStore({
 
          // Checks if all fields for an object is defined
          async checkUpdateStatus(context, target) {
+            
             let def_val = 0;
+            let set_object_field_length = 0;
             Object.keys(this.state[target]).forEach(key => {
-               if ( (this.state[target][key] == '' && key !== 'status') || (this.state[target][key] == undefined && key !== 'status') ) {
+               if ( (this.state[target][key] == '' && key !== 'status') || (this.state[target][key] == undefined && key !== 'status') || (this.state[target][key] == null && key !== 'status') ) {
+                  def_val = 1;
+               } else {
+                  if (key !== 'id') {
+                     set_object_field_length = set_object_field_length + 1;
+                  }
+               }
+            })
+
+            if (def_val == 0) {  // All fields for this object are set
+               await context.commit('setUpdateStatus', {target: target, value: true})  // Update status for this object to true
+               // Update this section edit status
+               context.commit('setUpdatedBefore', {target: target, value: true})
+            } else { // Some field in object is not set
+               await context.commit('setUpdateStatus', {target: target, value: false})  // Update status for this object to false
+               // Confirm if object length is same as number of set fields excluding compulsory id field
+               if (set_object_field_length !== (Object.keys(this.state[target]).length - 1)) { // If not same, means user has updated this object/section of profile before but some fields are missing
+                  context.commit('setUpdatedBefore', {target: target, value: true})
+               } else { // User has never updated this object/section of profile before
+                  context.commit('setUpdatedBefore', {target: target, value: false})
+               }
+            }
+         },
+
+         checkAllMandatoryFields(context) {
+            let def_val = 0;
+            Object.keys(this.state.update_status).forEach(key => {
+               if (this.state.update_status[key] === false) {
                   def_val = 1;
                }
             })
+            // If all fields are set, go to test portal
             if (def_val == 0) {
-               await context.commit('setUpdateStatus', {target: target, value: true})
-               if (this.state.personal.status == false) {
+               if (!this.state.personal.status) {
                   context.dispatch('updateUserStatus', true)
                }
             } else {
-               if (this.state.personal.status == true) {
+               if (this.state.personal.status) {
                   context.dispatch('updateUserStatus', false)
                }
             }

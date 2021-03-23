@@ -26,7 +26,7 @@ class CreateUsersTable extends Migration
             $table->foreignId('current_team_id')->nullable();
             $table->timestamp('email_verified_at')->nullable();
             $table->enum('status', ['true', 'false'])->default('false');
-            $table->enum('gender', ['select', 'male', 'female'])->default('select');
+            $table->enum('gender', [null, 'male', 'female'])->default(null);
             $table->timestamps();
         });
     }

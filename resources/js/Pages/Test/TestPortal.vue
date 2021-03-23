@@ -3,7 +3,7 @@
 
         <div class="relative overflow-x-hidden lg:overflow-hidden lg:grid grid-flow-col grid-cols-5 gap-0 w-screen lg:h-screen h-auto">
 
-            <div class="fixed top-0 left-0 w-3/5 p-4 h-screen z-50 lg:z-0 lg:w-full lg:relative hidden lg:block">
+            <div :class="leftSidebarToggler" class="fixed lg:left-0 top-0 w-full md:w-2/4 lg:w-full p-4 h-screen z-20 lg:relative lg:z-0 transition-all duration-700">
 
                 <div class="relative bg-white pr-1 py-4 shadow h-full rounded-xl">
 
@@ -101,13 +101,20 @@
                 
             </div>
             
-            <div class="relative p-4 lg:h-screen h-auto col-span-3">
+            <div class="relative p-4 h-screen col-span-3">
+
+                <div @click="toggleLeftSidebar" class="lg:hidden fixed bottom-6 left-8 z-50 bg-blue-400 rounded-full flex justify-center items-center w-12 h-12">
+                    <i :class="leftTogglerIcon" class="fa text-xl text-white transform scale-y-75"></i>
+                </div>
+                <div @click="toggleRightSidebar" class="lg:hidden fixed bottom-6 right-8 z-50 bg-blue-400 rounded-full flex justify-center items-center w-12 h-12">
+                    <i :class="rightTogglerIcon" class="fa text-xl text-white transform scale-y-75"></i>
+                </div>
 
                 <div class="relative pb-16 h-full">
 
                     <div class="relative invisible-scrollbar overflow-y-auto h-full">
                         
-                        <div class="sticky top-0 z-50 mb-4 mx-1 bg-white rounded-xl overflow-hidden shadow">
+                        <div class="sticky top-0 z-10 mb-4 mx-1 bg-white rounded-xl overflow-hidden shadow">
 
                             <div class="flex items-center justify-between py-4 px-8 bg-white shadow">
                                 
@@ -173,11 +180,11 @@
 
                     </div>
 
-                    <div v-if="testAccessories.questions" class="absolute bottom-0 w-full z-50 bg-white rounded-xl overflow-hidden shadow">
+                    <div v-if="testAccessories.questions" class="absolute bottom-0 w-full z-10 bg-white rounded-xl overflow-hidden shadow">
 
                         <div class="flex items-center justify-between py-2 px-8 bg-white shadow">
                             
-                            <button v-bind:disabled="testAccessories.submission_is_disabled" @click="setSubmissionConfirmationMessage" class="ripple-node text-xl bg-blue-600 px-6 py-3 rounded-xl font-bold uppercase text-blue-200">
+                            <button v-bind:disabled="testAccessories.submission_is_disabled" @click="setSubmissionConfirmationMessage" class="ripple-node w-full md:w-auto text-xl bg-blue-600 px-6 py-3 rounded-xl font-bold uppercase text-blue-200">
                                 Submit
                             </button>
 
@@ -189,7 +196,7 @@
 
             </div>
 
-            <div class="relative p-4 lg:h-screen h-auto">
+            <div :class="rightSidebarToggler" class="fixed lg:right-0 top-0 w-full md:w-2/4 lg:w-full p-4 h-screen z-20 lg:relative lg:z-0 transition-all duration-700">
 
                 <div class="bg-white h-full px-0 pb-4 rounded-xl shadow">
 
@@ -257,12 +264,31 @@
 
   export default {
 
+    data() {
+        return {
+            lToggler: false,
+            rToggler: false
+        }
+    },
+
     computed: {
         ...mapState([
             'test',
             'confirmation_modal',
             'testAccessories'
-        ])
+        ]),
+        leftSidebarToggler() {
+            return this.lToggler ? 'left-0' : '-left-full'
+        },
+        rightSidebarToggler() {
+            return this.rToggler ? 'right-0' : '-right-full'
+        },
+        leftTogglerIcon() {
+            return this.lToggler ? 'fa-times' : 'fa-chevron-left'
+        },
+        rightTogglerIcon() {
+            return this.rToggler ? 'fa-times' : 'fa-chevron-right'
+        }
     },
 
     methods: {
@@ -388,6 +414,16 @@
                 clearTimeout(auto_close_modal_timeout)
             }, 6000)
 
+        },
+
+        toggleLeftSidebar() {
+            this.lToggler = !this.lToggler
+            this.rToggler = false
+        },
+
+        toggleRightSidebar() {
+            this.rToggler = !this.rToggler
+            this.lToggler = false
         }
 
     },

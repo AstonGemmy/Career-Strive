@@ -53,10 +53,10 @@ class ContactController extends Controller
     {
         $request->validate([
             'id' => 'required',
-            'country' => 'required',
-            'state' => 'required',
-            'address' => 'required',
-            'phone' => 'required'
+            // 'country' => 'required',
+            // 'state' => 'required',
+            // 'address' => 'required',
+            // 'phone' => 'required'
         ]);
 
         $contact = new Contact();

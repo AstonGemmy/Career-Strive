@@ -6,6 +6,7 @@ use Inertia\Inertia;
 
 use Illuminate\Http\Request;
 use Illuminate\Foundation\Auth\EmailVerificationRequest;
+use Illuminate\Session\Middleware\AuthenticateSession;
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\FileUploadController;
@@ -39,7 +40,7 @@ Route::name('page.')->group(function () {
         return Inertia::render('Auth/Login');
     })->name('authenticate');
 
-    Route::get('/profile', function () {
+    Route::get('/profile', function (Request $request) {
         return Inertia::render('Profile/Show');
     })->name('profile');
 

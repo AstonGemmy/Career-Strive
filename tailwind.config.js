@@ -33,10 +33,26 @@ module.exports = {
                 '188': '56rem',
                 '206': '68rem'
             },
+            minHeight: {
+                '96': '24rem',
+                '112': '26rem',
+                '126': '28rem',
+                '144': '32rem',
+                '162': '38rem',
+                '170': '46rem',
+                '188': '56rem',
+                '206': '68rem'
+            },
             boxShadow: {
                 blue: '0 4px 14px 0 rgba(19, 51, 81, 0.39)',
                 theme: '0 1px 3px 0 rgba(157, 23, 77, 0.4), 0 1px 2px 0 rgba(157, 23, 77, 0.06)',
             },
+            transitionProperty: {
+                'top': 'top',
+                'left': 'left',
+                'right': 'right',
+                'bottom': 'bottom'
+            }
         },
     },
 

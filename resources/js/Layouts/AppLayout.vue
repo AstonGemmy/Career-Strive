@@ -92,9 +92,7 @@
         },
 
         created() {
-
             this.setAllInputsProperly()
-
         },
 
         updated() {

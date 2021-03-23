@@ -52,9 +52,9 @@ class ExperienceController extends Controller
     {
         $request->validate([
             'id' => 'required',
-            'job' => 'required',
-            'duration' => 'required',
-            'qualification' => 'required',
+            // 'job' => 'required',
+            // 'duration' => 'required',
+            // 'qualification' => 'required',
         ]);
 
         $experience = new Experience();

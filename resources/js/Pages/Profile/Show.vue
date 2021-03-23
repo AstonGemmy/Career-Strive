@@ -2,7 +2,7 @@
     <div class="bg-gray-100 bg-contain">
 
         <!-- Update Field -->
-        <div id="updates" style="z-index:9999" class="fixed z-50 left-2/4 top-16 transform -translate-x-2/4 w-full lg:w-4/12 bg-white rounded-lg overflow-hidden shadow-2xl">
+        <div id="updates" style="z-index:9999" class="fixed z-50 left-2/4 top-16 transform -translate-x-2/4 w-4/5 lg:w-4/12 bg-white rounded-lg overflow-hidden shadow-2xl">
             <personal-update class="update personal hidden" />
             <contact-update class="update contact hidden" />
             <skills-update class="update skills hidden" />
@@ -11,7 +11,7 @@
 
         <div class="relative overflow-x-hidden lg:overflow-hidden lg:grid grid-flow-col grid-cols-5 gap-0 w-screen lg:h-screen h-auto">
 
-            <div class="fixed top-0 left-0 w-3/5 p-4 h-screen z-50 lg:z-0 lg:w-full lg:relative hidden lg:block">
+            <div :class="leftSidebarToggler" class="fixed lg:left-0 top-0 w-full md:w-2/4 lg:w-full p-4 h-screen z-20 lg:relative lg:z-0 transition-all duration-700">
 
                 <div class="relative bg-white pr-1 py-4 shadow h-full rounded-xl">
 
@@ -41,6 +41,17 @@
                                 Take Test
                             </span>
                         </button>
+
+                        <inertia-link v-if="Object.keys(test).length" href="/all-tests">
+                            <div class="bg-gradient-to-r hover:border-blue-400 border-transparent border-l-4 hover:from-blue-100 hover:to-transparent hover:text-blue-600 text-gray-600 py-4 pl-16 pr-4 flex items-center text-xl transition-all duration-700">
+                                <span class="flex justify-center items-center mr-8 w-8 h-8 rounded-full shadow">
+                                    <i class="fa fa-bezier-curve"></i>
+                                </span>
+                                <span class="text-xl">
+                                    All Tests
+                                </span>
+                            </div>
+                        </inertia-link>
 
                         <!-- <?php echo $testStatus_indicator; ?> -->
                         
@@ -86,9 +97,16 @@
             
             <div class="relative p-4 lg:h-screen h-auto col-span-3">
 
+                <div @click="toggleLeftSidebar" class="lg:hidden fixed bottom-6 left-8 z-50 bg-blue-400 rounded-full flex justify-center items-center w-12 h-12">
+                    <i :class="leftTogglerIcon" class="fa text-xl text-white transform scale-y-75"></i>
+                </div>
+                <div @click="toggleRightSidebar" class="lg:hidden fixed bottom-6 right-8 z-50 bg-blue-400 rounded-full flex justify-center items-center w-12 h-12">
+                    <i :class="rightTogglerIcon" class="fa text-xl text-white transform scale-y-75"></i>
+                </div>
+
                 <div class="relative h-full">
 
-                    <div class="relative invisible-scrollbar overflow-y-auto h-full">
+                    <div class="relative invisible-scrollbar overflow-y-auto overflow-x-hidden h-full">
                         
                         <div class="relative mb-4 mx-1 bg-white rounded-xl overflow-hidden shadow">
 
@@ -111,7 +129,7 @@
                                     <img v-if="personal.cover_photo_path" v-bind:src="'/images/profile pictures/' + personal.cover_photo_path" class="w-full h-full">
                                     <img v-else src="/images/cover pictures/default-cover-photo.png" class="w-full h-full">
 
-                                    <button @click.prevent="$refs.cover_photo_input.click()" class="absolute flex justify-center items-center bg-blue-400 w-12 h-12 rounded-full z-50 right-12 -bottom-4">
+                                    <button @click.prevent="$refs.cover_photo_input.click()" class="absolute flex justify-center items-center bg-blue-400 w-12 h-12 rounded-full z-10 right-8 lg:right-12 -bottom-4">
                                         <i class="fa fa-image text-xl text-white"></i>
                                     </button>
                                     <!-- Cover Photo Update -->
@@ -123,48 +141,24 @@
                                     
                                     <div class="flex mx-8 lg:ml-56">
 
-                                        <div class="flex p-2 bg-blue-100 rounded-full transition ease-in-out">
+                                        <div class="relative flex mt-4 md:mt-2 w-full flex-col md:flex-row px-2 py-2 bg-blue-100 rounded-lg">
 
-                                            <span class="flex justify-center flex-col px-4 text-black bg-blue-400 rounded-full mr-4">
+                                            <span class="absolute -top-4 md:-top-8 md:left-8 flex justify-center flex-col px-4 text-black bg-blue-400 rounded-full mr-0 md:mr-4">
                                                 <span class="text-white font-medium uppercase text-center">
-                                                    Test Scores
+                                                    Scores cloud { {{ Object.keys(test).length }} }
                                                 </span>
                                             </span>
+                                            
+                                            <div class="grid grid-flow-col grid-rows-4 w-full invisible-scrollbar overflow-x-auto justify-start items-start mt-2 md:mt-0 rounded-lg transition-all duration-700 ease-in-out">
 
-                                            <span v-for="value in testsScores" :key="value.started_at">
-                                                <span v-if="value.score > 75" class="flex justify-center flex-col w-12 h-12 bg-blue-300 rounded-full mr-4">
-                                                    <span class="text-blue-800 text-center">
-                                                        <span>
-                                                            {{ value.score }}%
-                                                        </span>
-                                                    </span>
-                                                </span>
-                                                <span v-if="value.score > 50 && value.score < 76" class="flex justify-center flex-col w-12 h-12 bg-green-300 rounded-full mr-4">
-                                                    <span class="text-green-800 text-center">
-                                                        <span>
-                                                            {{ value.score }}%
-                                                        </span>
-                                                    </span>
-                                                </span>
-                                                <span v-if="value.score > 25 && value.score < 51" class="flex justify-center flex-col w-12 h-12 bg-yellow-300 rounded-full mr-4">
-                                                    <span class="text-yellow-800 text-center">
-                                                        <span>
-                                                            {{ value.score }}%
-                                                        </span>
-                                                    </span>
-                                                </span>
-                                                <span v-if="value.score < 26" class="flex justify-center flex-col w-12 h-12 bg-red-300 rounded-full mr-4">
-                                                    <span class="text-red-800 text-center">
-                                                        <span>
-                                                            {{ value.score }}%
-                                                        </span>
-                                                    </span>
-                                                </span>
-                                            </span>
+                                                <div v-for="value in test" :key="value.started_at" class="cursor-pointer flex mb-1 mr-1">
+                                                    <span v-if="value.score > 75" class="bg-blue-300 w-2 h-2 rounded-full"></span>
+                                                    <span v-if="value.score > 50 && value.score < 76" class="bg-green-300 w-2 h-2 rounded-full"></span>
+                                                    <span v-if="value.score > 25 && value.score < 51" class="bg-yellow-300 w-2 h-2 rounded-full"></span>
+                                                    <span v-if="value.score < 26" class="bg-red-300 w-2 h-2 rounded-full"></span>
+                                                </div>
 
-                                            <span class="flex justify-center flex-col cursor-pointer text-2xl w-12 h-12 text-white bg-blue-400 rounded-full">
-                                                <i @click="toggleTestsScores" class="fa fa-plus text-center"></i>
-                                            </span>
+                                            </div>                                            
 
                                         </div>
 
@@ -217,6 +211,9 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <div v-if="!update_before.personal" class="flex justify-center items-center">
+                                            Update Your Personal Details
+                                        </div>
                                     </div>
 
                                     <div class="row-span-1 uppercase w-full flex items-center justify-between border-t-2 border-gray-100 text-xl text-green-600 px-6 py-4">
@@ -255,7 +252,10 @@
                                                 <div class="text-lg text-black">
                                                     {{ keyToProperFormat(key) }}
                                                 </div>
-                                            </div>
+                                            </div>                                            
+                                        </div>
+                                        <div v-if="!update_before.contact" class="flex justify-center items-center">
+                                            Update Your Contact Details
                                         </div>
                                     </div>
 
@@ -297,6 +297,9 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <div v-if="!update_before.experiences" class="flex justify-center items-center">
+                                            Update Your Experience Details
+                                        </div>
                                     </div>
 
                                     <div class="row-span-1 uppercase w-full flex items-center justify-between border-t-2 border-gray-100 text-xl text-green-600 px-6 py-4">
@@ -337,6 +340,9 @@
                                                 </div>
                                             </div>
                                         </div>
+                                        <div v-if="!update_before.skills" class="flex justify-center items-center">
+                                            Update Your Skills Details
+                                        </div>
                                     </div>
 
                                     <div class="row-span-1 uppercase w-full flex items-center justify-between border-t-2 border-gray-100 text-xl text-green-600 px-6 py-4">
@@ -355,6 +361,7 @@
                                     </div>
 
                                 </div>
+
                             </div>
 
                         </div>
@@ -365,7 +372,7 @@
 
             </div>
 
-            <div class="relative p-4 lg:h-screen h-auto">
+            <div :class="rightSidebarToggler" class="fixed lg:right-0 top-0 w-full md:w-2/4 lg:w-full p-4 h-screen z-20 lg:relative lg:z-0 transition-all duration-700">
 
                 <div class="bg-white h-full px-0 pb-4 rounded-xl shadow">
 
@@ -513,10 +520,14 @@
 
   export default {
 
+    props: ['sessions'],
+
     data() {
         return {
             testsScores: null,
-            score_counts: null
+            score_counts: null,
+            lToggler: false,
+            rToggler: false
         }
     },
 
@@ -528,8 +539,21 @@
             'personal',
             'experiences',
             'contact',
-            'update_status'
-        ])
+            'update_status',
+            'update_before'
+        ]),
+        leftSidebarToggler() {
+            return this.lToggler ? 'left-0' : '-left-full'
+        },
+        rightSidebarToggler() {
+            return this.rToggler ? 'right-0' : '-right-full'
+        },
+        leftTogglerIcon() {
+            return this.lToggler ? 'fa-times' : 'fa-chevron-left'
+        },
+        rightTogglerIcon() {
+            return this.rToggler ? 'fa-times' : 'fa-chevron-right'
+        }
     },
 
     methods: {
@@ -544,7 +568,7 @@
             'updateCoverPhoto',
             'updateProfilePhoto',
             'protectedRouteRedirect',
-            'checkTestEligibilityStatus'
+            'checkTestEligibilityStatus',
         ]),        
 
         objectAvailability(object) {
@@ -574,35 +598,14 @@
             }
         },
 
-        showTestsScores() {
-            
-            this.score_counts = 2
-            this.testsScores = setTimeout(() => {
-                this.testsScores = Object.keys(this.test).slice(0, this.score_counts).reduce((result, key) => {
-                    result[key] = this.test[key]
-                    return result
-                }, {})
-            }, 500)
-          
+        toggleLeftSidebar() {
+            this.lToggler = !this.lToggler
+            this.rToggler = false
         },
 
-        toggleTestsScores(e) {
-            
-            if (this.score_counts == 2) {
-                this.score_counts = null
-                this.testsScores = this.test
-                e.target.classList.remove('fa-plus')
-                e.target.classList.add('fa-minus')
-            } else if (this.score_counts == null) {
-                this.score_counts = 2
-                this.testsScores = Object.keys(this.test).slice(0, this.score_counts).reduce((result, key) => {
-                    result[key] = this.test[key]
-                    return result
-                }, {})
-                e.target.classList.remove('fa-minus')
-                e.target.classList.add('fa-plus')
-            }
-
+        toggleRightSidebar() {
+            this.rToggler = !this.rToggler
+            this.lToggler = false
         }
 
     },
@@ -614,7 +617,6 @@
         this.fetchExperiences()
         this.fetchPersonal()
         this.fetchContacts()
-        this.showTestsScores()
     },
 
     components: {

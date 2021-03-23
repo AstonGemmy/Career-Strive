@@ -52,10 +52,10 @@ class SkillController extends Controller
     {
         $request->validate([
             'id' => 'required',
-            'time_management' => 'required',
-            'team_work' => 'required',
-            'problem_solving' => 'required',
-            'customer_service' => 'required'
+            // 'time_management' => 'required',
+            // 'team_work' => 'required',
+            // 'problem_solving' => 'required',
+            // 'customer_service' => 'required'
         ]);
 
         $skill = new Skill();

@@ -1,6 +1,6 @@
 <template>
 
-    <form @submit.prevent="confirmResponse" style="z-index:9999" class="fixed z-50 left-2/4 top-16 transform -translate-x-2/4 w-full lg:w-4/12 bg-white rounded-lg overflow-hidden shadow-2xl">
+    <form @submit.prevent="confirmResponse" style="z-index:99999" class="fixed z-50 left-2/4 top-16 transform -translate-x-2/4 w-4/5 lg:w-4/12 bg-white rounded-lg overflow-hidden shadow-2xl">
         
         <div class="relative flex justify-between px-6 py-3 border-b-2 border-gray-100 text-blue-600 text-xl uppercase">
             <h1 class="">
