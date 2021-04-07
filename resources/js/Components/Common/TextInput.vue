@@ -8,6 +8,8 @@
             <option v-for="option in options" :key="option">{{ option }}</option>
         </select>
         <textarea v-if="type == 'textarea'" :value="value" @input="$emit('update:modelValue', $event.target.value)" ref="textarea" class="text-xl h-56 p-4 focus:ring-pink-300 w-full ring-1 ring-blue-600 rounded-lg outline-none border-0 focus: bg-white" :placeholder="placeholder" :id="id"></textarea>
+        <!-- Dynamic classes to be included during TailwindCSS production build -->
+        <span class="hidden top-3 -top-5 block -translate-y-full translate-y-16 text-green-700 bg-green-200 text-red-700 bg-red-200 right-0 md:right-2/5 md:right-1/5 md:right-3/5 -right-full bg-green-400 bg-blue-400 text-green-400 text-blue-400 left-0 -left-full fa-times fa-chevron-left fa-chevron-right"></span>
     </div>
 </template>
 
