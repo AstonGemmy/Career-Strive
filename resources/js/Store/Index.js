@@ -349,7 +349,7 @@ const store = createStore({
                context.commit('setFeedbackStyleError', 'register');
                context.commit('setFeedbackMessage', {
                   target: 'register',
-                  message: error.message //message: 'Registration error!'
+                  message: 'Registration error!'
                });
             });
             context.commit('setLoader', false)
