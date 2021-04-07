@@ -1,7 +1,9 @@
 <template>
     <div id="globalLayoutCover">
+        <!-- Global Overlay -->
+        <Overlay />
         <!-- Global Warning Modal -->
-        <ConfirmationModal id="modal" :confirmation="confirmation_modal" @setResponse="getResponse" class="hidden" />
+        <ConfirmationModal :confirmation="confirmation_modal" @setResponse="getResponse" />
         <!-- Global Response Alert -->
         <GlobalAlert />
         <slot />
@@ -13,6 +15,7 @@
     import { mapActions, mapState } from 'vuex'
     import GlobalAlert from '../Components/Common/GlobalAlert.vue'
     import ConfirmationModal from '../Components/Common/ConfirmationModal.vue'
+    import Overlay from '../Components/Common/Overlay.vue'
 
     export default {
 
@@ -40,14 +43,24 @@
                 this.confirmation_modal.triggered = confirmed
             },
 
+            async initAOS() {
+                const AOS = await import('../aos')
+                AOS.init({
+                    easing: 'ease-in-out-sine'
+                })
+            }
+
         },
 
         components: {
             GlobalAlert,
-            ConfirmationModal
+            ConfirmationModal,
+            Overlay
         },
 
         mounted() {
+
+            this.initAOS()
 
             this.setAllInputsProperly()
 
@@ -96,6 +109,7 @@
         },
 
         updated() {
+            this.initAOS()
             this.closeModal()
         }
 

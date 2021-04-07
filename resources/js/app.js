@@ -5,6 +5,8 @@ import { createApp, h, ref } from 'vue';
 import { App as InertiaApp, plugin as InertiaPlugin } from '@inertiajs/inertia-vue3';
 import { InertiaProgress } from '@inertiajs/progress';
 
+import '../../public/css/aos.css'
+
 import { mapActions, mapMutations, mapState } from 'vuex';
 import store from './Store/Index';
 
@@ -38,12 +40,12 @@ createApp({
             ])
         },
         updated() {
-
+            
         },
         created() {
             store.commit('setFeedbackStyleState')
         },
-        mounted() {         
+        mounted() {
         }
     
 })

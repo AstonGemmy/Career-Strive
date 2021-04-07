@@ -23,49 +23,7 @@
                     <div class="w-full mb-2 mx-auto text-xl text-blue-600">
                         
                         <div class="p-4">
-                        
-                            <div class="relative">                        
-                                <label for="name" class="absolute left-3 flex justify-start w-3/4 items-center text-gray-900 rounded-full bg-gray-100 px-3 py-1 shadow transition-all ease-in-out">
-                                    <i class="fa rounded-full w-4 h-4 mr-2 bg-gray-100 border-white shadow"></i>
-                                    Name
-                                </label>
-                                <input v-model="personal.name" class="text-xl p-4 focus:ring-pink-300 w-full rounded-full outline-none border-0 focus: shadow-xl bg-transparent" placeholder="name" type="text" id="name">
-                            </div>
-
-                            <div class="relative mt-14">                        
-                                <label for="gender" class="absolute left-3 flex justify-start w-3/4 items-center text-gray-900 rounded-full bg-gray-100 px-3 py-1 shadow transition-all ease-in-out">
-                                    <i class="fa rounded-full w-4 h-4 mr-2 bg-gray-100 border-white shadow"></i>
-                                    Gender
-                                </label>
-                                <select v-model="personal.gender" class="text-xl p-4 focus:ring-pink-300 w-full rounded-full outline-none border-0 focus: shadow-xl bg-transparent" id="gender">
-                                    <option v-for="value in gender" :key="value">{{ value }}</option>
-                                </select>
-                            </div>
-
-                            <div class="relative mt-14">                        
-                                <label for="date-of-birth" class="absolute left-3 flex justify-start w-3/4 items-center text-gray-900 rounded-full bg-gray-100 px-3 py-1 shadow transition-all ease-in-out">
-                                    <i class="fa rounded-full w-4 h-4 mr-2 bg-gray-100 border-white shadow"></i>
-                                    Date of Birth
-                                </label>
-                                <input v-model="personal.date_of_birth" class="text-xl p-4 focus:ring-pink-300 w-full rounded-full outline-none border-0 focus: shadow-xl bg-transparent" placeholder="date of birth" type="text" id="date-of-birth">
-                            </div>
-
-                            <div class="relative mt-14">                        
-                                <label for="email" class="absolute left-3 flex justify-start w-3/4 items-center text-gray-900 rounded-full bg-gray-100 px-3 py-1 shadow transition-all ease-in-out">
-                                    <i class="fa rounded-full w-4 h-4 mr-2 bg-gray-100 border-white shadow"></i>
-                                    Email
-                                </label>
-                                <input v-model="personal.email" class="text-xl p-4 focus:ring-pink-300 w-full rounded-full outline-none border-0 focus: shadow-xl bg-transparent" placeholder="email" type="email" id="email">
-                            </div>
-
-                            <div class="relative mt-14">                        
-                                <label for="bio" class="absolute left-3 flex justify-start w-3/4 items-center text-gray-900 rounded-full bg-gray-100 px-3 py-1 shadow transition-all ease-in-out">
-                                    <i class="fa rounded-full w-4 h-4 mr-2 bg-gray-100 border-white shadow"></i>
-                                    Bio
-                                </label>
-                                <textarea v-model="personal.bio" class="text-xl h-56 p-4 focus:ring-pink-300 w-full rounded-lg outline-none border-0 focus: shadow-xl bg-transparent" placeholder="bio" id="bio"></textarea>
-                            </div>
-                            
+                            <TextInput v-for="item in Experience" :key="item.id" :options="item.options" :type="item.type" :value="item.value" v-model="item.value" :title="item.title" :id="item.id" :placeholder="item.placeholder" />
                         </div>
                         
                     </div>
@@ -88,16 +46,157 @@
 <script>
 
     import { mapState, mapActions } from 'vuex'
+    import TextInput from '../../Components/Common/TextInput.vue'
 
   export default {
+
+    data() {
+        
+    },
 
     computed: {
         ...mapState([
             'gender',
             'personal',
+            'contact',
+            'job_opening',
+            'experience_duration',
+            'qualifications',
+            'experiences',
+            'experience_level',
+            'experience_strength',            
+            'skills',
             'feedbackStyle',
             'feedbackMessages'
-        ])
+        ]),
+        Personal() {
+            return [
+                {
+                    id: 'name',
+                    type: 'text',
+                    placeholder: 'Name',
+                    title: 'Name',
+                    value: this.personal.name
+                },
+                {
+                    id: 'gender',
+                    type: 'select',
+                    options: this.gender,
+                    title: 'Gender',
+                    value: this.personal.gender
+                },
+                {
+                    id: 'date-of-birth',
+                    type: 'text',
+                    placeholder: 'DD//MM/YYYY',
+                    title: 'Date of Birth',
+                    value: this.personal.date_of_birth
+                },
+                {
+                    id: 'email',
+                    type: 'email',
+                    placeholder: '@',
+                    title: 'Email',
+                    value: this.personal.email
+                },
+                {
+                    id: 'bio',
+                    type: 'textarea',
+                    placeholder: 'Bio',
+                    title: 'Bio',
+                    value: this.personal.bio
+                }
+            ]
+        },
+        Contact() {
+            return [
+                {
+                    id: 'country',
+                    type: 'text',
+                    placeholder: 'Country',
+                    title: 'Country',
+                    value: this.contact.country
+                },
+                {
+                    id: 'gender',
+                    type: 'text',
+                    placeholder: 'State',
+                    title: 'State',
+                    value: this.contact.state
+                },
+                {
+                    id: 'address',
+                    type: 'text',
+                    placeholder: 'Address',
+                    title: 'Address',
+                    value: this.contact.address
+                },
+                {
+                    id: 'phone',
+                    type: 'text',
+                    placeholder: 'Phone',
+                    title: 'Phone',
+                    value: this.contact.phone
+                }
+            ]
+        },
+        Experience() {
+            return [
+                {
+                    id: 'work-experience',
+                    type: 'select',
+                    options: this.job_opening,
+                    title: 'Work Experience',
+                    value: this.experiences.job
+                },
+                {
+                    id: 'duration',
+                    type: 'select',
+                    options: this.experience_duration,
+                    title: 'Work Experience Duration Duration academy',
+                    value: this.experiences.duration
+                },
+                {
+                    id: 'qualification',
+                    type: 'select',
+                    options: this.qualifications,
+                    title: 'Qualification',
+                    value: this.experiences.qualification
+                }
+            ]
+        },
+        Skills() {
+            return [
+                {
+                    id: 'time-management',
+                    type: 'select',
+                    options: this.experience_level,
+                    title: 'Time Management',
+                    value: this.skills.time_management
+                },
+                {
+                    id: 'team-work',
+                    type: 'select',
+                    options: this.experience_level,
+                    title: 'Team Work',
+                    value: this.skills.team_work
+                },
+                {
+                    id: 'problem-solving',
+                    type: 'select',
+                    options: this.experience_strength,
+                    title: 'Problem Solving',
+                    value: this.skills.problem_solving
+                },
+                {
+                    id: 'customer-service',
+                    type: 'select',
+                    options: this.experience_strength,
+                    title: 'Customer Service',
+                    value: this.skills.customer_service
+                }
+            ]
+        }
     },
 
     methods: {
@@ -105,7 +204,11 @@
             'updatePersonal',
             'closeUpdaters'
         ])
-    }
+    
+    },
+
+    components: { TextInput }
+
   }
 
 </script>

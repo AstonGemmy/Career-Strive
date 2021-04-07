@@ -7,41 +7,47 @@ const store = createStore({
       authUser: window.AuthUser,
       loginState: false,
       isLoading: useLoading(),
+      overlay: false,
+      modal: false,
+      updater: {
+         target: null,
+         modal: false
+      },
       output: {
          personal: {},
-         skills: {},
+         skill: {},
          contact: {},
-         experiences: {},
+         experience: {},
       },
-      skills: {},
+      skill: {},
       test: {
          score: 0
       },
       contact: {},
       personal: {},
-      experiences: {},
+      experience: {},
       feedbackStyle: {},
       update_status: {
-         skills: false,
+         skill: false,
          contact: false,
          personal: false,
-         experiences: false
+         experience: false
       },
       update_before: {
-         skills: false,
+         skill: false,
          contact: false,
          personal: false,
-         experiences: false
+         experience: false
       },
       feedbackMessages: {
          login: null,
          register: null,
          email_verification: null,
          test: null,
-         skills: null,
+         skill: null,
          contact: null,
          personal: null,
-         experiences: null,
+         experience: null,
          global_alert: null
       },
       job_opening: [
@@ -132,6 +138,26 @@ const store = createStore({
          }
       },
 
+      setUpdater(state, {target, status}) {
+         if (!target) {
+            state.updater.target = null
+            state.updater.modal = false
+            return
+         }         
+         state.updater.target = target
+         state.updater.modal = status
+      },
+
+      setOverlay(state, val) {
+         state.overlay = false
+         state.overlay = val
+      },
+
+      setModal(state, val) {
+         state.modal = false,
+         state.modal = val
+      },
+
       setLoginState(state, val) {
          state.loginState = val
       },
@@ -176,10 +202,10 @@ const store = createStore({
          state.test = payload
       },
 
-      setSkills(state, payload) {
-         state.skills = payload
+      setSkill(state, payload) {
+         state.skill = payload
          const {time_management, team_work, problem_solving, customer_service} = payload
-         state.output.skills = {time_management, team_work, problem_solving, customer_service}
+         state.output.skill = {time_management, team_work, problem_solving, customer_service}
       },
 
       setContact(state, payload) {
@@ -198,10 +224,10 @@ const store = createStore({
          state.output.personal = {name, email, gender, date_of_birth}
       },
 
-      setExperiences(state, payload) {
-         state.experiences = payload
+      setExperience(state, payload) {
+         state.experience = payload
          let {job, qualification, duration} = payload
-         state.output.experiences = {job, qualification, duration}
+         state.output.experience = {job, qualification, duration}
       },
 
       setUpdateStatus(state, {target, value}) {
@@ -397,20 +423,20 @@ const store = createStore({
 
       // FETCHES
 
-         // Fetch user skills
-         async fetchSkills(context) {
+         // Fetch user skill
+         async fetchSkill(context) {
             context.commit('setLoader', true)
-            const fetch_skills = await window.axios.get(`/api/skill/${this.state.authUser.id}`)
+            const fetch_skill = await window.axios.get(`/api/skill/${this.state.authUser.id}`)
             .then(response => {
                if (response.status == 200 && response.data.data.length !== 0) {
-                  context.commit('setSkills', response.data.data)
-                  context.dispatch('checkUpdateStatus', 'skills')
+                  context.commit('setSkill', response.data.data)
+                  context.dispatch('checkUpdateStatus', 'skill')
                } else {
-                  context.commit('setSkills', {})
+                  context.commit('setSkill', {})
                }         
             })
             .catch(error => {
-               context.commit('setSkills', {})
+               context.commit('setSkill', {})
             })
             context.dispatch('checkAllMandatoryFields')
             context.commit('setLoader', false)
@@ -453,10 +479,10 @@ const store = createStore({
             context.commit('setLoader', false)
          },
 
-         // Fetch user contacts details
-         async fetchContacts(context) {
+         // Fetch user contact details
+         async fetchContact(context) {
             context.commit('setLoader', true)
-            const fetch_contacts = await window.axios.get(`/api/contact/${this.state.authUser.id}`)
+            const fetch_contact = await window.axios.get(`/api/contact/${this.state.authUser.id}`)
             .then(response => {
                if (response.status == 200 && response.data.data.length !== 0) {
                   context.commit('setContact', response.data.data)
@@ -473,19 +499,19 @@ const store = createStore({
          },
 
          // Fetch user experience data
-         async fetchExperiences(context) {
+         async fetchExperience(context) {
             // context.commit('setLoader', true)
-            const fetch_experiences = await window.axios.get(`/api/experience/${this.state.authUser.id}`)
+            const fetch_experience = await window.axios.get(`/api/experience/${this.state.authUser.id}`)
             .then(response => {
                if (response.status == 200 && response.data.data.length !== 0) {
-                  context.commit('setExperiences', response.data.data)
-                  context.dispatch('checkUpdateStatus', 'experiences')
+                  context.commit('setExperience', response.data.data)
+                  context.dispatch('checkUpdateStatus', 'experience')
                } else {
-                  context.commit('setExperiences', {})
+                  context.commit('setExperience', {})
                }
             })
             .catch(error => {
-               context.commit('setExperiences', {})
+               context.commit('setExperience', {})
             })
             context.dispatch('checkAllMandatoryFields')
             context.commit('setLoader', false)
@@ -495,56 +521,56 @@ const store = createStore({
 
       // UPDATES
 
-         // Updates user skills data
-         async updateSkills(context) {
+         // Updates user skill data
+         async updateSkill(context) {
             context.commit('setLoader', true)
 
-            // On first(after account creation) attempt, add skills
-            if (this.state.update_before.skills == false) {
-               context.dispatch('addSkills')
+            // On first(after account creation) attempt, add skill
+            if (this.state.update_before.skill == false) {
+               context.dispatch('addSkill')
                return;
             }
 
-            const update_skills = await window.axios.put(`/api/skill/${this.state.authUser.id}`, this.state.skills)
+            const update_skill = await window.axios.put(`/api/skill/${this.state.authUser.id}`, this.state.skill)
             .then(response => {
                if (response.status == 200 && response.data.status == 'success') {
-                  context.commit('setFeedbackStyleSuccess', 'skills');
+                  context.commit('setFeedbackStyleSuccess', 'skill');
                   context.commit('setFeedbackMessage', {
-                     target: 'skills',
-                     message: 'Skills successful updated!'
+                     target: 'skill',
+                     message: 'Skill successful updated!'
                   })
-                  context.dispatch('fetchSkills')
+                  context.dispatch('fetchSkill')
                } else {
-                  context.commit('setFeedbackStyleError', 'skills');
+                  context.commit('setFeedbackStyleError', 'skill');
                   context.commit('setFeedbackMessage', {
-                     target: 'skills',
-                     message: 'Skills not successfully updated!'
+                     target: 'skill',
+                     message: 'Skill not successfully updated!'
                   })
                }
             })
             .catch(error => {
-               context.commit('setFeedbackStyleError', 'skills');
+               context.commit('setFeedbackStyleError', 'skill');
                context.commit('setFeedbackMessage', {
-                  target: 'skills',
+                  target: 'skill',
                   message: 'Skill update error!'
                });
             });
             context.commit('setLoader', false)
-            context.commit('resetFeedbackStyle', 'skills');
-            context.commit('resetFeedbackMessage', 'skills')
+            context.commit('resetFeedbackStyle', 'skill');
+            context.commit('resetFeedbackMessage', 'skill')
          },
 
          // Updates user contact data
-         async updateContacts(context) {
+         async updateContact(context) {
             context.commit('setLoader', true)
             
-            // On first(after account creation) attempt, add contacts
+            // On first(after account creation) attempt, add contact
             if (this.state.update_before.contact == false) {
-               context.dispatch('addContacts')
+               context.dispatch('addContact')
                return;
             }
 
-            const update_contacts = await window.axios.put(`/api/contact/${this.state.authUser.id}`, this.state.contact)
+            const update_contact = await window.axios.put(`/api/contact/${this.state.authUser.id}`, this.state.contact)
             .then(response => {
                if (response.status == 200 && response.data.status == 'success') {
                   context.commit('setFeedbackStyleSuccess', 'contact');
@@ -552,7 +578,7 @@ const store = createStore({
                      target: 'contact',
                      message: 'Contact successful updated!'
                   })
-                  context.dispatch('fetchContacts')
+                  context.dispatch('fetchContact')
                } else {
                   context.commit('setFeedbackStyleError', 'contact');
                   context.commit('setFeedbackMessage', {
@@ -700,42 +726,42 @@ const store = createStore({
          },
 
          // Updates user experience data
-         async updateExperiences(context) {
+         async updateExperience(context) {
             context.commit('setLoader', true)
 
-            // On first(after account creation) attempt, add experiences
-            if (this.state.update_before.experiences == false) {
-               context.dispatch('addExperiences')
+            // On first(after account creation) attempt, add experience
+            if (this.state.update_before.experience == false) {
+               context.dispatch('addExperience')
                return;
             }
 
-            const update_experiences = await window.axios.put(`/api/experience/${this.state.authUser.id}`, this.state.experiences)
+            const update_experience = await window.axios.put(`/api/experience/${this.state.authUser.id}`, this.state.experience)
             .then(response => {
                if (response.status == 200 && response.data.status == 'success') {
-                  context.commit('setFeedbackStyleSuccess', 'experiences');
+                  context.commit('setFeedbackStyleSuccess', 'experience');
                   context.commit('setFeedbackMessage', {
-                     target: 'experiences',
+                     target: 'experience',
                      message: 'Experience successful updated!'
                   })
-                  context.dispatch('fetchExperiences')
+                  context.dispatch('fetchExperience')
                } else {
-                  context.commit('setFeedbackStyleError', 'experiences');
+                  context.commit('setFeedbackStyleError', 'experience');
                   context.commit('setFeedbackMessage', {
-                     target: 'experiences',
+                     target: 'experience',
                      message: 'Experience not successfully updated!'
                   })
                }
             })
             .catch(error => {
-               context.commit('setFeedbackStyleError', 'experiences');
+               context.commit('setFeedbackStyleError', 'experience');
                context.commit('setFeedbackMessage', {
-                  target: 'experiences',
+                  target: 'experience',
                   message: 'Experience update error!'
                });
             });
             context.commit('setLoader', false)
-            context.commit('resetFeedbackStyle', 'experiences');
-            context.commit('resetFeedbackMessage', 'experiences')
+            context.commit('resetFeedbackStyle', 'experience');
+            context.commit('resetFeedbackMessage', 'experience')
          },
 
       // UPDATES ENDS
@@ -743,10 +769,10 @@ const store = createStore({
       // INSERTS
          
          // Adds contact data
-         async addContacts(context) {
+         async addContact(context) {
             context.commit('setLoader', true)
             this.state.contact.id = this.state.authUser.id;
-            const add_contacts = await window.axios.post('/api/contact', this.state.contact)
+            const add_contact = await window.axios.post('/api/contact', this.state.contact)
             .then(response => {
                if (response.status == 201 && response.data.status == 'success') {
                   context.commit('setFeedbackStyleSuccess', 'contact');
@@ -754,7 +780,7 @@ const store = createStore({
                      target: 'contact',
                      message: 'Contact successful saved!'
                   })
-                  context.dispatch('fetchContacts')
+                  context.dispatch('fetchContact')
                } else {
                   context.commit('setFeedbackStyleError', 'contact');
                   context.commit('setFeedbackMessage', {
@@ -775,39 +801,39 @@ const store = createStore({
             context.commit('resetFeedbackMessage', 'contact')
          },
 
-         // Adds skills data
-         async addSkills(context) {
+         // Adds skill data
+         async addSkill(context) {
             context.commit('setLoader', true)
 
-            this.state.skills.id = this.state.authUser.id;
+            this.state.skill.id = this.state.authUser.id;
 
-            const add_skills = await window.axios.post('/api/skill/', this.state.skills)
+            const add_skill = await window.axios.post('/api/skill/', this.state.skill)
             .then(response => {
                if (response.status == 201 && response.data.status == 'success') {
-                  context.commit('setFeedbackStyleSuccess', 'skills');
+                  context.commit('setFeedbackStyleSuccess', 'skill');
                   context.commit('setFeedbackMessage', {
-                     target: 'skills',
-                     message: 'Skills successful saved!'
+                     target: 'skill',
+                     message: 'Skill successful saved!'
                   })
-                  context.dispatch('fetchSkills')
+                  context.dispatch('fetchSkill')
                } else {
-                  context.commit('setFeedbackStyleError', 'skills');
+                  context.commit('setFeedbackStyleError', 'skill');
                   context.commit('setFeedbackMessage', {
-                     target: 'skills',
-                     message: 'Skills not successfully saved!'
+                     target: 'skill',
+                     message: 'Skill not successfully saved!'
                   })
                }
             })
             .catch(error => {
-               context.commit('setFeedbackStyleError', 'skills');
+               context.commit('setFeedbackStyleError', 'skill');
                context.commit('setFeedbackMessage', {
-                  target: 'skills',
-                  message: 'Skills upload error!'
+                  target: 'skill',
+                  message: 'Skill upload error!'
                });
             });
             context.commit('setLoader', false)
-            context.commit('resetFeedbackStyle', 'skills');
-            context.commit('resetFeedbackMessage', 'skills')
+            context.commit('resetFeedbackStyle', 'skill');
+            context.commit('resetFeedbackMessage', 'skill')
          },
 
          // Adds test records
@@ -830,39 +856,39 @@ const store = createStore({
             context.commit('setLoader', false)
          },
 
-         // Adds experience data
-         async addExperiences(context) {
+         // Adds experienc data
+         async addExperience(context) {
             context.commit('setLoader', true)
 
-            this.state.experiences.id = this.state.authUser.id;
+            this.state.experience.id = this.state.authUser.id;
 
-            const add_experiences = await window.axios.post('/api/experience/', this.state.experiences)
+            const add_experience = await window.axios.post('/api/experience/', this.state.experience)
             .then(response => {
                if (response.status == 201 && response.data.status == 'success') {
-                  context.commit('setFeedbackStyleSuccess', 'experiences');
+                  context.commit('setFeedbackStyleSuccess', 'experience');
                   context.commit('setFeedbackMessage', {
-                     target: 'experiences',
+                     target: 'experience',
                      message: 'Experience successful saved!'
                   })
-                  context.dispatch('fetchExperiences')
+                  context.dispatch('fetchExperience')
                } else {
-                  context.commit('setFeedbackStyleError', 'experiences');
+                  context.commit('setFeedbackStyleError', 'experience');
                   context.commit('setFeedbackMessage', {
-                     target: 'experiences',
+                     target: 'experience',
                      message: 'Experience not successfully saved!'
                   })
                }
             })
             .catch(error => {
-               context.commit('setFeedbackStyleError', 'experiences');
+               context.commit('setFeedbackStyleError', 'experience');
                context.commit('setFeedbackMessage', {
-                  target: 'experiences',
+                  target: 'experience',
                   message: 'Experience upload error!'
                });
             });
             context.commit('setLoader', false)
-            context.commit('resetFeedbackStyle', 'experiences');
-            context.commit('resetFeedbackMessage', 'experiences')
+            context.commit('resetFeedbackStyle', 'experience');
+            context.commit('resetFeedbackMessage', 'experience')
          },
 
       // INSERTS ENDS
@@ -899,30 +925,30 @@ const store = createStore({
             context.commit('setLoader', false)
          },
 
-         // Deletes skills data
-         async deleteSkills(context) {
+         // Deletes skill data
+         async deleteSkill(context) {
             context.commit('setLoader', true)
-            const delete_skills = await window.axios.delete(`/api/skill/${this.state.authUser.id}`)
+            const delete_skill = await window.axios.delete(`/api/skill/${this.state.authUser.id}`)
             .then(response => {
                if (response.data.status == 'success') {
-                  context.commit('setFeedbackStyleSuccess', 'skills');
+                  context.commit('setFeedbackStyleSuccess', 'skill');
                   context.commit('setFeedbackMessage', {
-                     target: 'skills',
+                     target: 'skill',
                      message: 'Skill successful deleted!'
                   })
-                  context.dispatch('fetchSkills')
+                  context.dispatch('fetchSkill')
                } else {
-                  context.commit('setFeedbackStyleError', 'skills');
+                  context.commit('setFeedbackStyleError', 'skill');
                   context.commit('setFeedbackMessage', {
-                     target: 'skills',
+                     target: 'skill',
                      message: 'Skill not successfully deleted!'
                   })
                }
             })
             .catch(error => {
-               context.commit('setFeedbackStyleError', 'skills');
+               context.commit('setFeedbackStyleError', 'skill');
                context.commit('setFeedbackMessage', {
-                  target: 'skills',
+                  target: 'skill',
                   message: 'Skill delete error!'
                });
             });
@@ -930,9 +956,9 @@ const store = createStore({
          },
 
          // Deletes contact data
-         async deleteContacts(context) {
+         async deleteContact(context) {
             context.commit('setLoader', true)
-            const delete_contacts = await window.axios.delete(`/api/contact/${this.state.authUser.id}`)
+            const delete_contact = await window.axios.delete(`/api/contact/${this.state.authUser.id}`)
             .then(response => {
                if (response.data.status == 'success') {
                   context.commit('setFeedbackStyleSuccess', 'contact');
@@ -940,7 +966,7 @@ const store = createStore({
                      target: 'contact',
                      message: 'Contact successful deleted!'
                   })
-                  context.dispatch('fetchContacts')
+                  context.dispatch('fetchContact')
                } else {
                   context.commit('setFeedbackStyleError', 'contact');
                   context.commit('setFeedbackMessage', {
@@ -989,30 +1015,30 @@ const store = createStore({
             context.commit('setLoader', false)
          },
 
-         // Deletes experience data
-         async deleteExperiences(context) {
+         // Deletes experienc data
+         async deleteExperience(context) {
             context.commit('setLoader', true)
-            const delete_experiences = await window.axios.delete(`/api/experience/${this.state.authUser.id}`)
+            const delete_experience = await window.axios.delete(`/api/experience/${this.state.authUser.id}`)
             .then(response => {
                if (response.data.status == 'success') {
-                  context.commit('setFeedbackStyleSuccess', 'experiences');
+                  context.commit('setFeedbackStyleSuccess', 'experience');
                   context.commit('setFeedbackMessage', {
-                     target: 'experiences',
+                     target: 'experience',
                      message: 'Experience successful deleted!'
                   })
-                  context.dispatch('fetchExperiences')
+                  context.dispatch('fetchExperience')
                } else {
-                  context.commit('setFeedbackStyleError', 'experiences');
+                  context.commit('setFeedbackStyleError', 'experience');
                   context.commit('setFeedbackMessage', {
-                     target: 'experiences',
+                     target: 'experience',
                      message: 'Experience not successfully deleted!'
                   })
                }
             })
             .catch(error => {
-               context.commit('setFeedbackStyleError', 'experiences');
+               context.commit('setFeedbackStyleError', 'experience');
                context.commit('setFeedbackMessage', {
-                  target: 'experiences',
+                  target: 'experience',
                   message: 'Experience delete error!'
                });
             });
@@ -1100,25 +1126,14 @@ const store = createStore({
 
          // Displays data update modal      
          showUpdater(context, selected) {
-            const updaters = document.querySelectorAll('#updates .update');
-            updaters.forEach(updater => {
-               if (updater.classList.contains(selected)) {
-                  updater.style.display = 'block'            
-               } else {
-                  updater.style.display = 'none'
-               }
-            })
+            context.commit('setUpdater', {target: selected, status: true})
+            context.commit('setOverlay', true)
          },
 
          // Displays confirmation modal      
          showModal(context) {
-            
-            const modal = document.querySelector('#modal');
-            if (modal.style.display == 'none' || modal.style.display == '') {
-               modal.style.display = 'block'            
-            } else {
-               modal.style.display = 'none'
-            }
+            context.commit('setModal', true)
+            context.commit('setOverlay', true)
          },
 
       // DISPLAYS ENDS
@@ -1127,20 +1142,17 @@ const store = createStore({
          
          // Removes data updater modal
          closeUpdaters(context) {
-            const updaters = document.querySelectorAll('#updates .update');
-            updaters.forEach(updater => {
-               updater.style.display = 'none'
-               context.commit('setLoader', false)
-            })
+            context.commit('setUpdater', {status: false})
+            context.commit('setLoader', false)
+            context.commit('setOverlay', false)
          },
 
          // Removes confirmation modal
          closeModal(context) {
-            const modal = document.querySelector('#modal');
-            modal.style.display = 'none'
+            context.commit('setModal', false)
             context.commit('setLoader', false)
-
             this.state.confirmation_modal.can_close = false
+            context.commit('setOverlay', false)
          },
 
       // REMOVERS ENDS
@@ -1267,14 +1279,15 @@ const store = createStore({
             // Targetted selector label
             const selected_field_label = event_target.previousElementSibling;
 
-            // If targetted button is really among marked selectors
+            // If targetted input field is really among marked selectors
             if ( (event_target.nodeName.toLowerCase() == 'input' && event_target.type == 'text')
                || (event_target.nodeName.toLowerCase() == 'input' && event_target.type == 'email')
                || (event_target.nodeName.toLowerCase() == 'input' && event_target.type == 'password')
                || (event_target.nodeName.toLowerCase() == 'select')
                || event_target.nodeName.toLowerCase() == 'textarea') {
 
-               selected_field_label.style.top = '-1.5em'
+               selected_field_label.classList.remove('top-3')
+               selected_field_label.classList.add('-top-5')
 
             }
 
@@ -1296,9 +1309,11 @@ const store = createStore({
                || event_target.nodeName.toLowerCase() == 'textarea') {
             
                if (event_target.value !== '') {
-                  selected_field_label.style.top = '-1.5em'
+                  selected_field_label.classList.remove('top-3')
+                  selected_field_label.classList.add('-top-5')
                } else {
-                  selected_field_label.style.top = '0em'
+                  selected_field_label.classList.remove('-top-5')
+                  selected_field_label.classList.add('top-3')
                }
 
             }
@@ -1312,7 +1327,8 @@ const store = createStore({
             
             inputs.forEach(input => {
                if (input.value !== '') {
-                  input.previousElementSibling.style.top = '-1.5em'
+                  input.previousElementSibling.classList.remove('top-3')
+                  input.previousElementSibling.classList.add('-top-5')
                }
             })
 

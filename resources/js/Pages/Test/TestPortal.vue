@@ -9,87 +9,87 @@
 
                     <div class="relative overflow-y-auto h-full">
                     
-                        <h1 class="sticky -top-4 bg-white flex justify-between items-center mb-6 px-8 py-4 text-pink-800 text-xl font-bold">
+                        <h1 class="sticky -top-4 bg-white flex justify-between items-center mb-6 px-8 md:px-4 xl:px-8 py-4 text-pink-800 font-bold">
                             <i class="fa fa-spinner text-blue-600"></i>
                             Overview
                         </h1>
 
                         <inertia-link href="/">
-                            <div class="bg-gradient-to-r hover:border-blue-400 border-transparent border-l-4 hover:from-blue-100 hover:to-transparent hover:text-blue-600 text-gray-600 py-4 pl-16 pr-4 flex items-center text-xl transition-all duration-700">
+                            <div class="bg-gradient-to-r hover:border-blue-400 border-transparent border-l-4 hover:from-blue-100 hover:to-transparent hover:text-blue-600 text-gray-600 py-4 pl-4 xl:pl-16 pr-4 flex items-center transition-all duration-700">
                                 <span class="flex justify-center items-center mr-8 w-8 h-8 rounded-full shadow">
                                     <i class="fa fa-globe"></i>
                                 </span>
-                                <span class="text-xl">
+                                <span class="">
                                     Home
                                 </span>
                             </div>
                         </inertia-link>
 
                         <inertia-link href="/profile">
-                            <div class="bg-gradient-to-r hover:border-blue-400 border-transparent border-l-4 hover:from-blue-100 hover:to-transparent hover:text-blue-600 text-gray-600 py-4 pl-16 pr-4 flex items-center text-xl transition-all duration-700">
+                            <div class="bg-gradient-to-r hover:border-blue-400 border-transparent border-l-4 hover:from-blue-100 hover:to-transparent hover:text-blue-600 text-gray-600 py-4 pl-4 xl:pl-16 pr-4 flex items-center transition-all duration-700">
                                 <span class="flex justify-center items-center mr-8 w-8 h-8 rounded-full shadow">
                                     <i class="fa fa-user"></i>
                                 </span>
-                                <span class="text-xl">
+                                <span class="">
                                     Profile
                                 </span>
                             </div>
                         </inertia-link>
 
-                        <a href="#" @click.prevent="logoutUser" class="bg-gradient-to-r hover:border-red-400 border-transparent border-l-4 hover:from-red-100 hover:to-transparent hover:text-red-600 text-gray-600 py-4 pl-16 pr-4 flex items-center text-xl transition-all duration-700">
+                        <a href="#" @click.prevent="logoutUser" class="bg-gradient-to-r hover:border-red-400 border-transparent border-l-4 hover:from-red-100 hover:to-transparent hover:text-red-600 text-gray-600 py-4 pl-4 xl:pl-16 pr-4 flex items-center transition-all duration-700">
                             <span class="flex justify-center items-center mr-8 w-8 h-8 rounded-full shadow">
                                 <i class="fa fa-power-off"></i>
                             </span>
-                            <span class="text-xl">
+                            <span class="">
                                 Logout
                             </span>
                         </a>
                         
                         <!-- Checks if mandatory information have been updated -->
-                        <h1 class="sticky -top-4 bg-white flex justify-between items-center mb-6 mt-6 px-8 py-4 text-pink-800 text-xl font-bold">
+                        <h1 class="sticky -top-4 bg-white flex justify-between items-center mb-6 mt-6 px-8 md:px-4 xl:px-8 py-4 text-pink-800 font-bold">
                             <i class="far fa-bell text-red-600"></i>
-                            Test Score Legend
+                            Test Legend
                         </h1>
 
                         <div class="">
 
-                            <div class="bg-gradient-to-r hover:from-blue-100 hover:to-transparent hover:text-blue-600 text-gray-600 py-4 pl-16 pr-4 flex items-center">
+                            <div class="bg-gradient-to-r hover:from-blue-100 hover:to-transparent hover:text-blue-600 text-gray-600 py-4 pl-4 xl:pl-16 pr-4 flex items-center">
                                 <span class="flex justify-center items-center mr-8 w-8 h-8 rounded-full shadow">
                                     <i class="fa w-4 h-4 rounded-full bg-red-500"></i>
                                 </span>
-                                <span class="text-xl">
+                                <span class="">
                                     Fail
                                 </span>
                             </div>
 
-                            <div class="bg-gradient-to-r hover:from-blue-100 hover:to-transparent hover:text-blue-600 text-gray-600 py-4 pl-16 pr-4 flex items-center">
+                            <div class="bg-gradient-to-r hover:from-blue-100 hover:to-transparent hover:text-blue-600 text-gray-600 py-4 pl-4 xl:pl-16 pr-4 flex items-center">
                                 <span class="flex justify-center items-center mr-8 w-8 h-8 rounded-full shadow">
                                     <i class="fa w-4 h-4 rounded-full bg-yellow-500"></i>
                                 </span>
-                                <span class="text-xl">
+                                <span class="">
                                     Pass
                                 </span>
                             </div>
 
-                            <div class="bg-gradient-to-r hover:from-blue-100 hover:to-transparent hover:text-blue-600 text-gray-600 py-4 pl-16 pr-4 flex items-center">
+                            <div class="bg-gradient-to-r hover:from-blue-100 hover:to-transparent hover:text-blue-600 text-gray-600 py-4 pl-4 xl:pl-16 pr-4 flex items-center">
                                 <span class="flex justify-center items-center mr-8 w-8 h-8 rounded-full shadow">
                                     <i class="fa w-4 h-4 rounded-full bg-green-500"></i>
                                 </span>
-                                <span class="text-xl">
+                                <span class="">
                                     Good
                                 </span>
                             </div>
 
-                            <div class="bg-gradient-to-r hover:from-blue-100 hover:to-transparent hover:text-blue-600 text-gray-600 py-4 pl-16 pr-4 flex items-center">
+                            <div class="bg-gradient-to-r hover:from-blue-100 hover:to-transparent hover:text-blue-600 text-gray-600 py-4 pl-4 xl:pl-16 pr-4 flex items-center">
                                 <span class="flex justify-center items-center mr-8 w-8 h-8 rounded-full shadow">
                                     <i class="fa w-4 h-4 rounded-full bg-blue-500"></i>
                                 </span>
-                                <span class="text-xl">
+                                <span class="">
                                     Excellent
                                 </span>
                             </div>
                             
-                            <div class="p-8 text-blue-600">
+                            <div class="px-8 py-2 text-blue-600">
                                 Where do you belong?
                             </div>
 
@@ -110,7 +110,7 @@
                     <i :class="rightTogglerIcon" class="fa text-xl text-white transform scale-y-75"></i>
                 </div>
 
-                <div class="relative pb-16 h-full">
+                <div class="relative h-full pb-16">
 
                     <div class="relative invisible-scrollbar overflow-y-auto h-full">
                         
@@ -118,7 +118,7 @@
 
                             <div class="flex items-center justify-between py-4 px-8 bg-white shadow">
                                 
-                                <h1 class="text-xl font-bold uppercase text-blue-600">
+                                <h1 class="text-xl font-bold text-blue-600">
                                     Career Strive Test Portal
                                 </h1>
 
@@ -132,15 +132,15 @@
 
                                 <div class="relative flex justify-between w-full px-8 py-4 lg:py-4">
                                     
-                                    <div class="text-lg">
+                                    <div class="">
                                         Score <span class="ml-4 text-gray-600"> {{ test.score }}% </span>
                                     </div>
 
-                                    <div class="text-lg">
+                                    <div class="">
                                         Remaining <span class="ml-4 text-gray-600">{{ testAccessories.timer }}</span>
                                     </div>
 
-                                    <div class="text-lg">
+                                    <div class="">
                                         Status message: <span class="ml-4 text-gray-600">{{ testAccessories.timer_alert_message}}</span>
                                     </div>
 
@@ -153,11 +153,11 @@
 
                         <div v-if="testAccessories.questions" class="relative">
 
-                            <div class="relative lg:grid grid-flow-row grid-cols-2 grid-rows-auto gap-4 w-full h-auto px-1 py-4 my-2 mx-auto">
+                            <div class="relative grid grid-flow-row md:grid-cols-2 grid-rows-auto gap-4 w-full h-auto px-1 py-4 my-2 mx-auto">
                                 
                                 <div v-for="question in testAccessories.questions" :key="question.id" class="grid grid-flow-rows grid-cols-1 grid-rows-auto items-stretch gap-4 lg:mt-0 mt-8 overflow-hidden relative rounded-xl shadow bg-white">
                                     
-                                    <div class="p-4 text-lg">
+                                    <div class="p-4">
                                         
                                         Question: <span class="ml-4 text-gray-600">{{ question.question }}</span>
                                         <div class="mt-4">
@@ -206,18 +206,18 @@
 
                             <div class="relative">
                                     
-                                <h1 class="sticky z-10 text-xl text-blue-600 -top-2 px-8 py-4 bg-white border-b border-gray-100 border-1">
+                                <h1 class="sticky z-10 text-blue-600 -top-2 px-8 md:px-1 xl:px-8 py-4 bg-white border-b border-gray-100 border-1">
                                     <i class="fa fa-spinner text-blue-600 mr-4"></i>
-                                    Test Statistics
+                                    Test Statistic
                                 </h1>
 
-                                <div class="relative my-4 mx-4 py-2 px-4">
+                                <div class="relative my-4 mx-4 md:mx-0 xl:mx-4 py-2 px-4 md:px-0 xl:px-4">
                                     
                                     <h2 class="py-2 px-4 text-gray-700">
                                         Computer Hardware/software
                                     </h2>
 
-                                    <ul class="py-2 px-4 text-gray-500">
+                                    <ul class="py-2 px-4 md:px-0 xl:px-4 text-gray-500">
                                         <li class="py-2 px-4">Computer operator</li>
                                         <li class="py-2 px-4">Systems design architect</li>
                                         <li class="py-2 px-4">Hardware service manager</li>
@@ -232,14 +232,18 @@
 
                             <div class="relative">
                                     
-                                <h1 class="sticky z-10 text-xl text-blue-600 -top-2 px-8 py-4 bg-white border-b border-gray-100 border-1">
+                                <h1 class="sticky z-10 text-blue-600 -top-2 px-8 md:px-1 xl:px-8 py-4 bg-white border-b border-gray-100 border-1">
                                     <i class="fa fa-spinner text-blue-600 mr-4"></i>
                                     Progress Information
                                 </h1>
 
-                                <div class="relative my-4 mx-4 py-2 px-4">
+                                <div class="relative my-4 mx-4 md:mx-0 xl:mx-4 py-2 px-4 md:px-0 xl:px-4">
                                     
-                                    <span class="text-red"> {{ `${testAccessories.answered_questions} / ${testAccessories.total_questions}` }} answered</span>
+                                    <div class="py-2 px-4 text-gray-500">
+                                        <span class="text-red">
+                                            {{ `${testAccessories.answered_questions} / ${testAccessories.total_questions}` }} answered
+                                        </span>
+                                    </div>
 
                                 </div>
 

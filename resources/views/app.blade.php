@@ -3,8 +3,8 @@
     <head>
     <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
-        <meta name="theme-color" content="" />
-        <meta name="msapplication-TileColor" content="#ffffff" />
+        <meta name="theme-color" content="rgba(157, 23, 77, 1)" />
+        <meta name="msapplication-TileColor" content="rgba(157, 23, 77, 1)" />
         <meta name="msapplication-TileImage" content="images/favicon/ms-icon-144x144.png" />
         
         <meta http-equiv="content-type" content="text/html; charset=UTF-8" />
@@ -19,24 +19,21 @@
 
         <title>{{ config('app.name', 'Laravel') }}</title>
 
-        <!-- Fonts -->
-        <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@400;600;700&display=swap">
-
         <!-- Styles -->
-        <!-- <link rel="stylesheet" type="text/css" href="/css/app.css"/> -->
-        <link rel="stylesheet" type="text/css" href="/css/animate.css"/>
+        <link rel="stylesheet" type="text/css" href="/css/fonts.css"/>
         <link rel="stylesheet" type="text/css" href="/css/icons.css"/>
-        <link rel="stylesheet" href="{{ mix('css/app.css') }}">
+        <link rel="stylesheet" type="text/css" href="/css/app.css" />
 
         <!-- Scripts -->
         @routes
         <!-- <script src="{{ mix('js/app.js') }}" defer></script> -->
     </head>
-    <body class="font-sans antialiased">
+    <body class="antialiased">
         @inertia
     </body>
 
     <script src="js/app.js" defer></script>
+
     @if (Auth::check())
     <script> window.AuthUser = {!! json_encode(Auth::user()); !!}; </script>
     @else

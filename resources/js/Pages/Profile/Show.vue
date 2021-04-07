@@ -1,13 +1,8 @@
 <template>
     <div class="bg-gray-100 bg-contain">
 
-        <!-- Update Field -->
-        <div id="updates" style="z-index:9999" class="fixed z-50 left-2/4 top-16 transform -translate-x-2/4 w-4/5 lg:w-4/12 bg-white rounded-lg overflow-hidden shadow-2xl">
-            <personal-update class="update personal hidden" />
-            <contact-update class="update contact hidden" />
-            <skills-update class="update skills hidden" />
-            <experience-update class="update experience hidden" />
-        </div>
+        <!-- Update fields -->
+        <Updater />
 
         <div class="relative overflow-x-hidden lg:overflow-hidden lg:grid grid-flow-col grid-cols-5 gap-0 w-screen lg:h-screen h-auto">
 
@@ -17,37 +12,37 @@
 
                     <div class="relative overflow-y-auto h-full">
                     
-                        <h1 class="sticky -top-4 bg-white flex justify-between items-center mb-6 px-8 py-4 text-pink-800 text-xl font-bold">
+                        <h1 class="sticky -top-4 bg-white flex justify-between items-center mb-6 px-8 md:px-4 xl:px-8 py-4 text-pink-800 font-bold">
                             <i class="fa fa-spinner text-blue-600"></i>
                             Overview
                         </h1>
 
                         <inertia-link href="/">
-                            <div class="bg-gradient-to-r hover:border-blue-400 border-transparent border-l-4 hover:from-blue-100 hover:to-transparent hover:text-blue-600 text-gray-600 py-4 pl-16 pr-4 flex items-center text-xl transition-all duration-700">
+                            <div class="bg-gradient-to-r hover:border-blue-400 border-transparent border-l-4 hover:from-blue-100 hover:to-transparent hover:text-blue-600 text-gray-600 py-4 pl-4 xl:pl-16 pr-4 flex items-center transition-all duration-700">
                                 <span class="flex justify-center items-center mr-8 w-8 h-8 rounded-full shadow">
                                     <i class="fa fa-globe"></i>
                                 </span>
-                                <span class="text-xl">
+                                <span class="">
                                     Home
                                 </span>
                             </div>
                         </inertia-link>
 
-                        <button @click="checkTestEligibilityStatus" class="w-full bg-gradient-to-r hover:border-blue-400 border-transparent border-l-4 hover:from-blue-100 hover:to-transparent hover:text-blue-600 text-gray-600 py-4 pl-16 pr-4 flex items-center text-xl transition-all duration-700">
+                        <button @click="checkTestEligibilityStatus" class="w-full bg-gradient-to-r hover:border-blue-400 border-transparent border-l-4 hover:from-blue-100 hover:to-transparent hover:text-blue-600 text-gray-600 py-4 pl-4 xl:pl-16 pr-4 flex items-center transition-all duration-700">
                             <span class="flex justify-center items-center mr-8 w-8 h-8 rounded-full shadow">
                                 <i class="fa fa-chart-bar"></i>
                             </span>
-                            <span class="text-xl">
+                            <span class="">
                                 Take Test
                             </span>
                         </button>
 
                         <inertia-link v-if="Object.keys(test).length" href="/all-tests">
-                            <div class="bg-gradient-to-r hover:border-blue-400 border-transparent border-l-4 hover:from-blue-100 hover:to-transparent hover:text-blue-600 text-gray-600 py-4 pl-16 pr-4 flex items-center text-xl transition-all duration-700">
+                            <div class="bg-gradient-to-r hover:border-blue-400 border-transparent border-l-4 hover:from-blue-100 hover:to-transparent hover:text-blue-600 text-gray-600 py-4 pl-4 xl:pl-16 pr-4 flex items-center transition-all duration-700">
                                 <span class="flex justify-center items-center mr-8 w-8 h-8 rounded-full shadow">
                                     <i class="fa fa-bezier-curve"></i>
                                 </span>
-                                <span class="text-xl">
+                                <span class="">
                                     All Tests
                                 </span>
                             </div>
@@ -55,35 +50,35 @@
 
                         <!-- <?php echo $testStatus_indicator; ?> -->
                         
-                        <a href="#" @click.prevent="logoutUser" class="bg-gradient-to-r hover:border-red-400 border-transparent border-l-4 hover:from-red-100 hover:to-transparent hover:text-red-600 text-gray-600 py-4 pl-16 pr-4 flex items-center text-xl transition-all duration-700">
+                        <a href="#" @click.prevent="logoutUser" class="bg-gradient-to-r hover:border-red-400 border-transparent border-l-4 hover:from-red-100 hover:to-transparent hover:text-red-600 text-gray-600 py-4 pl-4 xl:pl-16 pr-4 flex items-center transition-all duration-700">
                             <span class="flex justify-center items-center mr-8 w-8 h-8 rounded-full shadow">
                                 <i class="fa fa-power-off"></i>
                             </span>
-                            <span class="text-xl">
+                            <span class="">
                                 Logout
                             </span>
                         </a>
                         
                         <!-- Checks if mandatory information have been updated -->
-                        <h1 class="sticky -top-4 bg-white flex justify-between items-center mb-6 px-8 py-4 text-pink-800 text-xl font-bold">
+                        <h1 class="sticky -top-4 bg-white flex justify-between items-center mb-6 px-8 py-4 text-pink-800 font-bold">
                             <i class="far fa-bell text-red-600"></i>
                             Notice
                         </h1>
 
                         <div v-for="(value, key) in update_status" :key="key" class="">
-                            <div v-if="value" class="bg-gradient-to-r hover:from-blue-100 hover:to-transparent hover:text-blue-600 text-gray-600 py-4 pl-16 pr-4 flex items-center">
+                            <div v-if="value" class="bg-gradient-to-r hover:from-blue-100 hover:to-transparent hover:text-blue-600 text-gray-600 py-4 pl-4 xl:pl-16 pr-4 flex items-center">
                                 <span class="flex justify-center items-center mr-8 w-8 h-8 rounded-full shadow">
                                     <i class="fa fa-check text-green-400"></i>
                                 </span>
-                                <span class="text-xl">
+                                <span class="">
                                     {{ getProperFormat(key) }}
                                 </span>
                             </div>
-                            <div v-else class="bg-gradient-to-r hover:from-blue-100 hover:to-transparent hover:text-blue-600 text-gray-600 py-4 pl-16 pr-4 flex items-center">
+                            <div v-else class="bg-gradient-to-r hover:from-blue-100 hover:to-transparent hover:text-blue-600 text-gray-600 py-4 pl-4 xl:pl-16 pr-4 flex items-center">
                                 <span class="flex justify-center items-center mr-8 w-8 h-8 rounded-full shadow">
                                     <i class="fa fa-times text-red-400"></i>
                                 </span>
-                                <span class="text">
+                                <span class="">
                                     Update <span class="text-pink-800"> {{ key }} </span> information.
                                 </span>                                
                             </div>
@@ -104,7 +99,7 @@
                     <i :class="rightTogglerIcon" class="fa text-xl text-white transform scale-y-75"></i>
                 </div>
 
-                <div class="relative h-full">
+                <div class="relative h-full pb-10 lg:pb-0">
 
                     <div class="relative invisible-scrollbar overflow-y-auto overflow-x-hidden h-full">
                         
@@ -112,7 +107,7 @@
 
                             <div class="flex items-center justify-between py-4 px-8 bg-white shadow">
                                 
-                                <h1 class="text-xl font-bold uppercase text-blue-600">
+                                <h1 class="text-xl font-bold text-blue-600">
                                     {{ output.personal.name }}
                                 </h1>
 
@@ -188,14 +183,14 @@
 
                         <div class="relative">
 
-                            <div class="relative lg:grid grid-flow-row grid-cols-2 grid-rows-2 gap-4 w-full h-auto px-1 py-4 my-2 mx-auto">
+                            <div class="relative grid grid-flow-row md:grid-cols-2 grid-rows-2 gap-4 w-full h-auto px-1 py-4 my-2 mx-auto">
                                 
                                 <div class="grid grid-flow-rows grid-cols-1 grid-rows-6 items-stretch gap-4 lg:mt-0 mt-8 overflow-hidden relative rounded-xl shadow bg-white">
                                     <h1 class="row-span-1 uppercase flex justify-between items-center py-3 px-8">
                                         <span class="flex justify-center items-center mr-8 w-8 h-8 rounded-full shadow">
                                             <i class="fa fa-user text-yellow-500"></i>
                                         </span>
-                                        <span class="text-blue-700 text-xl">
+                                        <span class="text-blue-700">
                                             Personal Details
                                         </span>
                                     </h1>
@@ -203,7 +198,7 @@
                                     <div class="row-span-4">
                                         <div v-for="(value, key) in output.personal" :key="key" class="px-6 pt-4">
                                             <div v-if="value">
-                                                <div class="text-xl text-gray-600">
+                                                <div class="text-gray-600">
                                                     {{ getProperFormat(value) }}
                                                 </div>
                                                 <div class="text-lg text-black">
@@ -238,7 +233,7 @@
                                         <span class="flex justify-center items-center mr-8 w-8 h-8 rounded-full shadow">
                                             <i class="fa fa-envelope text-blue-600"></i>
                                         </span>
-                                        <span class="text-blue-700 text-xl">
+                                        <span class="text-blue-700">
                                             Contact Details
                                         </span>
                                     </h1>
@@ -246,7 +241,7 @@
                                     <div class="row-span-4">
                                         <div v-for="(value, key) in output.contact" :key="key" class="px-6 pt-4">
                                             <div v-if="value">
-                                                <div class="text-xl text-gray-600">
+                                                <div class="text-gray-600">
                                                     {{ getProperFormat(value) }}
                                                 </div>
                                                 <div class="text-lg text-black">
@@ -281,15 +276,15 @@
                                         <span class="flex justify-center items-center mr-8 w-8 h-8 rounded-full shadow">
                                             <i class="fa fa-briefcase text-red-600"></i>
                                         </span>
-                                        <span class="text-blue-700 text-xl">
+                                        <span class="text-blue-700">
                                             Work Experience & Qualifications
                                         </span>
                                     </h1>
 
                                     <div class="row-span-4">                                    
-                                        <div v-for="(value, key) in output.experiences" :key="key" class="px-6 pt-4">
+                                        <div v-for="(value, key) in output.experience" :key="key" class="px-6 pt-4">
                                             <div v-if="value">
-                                                <div class="text-xl text-gray-600">
+                                                <div class="text-gray-600">
                                                     {{ getProperFormat(value) }}
                                                 </div>
                                                 <div class="text-lg text-black">
@@ -297,7 +292,7 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div v-if="!update_before.experiences" class="flex justify-center items-center">
+                                        <div v-if="!update_before.experience" class="flex justify-center items-center">
                                             Update Your Experience Details
                                         </div>
                                     </div>
@@ -307,7 +302,7 @@
                                             Edit
                                         </button>
                                         <div class="flex justify-between overflow-y-hidden overflow-x-auto text-sm">
-                                            <div v-for="(value, key) in experiences" :key="key + 'e-check'" class="mr-4">
+                                            <div v-for="(value, key) in experience" :key="key + 'e-check'" class="mr-4">
                                                 <div v-if="!value">
                                                     <span class="text-gray-600 py-4">
                                                         {{ keyToProperFormat(key) }}
@@ -324,15 +319,15 @@
                                         <span class="flex justify-center items-center mr-8 w-8 h-8 rounded-full shadow">
                                             <i class="fa fa-brain text-green-600"></i>
                                         </span>
-                                        <span class="text-blue-700 text-xl">
+                                        <span class="text-blue-700">
                                             Skills Level
                                         </span>
                                     </h1>
                                 
                                     <div class="row-span-4">
-                                        <div v-for="(value, key) in output.skills" :key="key" class="px-6 pt-4">
+                                        <div v-for="(value, key) in output.skill" :key="key" class="px-6 pt-4">
                                             <div v-if="value">
-                                                <div class="text-xl text-gray-600">
+                                                <div class="text-gray-600">
                                                     {{ getProperFormat(value) }}
                                                 </div>
                                                 <div class="text-lg text-black">
@@ -340,17 +335,17 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div v-if="!update_before.skills" class="flex justify-center items-center">
+                                        <div v-if="!update_before.skill" class="flex justify-center items-center">
                                             Update Your Skills Details
                                         </div>
                                     </div>
 
                                     <div class="row-span-1 uppercase w-full flex items-center justify-between border-t-2 border-gray-100 text-xl text-green-600 px-6 py-4">
-                                        <button @click="showUpdater('skills')" class="uppercase mr-4">
+                                        <button @click="showUpdater('skill')" class="uppercase mr-4">
                                             Edit
                                         </button>
                                         <div class="flex justify-between overflow-y-hidden overflow-x-auto text-sm">
-                                            <div v-for="(value, key) in skills" :key="key + 's-check'" class="mr-4">
+                                            <div v-for="(value, key) in skill" :key="key + 's-check'" class="mr-4">
                                                 <div v-if="!value">
                                                     <span class="text-gray-600 py-4">
                                                         {{ keyToProperFormat(key) }}
@@ -382,18 +377,18 @@
 
                             <div class="relative">
                                     
-                                <h1 class="sticky z-10 text-xl text-blue-600 -top-2 px-8 py-4 bg-white border-b border-gray-100 border-1">
+                                <h1 class="sticky z-10 text-blue-600 -top-2 px-8 md:px-1 xl:px-8 py-4 bg-white border-b border-gray-100 border-1">
                                     <i class="fa fa-spinner text-blue-600 mr-4"></i>
                                     Job Opening
                                 </h1>
 
-                                <div class="relative my-4 mx-4 py-2 px-4">
+                                <div class="relative my-4 mx-4 md:mx-0 xl:mx-4 py-2 px-4 md:px-0 xl:px-4">
                                     
                                     <h2 class="py-2 px-4 text-gray-700">
                                         Computer Hardware/software
                                     </h2>
 
-                                    <ul class="py-2 px-4 text-gray-500">
+                                    <ul class="py-2 px-4 md:px-0 xl:px-4 text-gray-500">
                                         <li class="py-2 px-4">Computer operator</li>
                                         <li class="py-2 px-4">Systems design architect</li>
                                         <li class="py-2 px-4">Hardware service manager</li>
@@ -408,18 +403,18 @@
 
                             <div class="relative">
 
-                                <h1 class="sticky z-10 text-xl text-blue-600 -top-2 px-8 py-4 bg-white border-b border-gray-100 border-1">
+                                <h1 class="sticky z-10 text-blue-600 -top-2 px-8 md:px-1 xl:px-8 py-4 bg-white border-b border-gray-100 border-1">
                                     <i class="fa fa-clock text-blue-600 mr-4"></i>
                                     Info Section
                                 </h1>
 
-                                <div class="relative my-4 mx-4 py-2 px-4">
+                                <div class="relative my-4 mx-4 md:mx-0 xl:mx-4 py-2 px-4 md:px-0 xl:px-4">
                                     
                                     <h2 class="py-2 px-4 text-gray-700">
                                         Public Administration
                                     </h2>
 
-                                    <ul class="py-2 px-4 text-gray-500">
+                                    <ul class="py-2 px-4 md:px-0 xl:px-4 text-gray-500">
                                         <li class="py-2 px-4">Public adminstrator</li>
                                         <li class="py-2 px-4">Financial secretary</li>
                                         <li class="py-2 px-4">Front desk operator</li>
@@ -427,13 +422,13 @@
 
                                 </div>
 
-                                <div class="relative my-4 mx-4 py-2 px-4">
+                                <div class="relative my-4 mx-4 md:mx-0 xl:mx-4 py-2 px-4 md:px-0 xl:px-4">
                                     
                                     <h2 class="py-2 px-4 text-gray-700">
                                         Sales and marketing
                                     </h2>
 
-                                    <ul class="py-2 px-4 text-gray-500">
+                                    <ul class="py-2 px-4 md:px-0 xl:px-4 text-gray-500">
                                         <li class="py-2 px-4">Senior sales manager</li>
                                         <li class="py-2 px-4">Marketing manager</li>
                                     </ul>
@@ -444,30 +439,30 @@
 
                             <div class="relative">
 
-                                <h1 class="sticky z-10 text-xl text-blue-600 -top-2 px-8 py-4 bg-white border-b border-gray-100 border-1">
+                                <h1 class="sticky z-10 text-blue-600 -top-2 px-8 md:px-1 xl:px-8 py-4 bg-white border-b border-gray-100 border-1">
                                     <i class="fa fa-car text-blue-600 mr-4"></i>
                                     Travels
                                 </h1>
 
-                                <div class="relative my-4 mx-4 py-2 px-4">
+                                <div class="relative my-4 mx-4 md:mx-0 xl:mx-4 py-2 px-4 md:px-0 xl:px-4">
                                     
                                     <h2 class="py-2 px-4 text-gray-700">
                                         Human resource
                                     </h2>
 
-                                    <ul class="py-2 px-4 text-gray-500">
+                                    <ul class="py-2 px-4 md:px-0 xl:px-4 text-gray-500">
                                         <li class="py-2 px-4">Human resource personnel</li>
                                     </ul>
 
                                 </div>
 
-                                <div class="relative my-4 mx-4 py-2 px-4">
+                                <div class="relative my-4 mx-4 md:mx-0 xl:mx-4 py-2 px-4 md:px-0 xl:px-4">
                                     
                                     <h2 class="py-2 px-4 text-gray-700">
                                         Industrial safety
                                     </h2>
 
-                                    <ul class="py-2 px-4 text-gray-500">
+                                    <ul class="py-2 px-4 md:px-0 xl:px-4 text-gray-500">
                                         <li class="py-2 px-4">Fire systems operator</li>
                                         <li class="py-2 px-4">Safety personnel</li>
                                         <li class="py-2 px-4">Field director/supervisor</li>
@@ -479,18 +474,18 @@
 
                             <div class="relative">
 
-                                <h1 class="sticky z-10 text-xl text-blue-600 -top-2 px-8 py-4 bg-white border-b border-gray-100 border-1">
+                                <h1 class="sticky z-10 text-blue-600 -top-2 px-8 md:px-1 xl:px-8 py-4 bg-white border-b border-gray-100 border-1">
                                     <i class="fa fa-wine-glass text-blue-600 mr-4"></i>
                                     Restaurants
                                 </h1>
 
-                                <div class="relative my-4 mx-4 py-2 px-4">
+                                <div class="relative my-4 mx-4 md:mx-0 xl:mx-4 py-2 px-4 md:px-0 xl:px-4">
                                     
                                     <h2 class="py-2 px-4 text-gray-700">
                                         Others
                                     </h2>
 
-                                    <ul class="py-2 px-4 text-gray-500">
+                                    <ul class="py-2 px-4 md:px-0 xl:px-4 text-gray-500">
                                         <li class="py-2 px-4">Technical partner</li>
                                     </ul>
 
@@ -513,10 +508,7 @@
 <script>
 
     import { mapState, mapGetters, mapActions } from 'vuex'
-    import PersonalUpdate from '../Profile/PersonalUpdate.vue'
-    import SkillsUpdate from '../Profile/SkillsUpdate.vue'
-    import ContactUpdate from '../Profile/ContactUpdate.vue'
-    import ExperienceUpdate from '../Profile/ExperienceUpdate.vue'
+    import Updater from '../../Components/Profile/Updater.vue'
 
   export default {
 
@@ -527,7 +519,7 @@
             testsScores: null,
             score_counts: null,
             lToggler: false,
-            rToggler: false
+            rToggler: false,
         }
     },
 
@@ -535,9 +527,9 @@
         ...mapState([
             'test',
             'output',
-            'skills',
+            'skill',
             'personal',
-            'experiences',
+            'experience',
             'contact',
             'update_status',
             'update_before'
@@ -560,10 +552,10 @@
         ...mapActions([
             'logoutUser',
             'fetchTests',
-            'fetchSkills',
-            'fetchContacts',
+            'fetchSkill',
+            'fetchContact',
             'fetchPersonal',
-            'fetchExperiences',
+            'fetchExperience',
             'showUpdater',
             'updateCoverPhoto',
             'updateProfilePhoto',
@@ -612,18 +604,15 @@
 
     created() {
         this.protectedRouteRedirect()
-        this.fetchSkills()
+        this.fetchSkill()
         this.fetchTests()
-        this.fetchExperiences()
+        this.fetchExperience()
         this.fetchPersonal()
-        this.fetchContacts()
+        this.fetchContact()
     },
 
     components: {
-        PersonalUpdate,
-        SkillsUpdate,
-        ContactUpdate,
-        ExperienceUpdate
+        Updater
     }
 
   }
