@@ -130,7 +130,7 @@ const store = createStore({
       },
 
       setLoader(state, val) {
-         //state.isLoading.hide()
+         state.isLoading.hide()
          if (val) {
             state.isLoading.show()
          } else {
