@@ -67,7 +67,7 @@ class UserController extends Controller
 
         if ($user->save()) {
             // Trigger Registration Complete Event to Send Verification Mail
-            // event(new Registered($user));
+            event(new Registered($user));
             return response()->json([
                 'status' => 'success',
                 'message' => 'contents saved!',
