@@ -350,7 +350,7 @@ const store = createStore({
                context.commit('setFeedbackMessage', {
                   target: 'register',
 message: error.message
-                  //message: 'Registration error!'
+                  //message: 'Registration error = p!'
                });
             });
             context.commit('setLoader', false)
