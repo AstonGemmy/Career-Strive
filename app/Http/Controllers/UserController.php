@@ -55,9 +55,9 @@ class UserController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'name' => 'required|alpha',
+            'name' => 'required|regex:/^[\pL\s\-]+$/u',
             'email' => 'required|email',
-            'password' => 'required'|password
+            'password' => 'required'
         ]);
 
         $user = new User();
