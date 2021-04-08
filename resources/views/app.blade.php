@@ -26,13 +26,13 @@
 
         <!-- Scripts -->
         @routes
-        <!-- <script src="{{ mix('js/app.js') }}" defer></script> -->
+        <script src="{{ mix('js/app.js') }}" defer></script>
     </head>
     <body class="antialiased">
         @inertia
     </body>
 
-    <script src="js/app.js" defer></script>
+    <!-- <script src="js/app.js" defer></script> -->
 
     @if (Auth::check())
     <script> window.AuthUser = {!! json_encode(Auth::user()); !!}; </script>

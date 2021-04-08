@@ -130,11 +130,11 @@ const store = createStore({
       },
 
       setLoader(state, val) {
-         state.isLoading.hide()
+         state.isLoading.hide();
          if (val) {
-            state.isLoading.show()
+            state.isLoading.show();
          } else {
-            state.isLoading.hide()
+            state.isLoading.hide();
          }
       },
 
@@ -500,7 +500,7 @@ const store = createStore({
 
          // Fetch user experience data
          async fetchExperience(context) {
-            // context.commit('setLoader', true)
+            context.commit('setLoader', true)
             const fetch_experience = await window.axios.get(`/api/experience/${this.state.authUser.id}`)
             .then(response => {
                if (response.status == 200 && response.data.data.length !== 0) {
