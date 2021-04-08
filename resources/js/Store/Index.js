@@ -1,12 +1,11 @@
 import { createStore } from 'vuex';
-import { useLoading } from 'vue3-loading-overlay';
 
 const store = createStore({
    
    state: {
       authUser: window.AuthUser,
       loginState: false,
-      isLoading: useLoading(),
+      isLoading: false,
       overlay: false,
       modal: false,
       updater: {
@@ -130,12 +129,7 @@ const store = createStore({
       },
 
       setLoader(state, val) {
-         state.isLoading.hide();
-         if (val) {
-            state.isLoading.show();
-         } else {
-            state.isLoading.hide();
-         }
+         state.isLoading = val;
       },
 
       setUpdater(state, {target, status}) {

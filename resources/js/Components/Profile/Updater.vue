@@ -25,7 +25,7 @@
                     <div class="w-full mb-2 mx-auto text-xl text-blue-600">
                         
                         <div class="p-4">
-                            <TextInput v-for="item in Payload[updater.target]" :key="item.id" :options="item.options" :type="item.type" :value="item.value" v-model="item.value" :title="item.title" :id="item.id" :placeholder="item.placeholder" />
+                            <TextInput v-for="item in Payload[updater.target].elementAttr" :key="item.id" :options="item.options" :type="item.type" :value="item.value" v-model="Payload[updater.target].model[item.id]" :title="item.title" :id="item.id" :placeholder="item.placeholder" />
                         </div>
                         
                     </div>
@@ -78,129 +78,141 @@
 
         Payload() {
             return {
-                personal: [
-                    {
-                        id: 'name',
-                        type: 'text',
-                        placeholder: 'Name',
-                        title: 'Name',
-                        value: this.personal.name
-                    },
-                    {
-                        id: 'gender',
-                        type: 'select',
-                        options: this.gender,
-                        title: 'Gender',
-                        value: this.personal.gender
-                    },
-                    {
-                        id: 'date-of-birth',
-                        type: 'text',
-                        placeholder: 'DD//MM/YYYY',
-                        title: 'Date of Birth',
-                        value: this.personal.date_of_birth
-                    },
-                    {
-                        id: 'email',
-                        type: 'email',
-                        placeholder: '@',
-                        title: 'Email',
-                        value: this.personal.email
-                    },
-                    {
-                        id: 'bio',
-                        type: 'textarea',
-                        placeholder: 'Bio',
-                        title: 'Bio',
-                        value: this.personal.bio
-                    }
-                ],
+                personal: {
+                    model: this.personal,
+                    elementAttr: [
+                        {
+                            id: 'name',
+                            type: 'text',
+                            placeholder: 'Name',
+                            title: 'Name',
+                            value: this.personal.name
+                        },
+                        {
+                            id: 'gender',
+                            type: 'select',
+                            options: this.gender,
+                            title: 'Gender',
+                            value: this.personal.gender
+                        },
+                        {
+                            id: 'date_of_birth',
+                            type: 'text',
+                            placeholder: 'DD//MM/YYYY',
+                            title: 'Date of Birth',
+                            value: this.personal.date_of_birth
+                        },
+                        {
+                            id: 'email',
+                            type: 'email',
+                            placeholder: '@',
+                            title: 'Email',
+                            value: this.personal.email
+                        },
+                        {
+                            id: 'bio',
+                            type: 'textarea',
+                            placeholder: 'Bio',
+                            title: 'Bio',
+                            value: this.personal.bio
+                        }
+                    ]
+                },
 
-                contact: [
-                    {
-                        id: 'country',
-                        type: 'text',
-                        placeholder: 'Country',
-                        title: 'Country',
-                        value: this.contact.country
-                    },
-                    {
-                        id: 'gender',
-                        type: 'text',
-                        placeholder: 'State',
-                        title: 'State',
-                        value: this.contact.state
-                    },
-                    {
-                        id: 'address',
-                        type: 'text',
-                        placeholder: 'Address',
-                        title: 'Address',
-                        value: this.contact.address
-                    },
-                    {
-                        id: 'phone',
-                        type: 'text',
-                        placeholder: 'Phone',
-                        title: 'Phone',
-                        value: this.contact.phone
-                    }
-                ],
+                contact: {
+                    model: this.contact,
+                    elementAttr: [
+                        {
+                            id: 'country',
+                            type: 'text',
+                            placeholder: 'Country',
+                            title: 'Country',
+                            value: this.contact.country
+                        },
+                        {
+                            id: 'state',
+                            type: 'text',
+                            placeholder: 'State',
+                            title: 'State',
+                            value: this.contact.state
+                        },
+                        {
+                            id: 'address',
+                            type: 'text',
+                            placeholder: 'Address',
+                            title: 'Address',
+                            value: this.contact.address
+                        },
+                        {
+                            id: 'phone',
+                            type: 'text',
+                            placeholder: 'Phone',
+                            title: 'Phone',
+                            value: this.contact.phone
+                        }
+                    ]
+                },
 
-                experience: [
-                    {
-                        id: 'work-experience',
-                        type: 'select',
-                        options: this.job_opening,
-                        title: 'Work Experience',
-                        value: this.experience.job
-                    },
-                    {
-                        id: 'duration',
-                        type: 'select',
-                        options: this.experience_duration,
-                        title: 'Work Experience Duration Duration academy',
-                        value: this.experience.duration
-                    },
-                    {
-                        id: 'qualification',
-                        type: 'select',
-                        options: this.qualifications,
-                        title: 'Qualification',
-                        value: this.experience.qualification
-                    }
-                ],
+                experience: {
+                    model: this.experience,
+                    elementAttr: [
+                        {
+                            id: 'job',
+                            type: 'select',
+                            options: this.job_opening,
+                            title: 'Work Experience',
+                            value: this.experience.job
+                        },
+                        {
+                            id: 'duration',
+                            type: 'select',
+                            options: this.experience_duration,
+                            title: 'Work Experience Duration Duration academy',
+                            value: this.experience.duration
+                        },
+                        {
+                            id: 'qualification',
+                            type: 'select',
+                            options: this.qualifications,
+                            title: 'Qualification',
+                            value: this.experience.qualification
+                        }
+                    ]
+                },
 
-                skill: [
-                    {
-                        id: 'time-management',
-                        type: 'select',
-                        options: this.experience_level,
-                        title: 'Time Management',
-                        value: this.skill.time_management
-                    },
-                    {
-                        id: 'team-work',
-                        type: 'select',
-                        options: this.experience_level,
-                        title: 'Team Work',
-                        value: this.skill.team_work
-                    },
-                    {
-                        id: 'problem-solving',
-                        type: 'select',
-                        options: this.experience_strength,
-                        title: 'Problem Solving',
-                        value: this.skill.problem_solving
-                    },
-                    {
-                        id: 'customer-service',
-                        type: 'select',
-                        options: this.experience_strength,
-                        title: 'Customer Service',
-                        value: this.skill.customer_service
-                    }
-                ]
+                skill: {
+                    model: this.skill,
+                    elementAttr: [
+                        {
+                            id: 'time_management',
+                            type: 'select',
+                            options: this.experience_level,
+                            title: 'Time Management',
+                            value: this.skill.time_management
+                        },
+                        {
+                            id: 'team_work',
+                            type: 'select',
+                            options: this.experience_level,
+                            title: 'Team Work',
+                            value: this.skill.team_work
+                        },
+                        {
+                            id: 'problem_solving',
+                            type: 'select',
+                            options: this.experience_strength,
+                            title: 'Problem Solving',
+                            value: this.skill.problem_solving
+                        },
+                        {
+                            id: 'customer_service',
+                            type: 'select',
+                            options: this.experience_strength,
+                            title: 'Customer Service',
+                            value: this.skill.customer_service
+                        }
+                    ]
+                }
             }
         },
     },

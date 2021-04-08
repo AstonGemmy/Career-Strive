@@ -144,7 +144,7 @@
                                                 </span>
                                             </span>
                                             
-                                            <div class="grid grid-flow-col grid-rows-4 w-full invisible-scrollbar overflow-x-auto justify-start items-start mt-2 md:mt-0 rounded-lg transition-all duration-700 ease-in-out">
+                                            <div v-if="Object.keys(test).length" class="grid grid-flow-col grid-rows-4 w-full invisible-scrollbar overflow-x-auto justify-start items-start mt-2 md:mt-0 rounded-lg transition-all duration-700 ease-in-out">
 
                                                 <div v-for="value in test" :key="value.started_at" class="cursor-pointer flex mb-1 mr-1">
                                                     <span v-if="value.score > 75" class="bg-blue-300 w-2 h-2 rounded-full"></span>
@@ -153,7 +153,10 @@
                                                     <span v-if="value.score < 26" class="bg-red-300 w-2 h-2 rounded-full"></span>
                                                 </div>
 
-                                            </div>                                            
+                                            </div>
+                                            <div v-else class="p-2 text-blue-600">
+                                                No tests yet taken!
+                                            </div>
 
                                         </div>
 
@@ -169,8 +172,9 @@
                             
                             <div class="bg-white shadow ring-8 ring-gray-100 ring-offset-8 absolute transform -translate-x-2/4 left-2/4 lg:-translate-x-0 lg:left-16 top-24 w-36 h-36 rounded-full">
                                 <img v-if="personal.profile_photo_path" v-bind:src="'/images/profile pictures/' + personal.profile_photo_path" class="overflow-hidden bg-white w-full h-full rounded-full">
-                                <img v-if="personal.profile_photo_path == '' && personal.gender == 'male'" src="/images/profile pictures/default-profile-picture-male.png" class="overflow-hidden bg-white w-full h-full rounded-full">
-                                <img v-if="personal.profile_photo_path == '' && personal.gender == 'female'" src="/images/profile pictures/default-profile-picture-female.png" class="overflow-hidden bg-white w-full h-full rounded-full">
+                                <img v-if="!personal.profile_photo_path && personal.gender == 'select'" src="/images/profile pictures/default-profile-picture-male.png" class="overflow-hidden bg-white w-full h-full rounded-full">
+                                <img v-if="!personal.profile_photo_path && personal.gender == 'male'" src="/images/profile pictures/default-profile-picture-male.png" class="overflow-hidden bg-white w-full h-full rounded-full">
+                                <img v-if="!personal.profile_photo_path && personal.gender == 'female'" src="/images/profile pictures/default-profile-picture-female.png" class="overflow-hidden bg-white w-full h-full rounded-full">
                                 <button @click.prevent="$refs.profile_photo_input.click()" class="absolute flex justify-center items-center bg-blue-400 w-12 h-12 rounded-full z-50 -left-6 -bottom-4">
                                     <i class="fa fa-camera text-xl text-white"></i>
                                 </button>
@@ -215,12 +219,10 @@
                                         <button @click="showUpdater('personal')" class="uppercase mr-4">
                                             Edit
                                         </button>
-                                        <div class="flex justify-between overflow-y-hidden overflow-x-auto text-sm">
-                                            <div v-for="(value, key) in personal" :key="key + 'p-check'" class="mr-4">
-                                                <div v-if="!value">
-                                                    <span class="text-gray-600 py-4">
-                                                        {{ keyToProperFormat(key) }}
-                                                    </span>
+                                        <div class="relative whitespace-nowrap flex overflow-y-hidden overflow-x-auto text-sm invisible-scrollbar">
+                                            <div v-for="(value, key) in personal" :key="key + 'p-check'">
+                                                <div v-if="!value" class="relative px-2 text-gray-600">
+                                                    {{ keyToProperFormat(key) }}
                                                 </div>
                                             </div>
                                         </div>
@@ -258,12 +260,10 @@
                                         <button @click="showUpdater('contact')" class="uppercase mr-4">
                                             Edit
                                         </button>
-                                        <div class="flex justify-between overflow-y-hidden overflow-x-auto text-sm">
-                                            <div v-for="(value, key) in contact" :key="key + 'c-check'" class="mr-4">
-                                                <div v-if="!value">
-                                                    <span class="text-gray-600 py-4">
-                                                        {{ keyToProperFormat(key) }}
-                                                    </span>
+                                        <div class="relative whitespace-nowrap flex overflow-y-hidden overflow-x-auto text-sm invisible-scrollbar">
+                                            <div v-for="(value, key) in contact" :key="key + 'c-check'">
+                                                <div v-if="!value" class="relative px-2 text-gray-600">
+                                                    {{ keyToProperFormat(key) }}
                                                 </div>
                                             </div>
                                         </div>
@@ -301,12 +301,10 @@
                                         <button @click="showUpdater('experience')" class="uppercase mr-4">
                                             Edit
                                         </button>
-                                        <div class="flex justify-between overflow-y-hidden overflow-x-auto text-sm">
-                                            <div v-for="(value, key) in experience" :key="key + 'e-check'" class="mr-4">
-                                                <div v-if="!value">
-                                                    <span class="text-gray-600 py-4">
-                                                        {{ keyToProperFormat(key) }}
-                                                    </span>
+                                        <div class="relative whitespace-nowrap flex overflow-y-hidden overflow-x-auto text-sm invisible-scrollbar">
+                                            <div v-for="(value, key) in experience" :key="key + 'e-check'">
+                                                <div v-if="!value" class="relative px-2 text-gray-600">
+                                                    {{ keyToProperFormat(key) }}
                                                 </div>
                                             </div>
                                         </div>
@@ -344,12 +342,10 @@
                                         <button @click="showUpdater('skill')" class="uppercase mr-4">
                                             Edit
                                         </button>
-                                        <div class="flex justify-between overflow-y-hidden overflow-x-auto text-sm">
-                                            <div v-for="(value, key) in skill" :key="key + 's-check'" class="mr-4">
-                                                <div v-if="!value">
-                                                    <span class="text-gray-600 py-4">
-                                                        {{ keyToProperFormat(key) }}
-                                                    </span>
+                                        <div class="relative whitespace-nowrap flex overflow-y-hidden overflow-x-auto text-sm invisible-scrollbar">
+                                            <div v-for="(value, key) in skill" :key="key + 's-check'">
+                                                <div v-if="!value" class="relative px-2 text-gray-600">
+                                                    {{ keyToProperFormat(key) }}
                                                 </div>
                                             </div>
                                         </div>

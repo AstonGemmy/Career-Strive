@@ -10,8 +10,6 @@ import '../../public/css/aos.css'
 import { mapActions, mapMutations, mapState } from 'vuex';
 import store from './Store/Index';
 
-import 'vue3-loading-overlay/dist/vue3-loading-overlay.css';
-
 import Layout from './Layouts/AppLayout.vue'
 
 const el = document.getElementById('app');

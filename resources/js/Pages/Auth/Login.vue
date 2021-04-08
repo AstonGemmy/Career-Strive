@@ -119,7 +119,7 @@
                                     Submit your login credentials to gain access to future opportunities
                                 </div>
                                 <button @click="toggleForm" :class="formBGColor" class="relative inline-block text-white shadow text-xl px-8 py-3 rounded-xl">
-                                    Register
+                                    {{ toggler_text }}
                                 </button>
                             </div>
                         
@@ -160,6 +160,7 @@
 
                 },
                 toggler: false,
+                toggler_text: 'Register'
             }
         },
 
@@ -195,10 +196,10 @@
             toggleForm(e) {
                 this.toggler = !this.toggler
                 if (window.innerWidth > 767) {
-                    if (e.target.innerText == 'Register') {
-                        e.target.innerText = 'Login'
+                    if (this.toggler_text == 'Register') {
+                        this.toggler_text = 'Login'
                     } else {
-                        e.target.innerText = 'Register'
+                        thi.toggler_text = 'Register'
                     }
                 }
             }

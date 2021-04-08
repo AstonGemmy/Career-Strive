@@ -1,5 +1,7 @@
 <template>
     <div id="globalLayoutCover">
+        <!-- Global Loading Overlay -->
+        <LoadingOverlay />
         <!-- Global Overlay -->
         <Overlay />
         <!-- Global Warning Modal -->
@@ -16,6 +18,7 @@
     import GlobalAlert from '../Components/Common/GlobalAlert.vue'
     import ConfirmationModal from '../Components/Common/ConfirmationModal.vue'
     import Overlay from '../Components/Common/Overlay.vue'
+    import LoadingOverlay from '../Components/Common/LoadingOverlay.vue'
 
     export default {
 
@@ -55,7 +58,8 @@
         components: {
             GlobalAlert,
             ConfirmationModal,
-            Overlay
+            Overlay,
+            LoadingOverlay
         },
 
         mounted() {
