@@ -66,7 +66,7 @@ class FileUploadController extends Controller
 
                 $cover_photo_new_name = time().'.'.$request->cover_photo_path->getClientOriginalExtension();
                 
-                $request->cover_photo_path->move(public_path('images/profile pictures/'), $cover_photo_new_name);
+                $request->cover_photo_path->move(public_path('images/cover photos/'), $cover_photo_new_name);
                 $user->cover_photo_path = $cover_photo_new_name;
             
                 if ($user->save()) {
