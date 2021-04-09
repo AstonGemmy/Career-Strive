@@ -801,7 +801,7 @@ const store = createStore({
 
             this.state.skill.id = this.state.authUser.id;
 
-            const add_skill = await window.axios.post('/api/skill/', this.state.skill)
+            const add_skill = await window.axios.post('/api/skill', this.state.skill)
             .then(response => {
                if (response.status == 201 && response.data.status == 'success') {
                   context.commit('setFeedbackStyleSuccess', 'skill');
@@ -856,7 +856,7 @@ const store = createStore({
 
             this.state.experience.id = this.state.authUser.id;
 
-            const add_experience = await window.axios.post('/api/experience/', this.state.experience)
+            const add_experience = await window.axios.post('/api/experience', this.state.experience)
             .then(response => {
                if (response.status == 201 && response.data.status == 'success') {
                   context.commit('setFeedbackStyleSuccess', 'experience');
