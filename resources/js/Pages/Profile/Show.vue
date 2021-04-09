@@ -172,9 +172,16 @@
                             
                             <div class="bg-white shadow ring-8 ring-gray-100 ring-offset-8 absolute transform -translate-x-2/4 left-2/4 lg:-translate-x-0 lg:left-16 top-24 w-36 h-36 rounded-full">
                                 <img v-if="personal.profile_photo_path" v-bind:src="'/images/profile pictures/' + personal.profile_photo_path" class="overflow-hidden bg-white w-full h-full rounded-full">
-                                <img v-if="!personal.profile_photo_path && personal.gender == 'select'" src="/images/profile pictures/default-profile-picture-male.png" class="overflow-hidden bg-white w-full h-full rounded-full">
-                                <img v-if="!personal.profile_photo_path && personal.gender == 'male'" src="/images/profile pictures/default-profile-picture-male.png" class="overflow-hidden bg-white w-full h-full rounded-full">
+                                <!-- Defaults -->
+                                <img
+                                    v-if="!personal.profile_photo_path && personal.gender
+                                        || !personal.profile_photo_path && personal.gender == 'select'
+                                        || !personal.profile_photo_path && personal.gender == 'male'"
+                                    src="/images/profile pictures/default-profile-picture-male.png"
+                                    class="overflow-hidden bg-white w-full h-full rounded-full"
+                                />
                                 <img v-if="!personal.profile_photo_path && personal.gender == 'female'" src="/images/profile pictures/default-profile-picture-female.png" class="overflow-hidden bg-white w-full h-full rounded-full">
+                                
                                 <button @click.prevent="$refs.profile_photo_input.click()" class="absolute flex justify-center items-center bg-blue-400 w-12 h-12 rounded-full z-50 -left-6 -bottom-4">
                                     <i class="fa fa-camera text-xl text-white"></i>
                                 </button>

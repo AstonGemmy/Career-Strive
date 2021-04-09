@@ -52,7 +52,6 @@
                     easing: 'ease-in-out-sine'
                 })
             }
-
         },
 
         components: {

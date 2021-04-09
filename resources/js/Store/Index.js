@@ -1328,6 +1328,14 @@ const store = createStore({
 
          },
 
+         labelClick(context) {
+            document.querySelectorAll('#globalLayoutCover label').forEach(label => {
+               label.addEventListener('click', function() {
+                  this.nextElementSibling.focus()
+               })
+            }, true)
+         },
+
          addLoader(context, e) {
             document.querySelector(`#${e}`).classList.remove('hidden')
          },
