@@ -15,7 +15,7 @@ module.exports = {
                 sans: ['Nunito', ...defaultTheme.fontFamily.sans],
             },
             backgroundImage: theme => ({
-                'login': "url('/images/login-cover.jpg')",
+                'login': "url('/images/backgrounds/login-cover.jpg')",
                 'main': "url('/images/'career-strive-bg.png)",
             }),
             scale: {

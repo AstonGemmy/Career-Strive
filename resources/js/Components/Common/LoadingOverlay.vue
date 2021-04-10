@@ -31,8 +31,9 @@ import { mapState } from 'vuex'
         justify-content: center;
         overflow: hidden;
         z-index: 9999;
-        opacity: 0.5;
+        opacity: 0.9;
         background: #fff;
+        overscroll-behavior:contain;
     }
     
     .lds-ripple {
@@ -44,7 +45,7 @@ import { mapState } from 'vuex'
     .lds-ripple div {
         position: absolute;
         border: 4px solid rgba(157, 23, 77, 1);
-        background-color:rgba(157, 23, 77, 0.7);
+        background-color:rgba(157, 23, 77, 0.5);
         opacity: 1;
         border-radius: 50%;
         animation: lds-ripple 1s cubic-bezier(0, 0.2, 0.8, 1) infinite;

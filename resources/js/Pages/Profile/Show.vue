@@ -47,8 +47,6 @@
                                 </span>
                             </div>
                         </inertia-link>
-
-                        <!-- <?php echo $testStatus_indicator; ?> -->
                         
                         <a href="#" @click.prevent="logoutUser" class="bg-gradient-to-r hover:border-red-400 border-transparent border-l-4 hover:from-red-100 hover:to-transparent hover:text-red-600 text-gray-600 py-4 pl-4 xl:pl-16 pr-4 flex items-center transition-all duration-700">
                             <span class="flex justify-center items-center mr-8 w-8 h-8 rounded-full shadow">
@@ -122,7 +120,7 @@
                                 
                                 <div class="relative h-32 lg:h-36 w-full">
                                     <img v-if="personal.cover_photo_path" v-bind:src="'/images/cover photos/' + personal.cover_photo_path" class="w-full h-full">
-                                    <img v-else src="/images/cover pictures/default-cover-photo.png" class="w-full h-full">
+                                    <img v-else src="/images/cover photo/default-cover-photo.png" class="w-full h-full">
 
                                     <button @click.prevent="$refs.cover_photo_input.click()" class="absolute flex justify-center items-center bg-blue-400 w-12 h-12 rounded-full z-10 right-8 lg:right-12 -bottom-4">
                                         <i class="fa fa-image text-xl text-white"></i>
@@ -170,7 +168,7 @@
 
                             </div>
                             
-                            <div class="bg-white shadow ring-8 ring-gray-100 ring-offset-8 absolute transform -translate-x-2/4 left-2/4 lg:-translate-x-0 lg:left-16 top-24 w-36 h-36 rounded-full">
+                            <div class="bg-white shadow ring-8 ring-gray-100 ring-offset-0 absolute transform -translate-x-2/4 left-2/4 lg:-translate-x-0 lg:left-16 top-24 w-36 h-36 rounded-full">
                                 <img v-if="personal.profile_photo_path" v-bind:src="'/images/profile pictures/' + personal.profile_photo_path" class="overflow-hidden bg-white w-full h-full rounded-full">
                                 <!-- Defaults -->
                                 <img

@@ -1,6 +1,6 @@
 <template>
     <!-- Update Field -->
-    <div v-if="updater.target" :class="toggleUpdater" class="fixed z-50 left-2/4 top-16 transform -translate-x-2/4 w-4/5 md:w-3/5 xl:w-4/12 bg-white rounded-lg overflow-hidden shadow-2xl">
+    <div v-if="updater.target" :class="toggleUpdater" class="fixed z-50 left-2/4 top-2/4 -translate-y-2/4 md:-translate-y-0 md:top-16 transform -translate-x-2/4 w-4/5 md:w-3/5 xl:w-4/12 bg-white rounded-lg overflow-hidden shadow-2xl">
         
         <div class="relative flex justify-between px-6 py-3 border-b-2 border-gray-100 text-blue-600 text-xl uppercase">
             <h1 class="">
@@ -12,7 +12,7 @@
             </span>
         </div>
 
-        <div :class="toggleFeedbackStyles" class="relative text-center w-full px-2 md:px-8 py-2">
+        <div :class="toggleFeedbackStyles" class="absolute transition-top ease-in-out duration-500 text-center w-full px-2 md:px-8 py-2">
             {{ feedbackMessages[updater.target] }}
         </div>
         
@@ -20,7 +20,7 @@
             
             <div class="relative py-8 md:p-8 h-full">
                 
-                <div class="relative top-auto left-auto pt-4 px-0 md:p-8 overflow-x-hidden overflow-y-auto invisible-scrollbar h-144 mx-4 text-pink-800">
+                <div class="relative top-auto left-auto pt-4 px-0 md:p-8 overflow-x-hidden overflow-y-auto invisible-scrollbar h-126 md:h-144 mx-4 text-pink-800">
                     
                     <div class="w-full mb-2 mx-auto text-xl text-blue-600">
                         
@@ -73,7 +73,11 @@
         },
 
         toggleFeedbackStyles() {
-            return this.feedbackStyle[this.updater.target].success ? 'text-green-700 bg-green-200' : this.feedbackStyle[this.updater.target].error ? 'text-red-700 bg-red-200' : ''
+            return this.feedbackStyle[this.updater.target].success
+            ? 'text-green-700 bg-green-200'
+            : this.feedbackStyle[this.updater.target].error
+            ? 'text-red-700 bg-red-200'
+            : '-top-full'
         },
 
         Payload() {

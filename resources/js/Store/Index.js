@@ -285,12 +285,12 @@ const store = createStore({
       // AUTHENTICATION
    
          // Confirms and triggers login state value
-         async isAuthenticated(context) {
+         isAuthenticated(context) {
             if (Object.keys(this.state.authUser).length !== 0) {
-               await context.commit('setLoginState', true)
+               context.commit('setLoginState', true)
                return;
             }
-            await context.commit('setLoginState', false)
+            context.commit('setLoginState', false)
          },
 
          // Destroys session
@@ -476,7 +476,6 @@ const store = createStore({
                context.commit('setTest', {})
             })
             context.dispatch('confirmAndUpdateStatus')
-            context.commit('setLoader', false)
          },
 
          // Fetch user's personal information
@@ -1022,7 +1021,7 @@ const store = createStore({
       // CHECKS
 
          // Checks if a target section has been updated previously
-         async isPreviouslyUpdated(context, target) {
+         isPreviouslyUpdated(context, target) {
             if (Object.keys(this.state[target]) == 0) {
                context.commit('setUpdatedBefore', {target: target, value: false})
             } else {
@@ -1031,7 +1030,7 @@ const store = createStore({
          },
          
          // Toggles response messages with appropriate feedback styles
-         async toggleResponseFeedback(context, {target, message, type}) {
+         toggleResponseFeedback(context, {target, message, type}) {
             if (type == 'error') {
                context.commit('setFeedbackStyleError', target);
             }
@@ -1049,7 +1048,7 @@ const store = createStore({
          },
 
          // Triggers creation or update call for each section update
-         async createOrUpdate(context, target) {
+         createOrUpdate(context, target) {
             // If this section of the user data has been updated since account creation
             // Update it with provided data object
             if (this.state.update_before[target]) {
@@ -1082,7 +1081,7 @@ const store = createStore({
          },
 
          // Checks if all fields for an object is defined
-         async isAllFieldsSet(context, target) {
+         isAllFieldsSet(context, target) {
             
             let def_val = true;
             let active_object = this.state[target]
@@ -1095,9 +1094,9 @@ const store = createStore({
             })
 
             if (def_val) {  // All fields for this object are set
-               await context.commit('setUpdateStatus', {target: target, value: true})  // Update status for this object to true
+               context.commit('setUpdateStatus', {target: target, value: true})  // Update status for this object to true
             } else { // Some field in object is not set
-               await context.commit('setUpdateStatus', {target: target, value: false})  // Update status for this object to false
+               context.commit('setUpdateStatus', {target: target, value: false})  // Update status for this object to false
             }
          },
 
@@ -1117,7 +1116,7 @@ const store = createStore({
          },
 
          // Checks if user has updated all required fields and is eligible to take test
-         async checkTestEligibilityStatus(context) {
+         checkTestEligibilityStatus(context) {
             // If all fields are set, go to test portal
             if (context.getters.getMandatoryUpdateStatus) {
                context.dispatch('redirectTo', {intended: '/test-portal'})

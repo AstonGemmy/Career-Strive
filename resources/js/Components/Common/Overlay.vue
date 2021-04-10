@@ -1,5 +1,5 @@
 <template>
-    <div :class="toggleOverlay" class="fixed z-50 left-0 top-0 w-full h-full bg-white bg-opacity-75 overflow-hidden"></div>
+    <div :class="toggleOverlay" class="fixed z-50 left-0 top-0 w-full h-full bg-black md:bg-white bg-opacity-75 overflow-hidden overscroll-contain"></div>
 </template>
 
 <script>
