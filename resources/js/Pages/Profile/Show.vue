@@ -6,7 +6,7 @@
 
         <div class="relative overflow-x-hidden lg:overflow-hidden lg:grid grid-flow-col grid-cols-5 gap-0 w-screen lg:h-screen h-auto">
 
-            <div :class="leftSidebarToggler" class="fixed lg:left-0 top-0 w-full md:w-2/4 lg:w-full p-4 h-screen z-20 lg:relative lg:z-0 transition-all duration-700">
+            <div :class="leftSidebarToggler" class="fixed lg:left-0 top-0 w-full md:w-2/4 lg:w-full p-4 h-screen z-20 lg:relative lg:z-0 transition-all duration-700 overscroll-contain">
 
                 <div class="relative bg-white pr-1 py-4 shadow h-full rounded-xl">
 
@@ -365,7 +365,7 @@
 
             </div>
 
-            <div :class="rightSidebarToggler" class="fixed lg:right-0 top-0 w-full md:w-2/4 lg:w-full p-4 h-screen z-20 lg:relative lg:z-0 transition-all duration-700">
+            <div :class="rightSidebarToggler" class="fixed lg:right-0 top-0 w-full md:w-2/4 lg:w-full p-4 h-screen z-20 lg:relative lg:z-0 transition-all duration-700 overscroll-contain">
 
                 <div class="bg-white h-full px-0 pb-4 rounded-xl shadow">
 
@@ -505,7 +505,7 @@
 
 <script>
 
-    import { mapState, mapGetters, mapActions } from 'vuex'
+    import { mapState, mapGetters, mapActions, mapMutations, useStore } from 'vuex'
     import Updater from '../../Components/Profile/Updater.vue'
 
   export default {
@@ -548,6 +548,7 @@
             'fetchTests',
             'fetchSkill',
             'fetchContact',
+            'toggleOverlay',
             'fetchPersonal',
             'fetchExperience',
             'showUpdater',
@@ -555,7 +556,7 @@
             'updateProfilePhoto',
             'protectedRouteRedirect',
             'checkTestEligibilityStatus',
-        ]),        
+        ]),
 
         objectAvailability(object) {
             if (Object.keys(object).length == 0) {
@@ -584,14 +585,16 @@
             }
         },
 
-        toggleLeftSidebar() {
+        toggleLeftSidebar() {            
             this.lToggler = !this.lToggler
             this.rToggler = false
+            this.toggleOverlay(this.lToggler)
         },
 
         toggleRightSidebar() {
             this.rToggler = !this.rToggler
             this.lToggler = false
+            this.toggleOverlay(this.rToggler)
         }
 
     },

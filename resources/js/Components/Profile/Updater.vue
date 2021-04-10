@@ -102,7 +102,7 @@
                         {
                             id: 'date_of_birth',
                             type: 'text',
-                            placeholder: 'DD//MM/YYYY',
+                            placeholder: 'DD/MM/YYYY',
                             title: 'Date of Birth',
                             value: this.personal.date_of_birth
                         },

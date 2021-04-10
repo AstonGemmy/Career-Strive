@@ -7,7 +7,7 @@ import { InertiaProgress } from '@inertiajs/progress';
 
 import '../../public/css/aos.css'
 
-import { mapActions, mapMutations, mapState } from 'vuex';
+import { mapMutations } from 'vuex';
 import store from './Store/Index';
 
 import Layout from './Layouts/AppLayout.vue'
@@ -30,11 +30,6 @@ createApp({
         computed: {
             ...mapMutations([
                 'setFeedbackStyleState'
-            ])
-        },
-        methods: {
-            ...mapActions([
-                
             ])
         },
         updated() {

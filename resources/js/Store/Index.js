@@ -1139,6 +1139,10 @@ const store = createStore({
             context.commit('setOverlay', true)
          },
 
+         toggleOverlay(context, status) {
+            context.commit('setOverlay', status)
+         },
+
          // Displays confirmation modal      
          showModal(context) {
             context.commit('setModal', true)
