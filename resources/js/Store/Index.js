@@ -815,7 +815,7 @@ const store = createStore({
 
             this.state.test.id = this.state.authUser.id;
 
-            const add_test = await window.axios.post('/api/test/', this.state.test)
+            const add_test = await window.axios.post('/api/test', this.state.test)
             .then(response => {
                if (response.status == 201 && response.data.status == 'success') {
                   
