@@ -9,7 +9,7 @@
 					<i class="fas fa-bars text-3xl transform scale-y-75"></i>
 				</div>
 			</div>
-			<div :class="toggler" class="px-8 md:px-4 py-8 md:py-4 transition-translate ease-in-out duration-500 transform lg:translate-y-0 absolute left-0 lg:relative bg-black md:bg-transparent lg:flex w-full lg:w-auto lg:mr-16">
+			<div :class="mobileNavbarToggler" class="px-8 md:px-4 py-8 md:py-4 transition-translate ease-in-out duration-500 transform lg:translate-y-0 absolute left-0 lg:relative bg-black md:bg-transparent lg:flex w-full lg:w-auto lg:mr-16">
 				<div class="flex flex-col lg:flex-row items-start lg:items-center justify-start lg:justify-between uppercase text-white">
 					<inertia-link href="/profile" v-if="authUser.name" class="w-full lg:w-auto bg-pink-800 rounded-md text-center py-2 px-4 my-2 lg:my-0 lg:mr-4">{{ getAuthUserFirstname }}</inertia-link>
 					<a href="#" v-if="authUser.name" @click="logoutUser" class="w-full lg:w-auto bg-pink-800 rounded-md text-center py-2 px-4 my-2 lg:my-0 lg:mr-4">Logout</a>
@@ -42,7 +42,7 @@
 	  ...mapGetters([
 		'getAuthUserFirstname'
 	  ]),
-	  toggler() {
+	  mobileNavbarToggler() {
 		return this.navbarIsOpen ? '-translate-y-full' : 'translate-y-16'
 	  }
 	},

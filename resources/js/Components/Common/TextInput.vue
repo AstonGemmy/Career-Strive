@@ -4,7 +4,6 @@
             {{ title }}
         </label>
         <input v-if="type == 'text' || type == 'email' || type == 'password'" :value="value" @input="$emit('update:modelValue', $event.target.value)" ref="input" class="text-xl p-4 focus:ring-pink-300 w-full ring-1 ring-blue-600 rounded-lg outline-none border-0 focus: bg-white" :placeholder="placeholder" :type="type" :id="id">
-        <!-- <v-select v-if="type == 'select'" :options="options" :value="value" @input="$emit('update:modelValue', $event.target.value)" class="text-xl p-4 focus:ring-pink-300 w-full ring-1 ring-blue-600 rounded-lg outline-none border-0 focus: bg-white" :id="id"></v-select> -->
         <select v-if="type == 'select'" :value="value" @input="$emit('update:modelValue', $event.target.value)" ref="select" class="text-xl p-4 focus:ring-pink-300 w-full ring-1 ring-blue-600 rounded-lg outline-none border-0 focus: bg-white" :id="id">
             <option v-for="option in options" :key="option">{{ option }}</option>
         </select>
@@ -15,24 +14,14 @@
 </template>
 
 <script>
-    // import vSelect from 'vue-select'
-    import { mapActions } from 'vuex'
-    // import 'vue-select/dist/vue-select.css';
     export default {
         props: ['id', 'title', 'type', 'value', 'options', 'placeholder'],    
         emits: ['update:modelValue'],
-        // components: {vSelect},
         methods: {
             focus(e) {
                 const target_ref = e.target.nodeName.toLowercase()
                 this.$refs[target_ref].focus()
-            },
-            ...mapActions([
-                'labelClick'
-            ])
+            }
         },
-        mounted() {
-            // this.labelClick()
-        }
     }
 </script>

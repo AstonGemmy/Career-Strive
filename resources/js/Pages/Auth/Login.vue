@@ -119,7 +119,7 @@
                                     Submit your login credentials to gain access to future opportunities
                                 </div>
                                 <button @click="toggleForm" :class="formBGColor" class="relative inline-block text-white shadow text-xl px-8 py-3 rounded-xl">
-                                    {{ toggler_text }}
+                                    {{ form_toggle_text }}
                                 </button>
                             </div>
                         
@@ -159,8 +159,8 @@
                     }
 
                 },
-                toggler: false,
-                toggler_text: 'Register'
+                form_toggle: false,
+                form_toggle_text: 'Register'
             }
         },
 
@@ -170,19 +170,19 @@
                 'feedbackStyle'
             ]),
             formSelector() {
-                return this.toggler ? 'right-0 md:right-2/5' : 'right-0'
+                return this.form_toggle ? 'right-0 md:right-2/5' : 'right-0'
             },
             loginFormSelector() {
-                return this.toggler ? 'md:right-1/5' : 'md:right-3/5'
+                return this.form_toggle ? 'md:right-1/5' : 'md:right-3/5'
             },
             registerFormSelector() {
-                return this.toggler ? 'right-0' : '-right-full md:right-1/5'
+                return this.form_toggle ? 'right-0' : '-right-full md:right-1/5'
             },
             formBGColor() {
-                return this.toggler ? 'bg-green-400' : 'bg-blue-400'
+                return this.form_toggle ? 'bg-green-400' : 'bg-blue-400'
             },
             formTextColor() {
-                return this.toggler ? 'text-green-400' : 'text-blue-400'
+                return this.form_toggle ? 'text-green-400' : 'text-blue-400'
             }
         },
 
@@ -194,12 +194,12 @@
                 'redirectAuthenticated'
             ]),
             toggleForm(e) {
-                this.toggler = !this.toggler
+                this.form_toggle = !this.form_toggle
                 if (window.innerWidth > 767) {
-                    if (this.toggler_text == 'Register') {
-                        this.toggler_text = 'Login'
+                    if (this.form_toggle_text == 'Register') {
+                        this.form_toggle_text = 'Login'
                     } else {
-                        thi.toggler_text = 'Register'
+                        this.form_toggle_text = 'Register'
                     }
                 }
             }

@@ -121,7 +121,7 @@
                             <div class="relative h-full">
                                 
                                 <div class="relative h-32 lg:h-36 w-full">
-                                    <img v-if="personal.cover_photo_path" v-bind:src="'/images/profile pictures/' + personal.cover_photo_path" class="w-full h-full">
+                                    <img v-if="personal.cover_photo_path" v-bind:src="'/images/cover photos/' + personal.cover_photo_path" class="w-full h-full">
                                     <img v-else src="/images/cover pictures/default-cover-photo.png" class="w-full h-full">
 
                                     <button @click.prevent="$refs.cover_photo_input.click()" class="absolute flex justify-center items-center bg-blue-400 w-12 h-12 rounded-full z-10 right-8 lg:right-12 -bottom-4">
@@ -174,7 +174,7 @@
                                 <img v-if="personal.profile_photo_path" v-bind:src="'/images/profile pictures/' + personal.profile_photo_path" class="overflow-hidden bg-white w-full h-full rounded-full">
                                 <!-- Defaults -->
                                 <img
-                                    v-if="!personal.profile_photo_path && personal.gender
+                                    v-if="!personal.profile_photo_path && !personal.gender
                                         || !personal.profile_photo_path && personal.gender == 'select'
                                         || !personal.profile_photo_path && personal.gender == 'male'"
                                     src="/images/profile pictures/default-profile-picture-male.png"
@@ -217,9 +217,6 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <div v-if="!update_before.personal" class="flex justify-center items-center">
-                                            Update Your Personal Details
-                                        </div>
                                     </div>
 
                                     <div class="row-span-1 uppercase w-full flex items-center justify-between border-t-2 border-gray-100 text-xl text-green-600 px-6 py-4">
@@ -227,7 +224,7 @@
                                             Edit
                                         </button>
                                         <div class="relative whitespace-nowrap flex overflow-y-hidden overflow-x-auto text-sm invisible-scrollbar">
-                                            <div v-for="(value, key) in personal" :key="key + 'p-check'">
+                                            <div v-for="(value, key) in output.personal" :key="key + 'p-check'">
                                                 <div v-if="!value" class="relative px-2 text-gray-600">
                                                     {{ keyToProperFormat(key) }}
                                                 </div>
@@ -248,6 +245,9 @@
                                     </h1>
 
                                     <div class="row-span-4">
+                                        <div v-if="!update_before.contact" class="flex justify-center items-center">
+                                            Update Your Contact Details
+                                        </div>
                                         <div v-for="(value, key) in output.contact" :key="key" class="px-6 pt-4">
                                             <div v-if="value">
                                                 <div class="text-gray-600">
@@ -258,9 +258,6 @@
                                                 </div>
                                             </div>                                            
                                         </div>
-                                        <div v-if="!update_before.contact" class="flex justify-center items-center">
-                                            Update Your Contact Details
-                                        </div>
                                     </div>
 
                                     <div class="row-span-1 uppercase w-full flex items-center justify-between border-t-2 border-gray-100 text-xl text-green-600 px-6 py-4">
@@ -268,7 +265,7 @@
                                             Edit
                                         </button>
                                         <div class="relative whitespace-nowrap flex overflow-y-hidden overflow-x-auto text-sm invisible-scrollbar">
-                                            <div v-for="(value, key) in contact" :key="key + 'c-check'">
+                                            <div v-for="(value, key) in output.contact" :key="key + 'c-check'">
                                                 <div v-if="!value" class="relative px-2 text-gray-600">
                                                     {{ keyToProperFormat(key) }}
                                                 </div>
@@ -289,6 +286,9 @@
                                     </h1>
 
                                     <div class="row-span-4">                                    
+                                        <div v-if="!update_before.experience" class="flex justify-center items-center">
+                                            Update Your Experience Details
+                                        </div>
                                         <div v-for="(value, key) in output.experience" :key="key" class="px-6 pt-4">
                                             <div v-if="value">
                                                 <div class="text-gray-600">
@@ -298,10 +298,7 @@
                                                     {{ keyToProperFormat(key) }}
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div v-if="!update_before.experience" class="flex justify-center items-center">
-                                            Update Your Experience Details
-                                        </div>
+                                        </div>                                        
                                     </div>
 
                                     <div class="row-span-1 uppercase w-full flex items-center justify-between border-t-2 border-gray-100 text-xl text-green-600 px-6 py-4">
@@ -309,7 +306,7 @@
                                             Edit
                                         </button>
                                         <div class="relative whitespace-nowrap flex overflow-y-hidden overflow-x-auto text-sm invisible-scrollbar">
-                                            <div v-for="(value, key) in experience" :key="key + 'e-check'">
+                                            <div v-for="(value, key) in output.experience" :key="key + 'e-check'">
                                                 <div v-if="!value" class="relative px-2 text-gray-600">
                                                     {{ keyToProperFormat(key) }}
                                                 </div>
@@ -330,6 +327,9 @@
                                     </h1>
                                 
                                     <div class="row-span-4">
+                                        <div v-if="!update_before.skill" class="flex justify-center items-center">
+                                            Update Your Skills Details
+                                        </div>
                                         <div v-for="(value, key) in output.skill" :key="key" class="px-6 pt-4">
                                             <div v-if="value">
                                                 <div class="text-gray-600">
@@ -339,10 +339,7 @@
                                                     {{ keyToProperFormat(key) }}
                                                 </div>
                                             </div>
-                                        </div>
-                                        <div v-if="!update_before.skill" class="flex justify-center items-center">
-                                            Update Your Skills Details
-                                        </div>
+                                        </div>                                        
                                     </div>
 
                                     <div class="row-span-1 uppercase w-full flex items-center justify-between border-t-2 border-gray-100 text-xl text-green-600 px-6 py-4">
@@ -350,7 +347,7 @@
                                             Edit
                                         </button>
                                         <div class="relative whitespace-nowrap flex overflow-y-hidden overflow-x-auto text-sm invisible-scrollbar">
-                                            <div v-for="(value, key) in skill" :key="key + 's-check'">
+                                            <div v-for="(value, key) in output.skill" :key="key + 's-check'">
                                                 <div v-if="!value" class="relative px-2 text-gray-600">
                                                     {{ keyToProperFormat(key) }}
                                                 </div>
@@ -514,8 +511,6 @@
     import Updater from '../../Components/Profile/Updater.vue'
 
   export default {
-
-    props: ['sessions'],
 
     data() {
         return {

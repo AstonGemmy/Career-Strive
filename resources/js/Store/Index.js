@@ -118,6 +118,36 @@ const store = createStore({
       
       properCase: state => {
          return state.authUser.name.charAt(0).toUpperCase() + state.authUser.name.slice(1);
+      },
+
+      getProperFormat: state => {
+         return state.updater.target.charAt(0).toUpperCase() + state.updater.target.slice(1);
+      },
+
+      targetObjectIsEmpty: state => {
+         let set_object_field_length = 0;
+         Object.keys(state[state.updater.target]).forEach(key => {
+            if (key !== 'id' && key !== 'status') {
+               if (state[state.updater.target][key] == '' || state[state.updater.target][key] == undefined || state[state.updater.target][key] == null) {
+                  set_object_field_length = set_object_field_length + 1;
+               }
+            }
+         })
+         if (set_object_field_length == Object.keys(state[state.updater.target]).length - 1) { // Completely empty
+            return true
+         } else {
+            return false
+         }
+      },
+
+      getMandatoryUpdateStatus: state => {
+         let def_val = true;
+         Object.keys(state.update_status).forEach(key => {
+            if (state.update_status[key] === false) {
+               def_val = false;
+            }
+         })
+         return def_val
       }
    
    },
@@ -189,7 +219,7 @@ const store = createStore({
       resetFeedbackMessage(state, target) {
          setTimeout(() => {
             state.feedbackMessages[target] = null
-         }, 4000)
+         }, 5000)
       },
 
       setTest(state, payload) {
@@ -218,6 +248,10 @@ const store = createStore({
          state.output.personal = {name, email, gender, date_of_birth}
       },
 
+      setUserStatus(state, val) {
+         state.personal.status = val
+      },
+
       setExperience(state, payload) {
          state.experience = payload
          let {job, qualification, duration} = payload
@@ -234,10 +268,6 @@ const store = createStore({
 
       setProfilePhotoPath(state, path) {
          state.personal.profile_photo_path = path
-      },
-
-      setGlobalAlert(state, {message}) {
-         state.feedbackMessages.global_alert = message
       },
 
       setLastTimerValue(state, value) {
@@ -285,34 +315,32 @@ const store = createStore({
             .then(response => {
                if (response.data.status == 'success') {
                   context.commit('setLoginState', true)
-                  context.commit('setFeedbackStyleSuccess', 'login');
-                  context.commit('setFeedbackMessage', {
+                  context.dispatch('toggleResponseFeedback', {
                      target: 'login',
-                     message: 'Logged in!'
-                  });
+                     message: 'Logged in!',
+                     type: 'success'
+                  })
                   const intended = response.data.intended_url;
                   context.dispatch('redirectTo', {intended});
                } else {
                   context.commit('setLoginState', false)
-                  context.commit('setFeedbackStyleError', 'login');
-                  context.commit('setFeedbackMessage', {
+                  context.dispatch('toggleResponseFeedback', {
                      target: 'login',
-                     message: 'The provided credentials do not match our records.'
+                     message: 'The provided credentials do not match our records.',
+                     type: 'error'
                   })
                }
             })
             .catch(error => {
                context.commit('setLoginState', false)
-               context.commit('setFeedbackStyleError', 'login');
-               context.commit('setFeedbackMessage', {
+               context.dispatch('toggleResponseFeedback', {
                   target: 'login',
-                  message: 'Login error!'
-               });
+                  message: 'Login error!',
+                  type: 'error'
+               })
             })
             context.commit('setLoader', false)
             context.dispatch('removeLoader', 'login_loader')
-            context.commit('resetFeedbackStyle', 'login');
-            context.commit('resetFeedbackMessage', 'login')
          },
 
       // AUTHENTICATION ENDS
@@ -326,30 +354,28 @@ const store = createStore({
             const attempt_registration = await window.axios.post('/api/users', register)
             .then(response => {
                if (response.data.status == 'success') {
-                  context.commit('setFeedbackStyleSuccess', 'register');
-                  context.commit('setFeedbackMessage', {
+                  context.dispatch('toggleResponseFeedback', {
                      target: 'register',
-                     message: 'Registration successful! A verification email has been sent to your email!'
+                     message: 'Registration successful! A verification email has been sent to your email!',
+                     type: 'success'
                   })
                } else {
-                  context.commit('setFeedbackStyleError', 'register');
-                  context.commit('setFeedbackMessage', {
+                  context.dispatch('toggleResponseFeedback', {
                      target: 'register',
-                     message: 'Registration not successful! Try again later.'
+                     message: 'Registration not successful! Try again later!',
+                     type: 'error'
                   })
                }
             })
             .catch(error => {
-               context.commit('setFeedbackStyleError', 'register');
-               context.commit('setFeedbackMessage', {
+               context.dispatch('toggleResponseFeedback', {
                   target: 'register',
-                  message: 'Registration error!'
-               });
+                  message: 'Registration error!',
+                  type: 'error'
+               })
             });
             context.commit('setLoader', false)
             context.dispatch('removeLoader', 'register_loader')
-            context.commit('resetFeedbackStyle', 'register');
-            context.commit('resetFeedbackMessage', 'register')
          },
 
          // Sends verification message on registration if it fails
@@ -358,29 +384,27 @@ const store = createStore({
             const resend_verification_email = await window.axios.post('/email/verification-notification')
             .then(response => {
                if (response.data.status == 'success') {
-                  context.commit('setFeedbackStyleSuccess', 'email_verification');
-                  context.commit('setFeedbackMessage', {
+                  context.dispatch('toggleResponseFeedback', {
                      target: 'email_verification',
-                     message: 'A new verification link has been sent to the email address you provided during registration.'
+                     message: 'A new verification link has been sent to the email address you provided during registration.',
+                     type: 'success'
                   })
                } else {
-                  context.commit('setFeedbackStyleError', 'email_verification');
-                  context.commit('setFeedbackMessage', {
+                  context.dispatch('toggleResponseFeedback', {
                      target: 'email_verification',
-                     message: 'Verification link could not be sent!'
+                     message: 'Verification link could not be sent.',
+                     type: 'error'
                   })
                }
             })
             .catch(error => {
-               context.commit('setFeedbackStyleError', 'email_verification');
-               context.commit('setFeedbackMessage', {
+               context.dispatch('toggleResponseFeedback', {
                   target: 'email_verification',
-                  message: 'Verification link error!'
+                  message: 'Verification link error.',
+                  type: 'error'
                })
             })
             context.commit('setLoader', false)
-            context.commit('resetFeedbackStyle', 'email_verification');
-            context.commit('resetFeedbackMessage', 'email_verification')
          },
 
       // REGISTRATION ENDS
@@ -424,7 +448,8 @@ const store = createStore({
             .then(response => {
                if (response.status == 200 && response.data.data.length !== 0) {
                   context.commit('setSkill', response.data.data)
-                  context.dispatch('checkUpdateStatus', 'skill')
+                  context.dispatch('isPreviouslyUpdated', 'skill')
+                  context.dispatch('isAllFieldsSet', 'skill')
                } else {
                   context.commit('setSkill', {})
                }         
@@ -432,7 +457,7 @@ const store = createStore({
             .catch(error => {
                context.commit('setSkill', {})
             })
-            context.dispatch('checkAllMandatoryFields')
+            context.dispatch('confirmAndUpdateStatus')
             context.commit('setLoader', false)
          },
 
@@ -450,7 +475,7 @@ const store = createStore({
             .catch(error => {
                context.commit('setTest', {})
             })
-            context.dispatch('checkAllMandatoryFields')
+            context.dispatch('confirmAndUpdateStatus')
             context.commit('setLoader', false)
          },
 
@@ -461,7 +486,8 @@ const store = createStore({
             .then(response => {
                if (response.status == 200 && response.data.data.length !== 0) {
                   context.commit('setPersonal', response.data.data)
-                  context.dispatch('checkUpdateStatus', 'personal')
+                  context.dispatch('isPreviouslyUpdated', 'personal')
+                  context.dispatch('isAllFieldsSet', 'personal')
                } else {
                   context.commit('setPersonal', {})
                }
@@ -469,7 +495,7 @@ const store = createStore({
             .catch(error => {
                context.commit('setPersonal', {})
             })
-            context.dispatch('checkAllMandatoryFields')
+            context.dispatch('confirmAndUpdateStatus')
             context.commit('setLoader', false)
          },
 
@@ -480,7 +506,8 @@ const store = createStore({
             .then(response => {
                if (response.status == 200 && response.data.data.length !== 0) {
                   context.commit('setContact', response.data.data)
-                  context.dispatch('checkUpdateStatus', 'contact')            
+                  context.dispatch('isPreviouslyUpdated', 'contact')
+                  context.dispatch('isAllFieldsSet', 'contact')
                } else {
                   context.commit('setContact', {})
                }
@@ -488,7 +515,7 @@ const store = createStore({
             .catch(error => {
                context.commit('setContact', {})
             })
-            context.dispatch('checkAllMandatoryFields')
+            context.dispatch('confirmAndUpdateStatus')
             context.commit('setLoader', false)
          },
 
@@ -499,7 +526,8 @@ const store = createStore({
             .then(response => {
                if (response.status == 200 && response.data.data.length !== 0) {
                   context.commit('setExperience', response.data.data)
-                  context.dispatch('checkUpdateStatus', 'experience')
+                  context.dispatch('isPreviouslyUpdated', 'experience')
+                  context.dispatch('isAllFieldsSet', 'experience')
                } else {
                   context.commit('setExperience', {})
                }
@@ -507,7 +535,7 @@ const store = createStore({
             .catch(error => {
                context.commit('setExperience', {})
             })
-            context.dispatch('checkAllMandatoryFields')
+            context.dispatch('confirmAndUpdateStatus')
             context.commit('setLoader', false)
          },
 
@@ -519,78 +547,62 @@ const store = createStore({
          async updateSkill(context) {
             context.commit('setLoader', true)
 
-            // On first(after account creation) attempt, add skill
-            if (this.state.update_before.skill == false) {
-               context.dispatch('addSkill')
-               return;
-            }
-
             const update_skill = await window.axios.put(`/api/skill/${this.state.authUser.id}`, this.state.skill)
             .then(response => {
                if (response.status == 200 && response.data.status == 'success') {
-                  context.commit('setFeedbackStyleSuccess', 'skill');
-                  context.commit('setFeedbackMessage', {
+                  context.dispatch('toggleResponseFeedback', {
                      target: 'skill',
-                     message: 'Skill successful updated!'
+                     message: 'Skill successfully updated!',
+                     type: 'success'
                   })
                   context.dispatch('fetchSkill')
                } else {
-                  context.commit('setFeedbackStyleError', 'skill');
-                  context.commit('setFeedbackMessage', {
+                  context.dispatch('toggleResponseFeedback', {
                      target: 'skill',
-                     message: 'Skill not successfully updated!'
+                     message: 'Skill not successfully updated!',
+                     type: 'error'
                   })
                }
             })
             .catch(error => {
-               context.commit('setFeedbackStyleError', 'skill');
-               context.commit('setFeedbackMessage', {
+               context.dispatch('toggleResponseFeedback', {
                   target: 'skill',
-                  message: 'Skill update error!'
-               });
+                  message: 'Skill update error!',
+                  type: 'error'
+               })
             });
             context.commit('setLoader', false)
-            context.commit('resetFeedbackStyle', 'skill');
-            context.commit('resetFeedbackMessage', 'skill')
          },
 
          // Updates user contact data
          async updateContact(context) {
             context.commit('setLoader', true)
             
-            // On first(after account creation) attempt, add contact
-            if (this.state.update_before.contact == false) {
-               context.dispatch('addContact')
-               return;
-            }
-
             const update_contact = await window.axios.put(`/api/contact/${this.state.authUser.id}`, this.state.contact)
             .then(response => {
                if (response.status == 200 && response.data.status == 'success') {
-                  context.commit('setFeedbackStyleSuccess', 'contact');
-                  context.commit('setFeedbackMessage', {
+                  context.dispatch('toggleResponseFeedback', {
                      target: 'contact',
-                     message: 'Contact successful updated!'
+                     message: 'Contact successfully updated!',
+                     type: 'success'
                   })
                   context.dispatch('fetchContact')
                } else {
-                  context.commit('setFeedbackStyleError', 'contact');
-                  context.commit('setFeedbackMessage', {
+                  context.dispatch('toggleResponseFeedback', {
                      target: 'contact',
-                     message: 'Contact not successfully updated!'
+                     message: 'Contact not successfully updated!',
+                     type: 'error'
                   })
                }
             })
             .catch(error => {
-               context.commit('setFeedbackStyleError', 'contact');
-               context.commit('setFeedbackMessage', {
+               context.dispatch('toggleResponseFeedback', {
                   target: 'contact',
-                  message: 'Contact update error!'
-               });
+                  message: 'Contact update error!',
+                  type: 'error'
+               })
             });
             context.commit('setLoader', false)
-            context.commit('resetFeedbackStyle', 'contact');
-            context.commit('resetFeedbackMessage', 'contact')
          },
 
          // Updates user's personal data
@@ -599,44 +611,59 @@ const store = createStore({
             const update_personal = await window.axios.put(`/api/users/${this.state.authUser.id}`, this.state.personal)
             .then(response => {
                if (response.status == 200 && response.data.status == 'success') {
-                  context.commit('setFeedbackStyleSuccess', 'personal');
-                  context.commit('setFeedbackMessage', {
+                  context.dispatch('toggleResponseFeedback', {
                      target: 'personal',
-                     message: 'Personal successful updated!'
+                     message: 'Personal successfully updated!',
+                     type: 'success'
                   })
                   context.dispatch('fetchPersonal')
                } else {
-                  context.commit('setFeedbackStyleError', 'personal');
-                  context.commit('setFeedbackMessage', {
+                  context.dispatch('toggleResponseFeedback', {
                      target: 'personal',
-                     message: 'Personal not successfully updated!'
+                     message: 'Personal not successfully updated!',
+                     type: 'error'
                   })
                }
             })
             .catch(error => {
-               context.commit('setFeedbackStyleError', 'personal');
-               context.commit('setFeedbackMessage', {
+               context.dispatch('toggleResponseFeedback', {
                   target: 'personal',
-                  message: 'Personal update error!'
-               });
+                  message: 'Personal update error!',
+                  type: 'error'
+               })
             });
             context.commit('setLoader', false)
-            context.commit('resetFeedbackStyle', 'personal');
-            context.commit('resetFeedbackMessage', 'personal')
          },
 
-         // Updates a user to eligible status
-         async updateUserStatus(context, status) {
-            this.state.personal.status = status
-            const update_user_status = await window.axios.put(`/api/users/${this.state.authUser.id}`, this.state.personal)
+         // Updates user experience data
+         async updateExperience(context) {
+            context.commit('setLoader', true)
+
+            const update_experience = await window.axios.put(`/api/experience/${this.state.authUser.id}`, this.state.experience)
             .then(response => {
                if (response.status == 200 && response.data.status == 'success') {
-                  context.dispatch('fetchPersonal')
+                  context.dispatch('toggleResponseFeedback', {
+                     target: 'experience',
+                     message: 'Experience successful updated!',
+                     type: 'success'
+                  })
+                  context.dispatch('fetchExperience')
+               } else {
+                  context.dispatch('toggleResponseFeedback', {
+                     target: 'experience',
+                     message: 'Experience not successfully updated!',
+                     type: 'error'
+                  })
                }
             })
             .catch(error => {
-
-            })
+               context.dispatch('toggleResponseFeedback', {
+                  target: 'experience',
+                  message: 'Experience update error!',
+                  type: 'error'
+               })
+            });
+            context.commit('setLoader', false)
          },
 
          // Updates user profile photo
@@ -653,30 +680,28 @@ const store = createStore({
             const update_profile_photo = await window.axios.post(`/upload/profile-photo/${this.state.authUser.id}`, formData)
             .then(response => {
                if (response.status == 200 && response.data.status == 'success') {
-                  context.commit('setFeedbackStyleSuccess', 'global_alert');
-                  context.commit('setFeedbackMessage', {
+                  context.dispatch('toggleResponseFeedback', {
                      target: 'global_alert',
-                     message: 'Profile photo successful updated!'
+                     message: 'Profile photo successfully updated!',
+                     type: 'success'
                   })
                   context.dispatch('fetchPersonal')
                } else {
-                  context.commit('setFeedbackStyleError', 'global_alert');
-                  context.commit('setFeedbackMessage', {
+                  context.dispatch('toggleResponseFeedback', {
                      target: 'global_alert',
-                     message: 'Profile photo not successfully updated!'
+                     message: 'Profile photo not successfully updated!',
+                     type: 'error'
                   })
                }
             })
             .catch(error => {
-               context.commit('setFeedbackStyleError', 'global_alert');
-               context.commit('setFeedbackMessage', {
+               context.dispatch('toggleResponseFeedback', {
                   target: 'global_alert',
-                  message: 'Profile photo update error!'
-               });
+                  message: 'Profile photo update error!',
+                  type: 'error'
+               })
             });
             context.commit('setLoader', false)
-            context.commit('resetFeedbackStyle', 'global_alert');
-            context.commit('resetFeedbackMessage', 'global_alert')
          },
 
          // Updates user cover photo
@@ -693,69 +718,28 @@ const store = createStore({
             const update_cover_photo = await window.axios.post(`/upload/cover-photo/${this.state.authUser.id}`, formData)
             .then(response => {
                if (response.status == 200 && response.data.status == 'success') {
-                  context.commit('setFeedbackStyleSuccess', 'global_alert');
-                  context.commit('setFeedbackMessage', {
+                  context.dispatch('toggleResponseFeedback', {
                      target: 'global_alert',
-                     message: 'Cover photo successful updated!'
+                     message: 'Cover photo successfully updated!',
+                     type: 'success'
                   })
                   context.dispatch('fetchPersonal')
                } else {
-                  context.commit('setFeedbackStyleError', 'global_alert');
-                  context.commit('setFeedbackMessage', {
+                  context.dispatch('toggleResponseFeedback', {
                      target: 'global_alert',
-                     message: 'Cover photo not successfully updated!'
+                     message: 'Cover photo not successfully updated!',
+                     type: 'error'
                   })
                }
             })
             .catch(error => {
-               context.commit('setFeedbackStyleError', 'global_alert');
-               context.commit('setFeedbackMessage', {
+               context.dispatch('toggleResponseFeedback', {
                   target: 'global_alert',
-                  message: 'Cover photo update error!'
-               });
+                  message: 'Cover photo update error!',
+                  type: 'error'
+               })
             });
             context.commit('setLoader', false)
-            context.commit('resetFeedbackStyle', 'global_alert');
-            context.commit('resetFeedbackMessage', 'global_alert')
-         },
-
-         // Updates user experience data
-         async updateExperience(context) {
-            context.commit('setLoader', true)
-
-            // On first(after account creation) attempt, add experience
-            if (this.state.update_before.experience == false) {
-               context.dispatch('addExperience')
-               return;
-            }
-
-            const update_experience = await window.axios.put(`/api/experience/${this.state.authUser.id}`, this.state.experience)
-            .then(response => {
-               if (response.status == 200 && response.data.status == 'success') {
-                  context.commit('setFeedbackStyleSuccess', 'experience');
-                  context.commit('setFeedbackMessage', {
-                     target: 'experience',
-                     message: 'Experience successful updated!'
-                  })
-                  context.dispatch('fetchExperience')
-               } else {
-                  context.commit('setFeedbackStyleError', 'experience');
-                  context.commit('setFeedbackMessage', {
-                     target: 'experience',
-                     message: 'Experience not successfully updated!'
-                  })
-               }
-            })
-            .catch(error => {
-               context.commit('setFeedbackStyleError', 'experience');
-               context.commit('setFeedbackMessage', {
-                  target: 'experience',
-                  message: 'Experience update error!'
-               });
-            });
-            context.commit('setLoader', false)
-            context.commit('resetFeedbackStyle', 'experience');
-            context.commit('resetFeedbackMessage', 'experience')
          },
 
       // UPDATES ENDS
@@ -769,30 +753,28 @@ const store = createStore({
             const add_contact = await window.axios.post('/api/contact', this.state.contact)
             .then(response => {
                if (response.status == 201 && response.data.status == 'success') {
-                  context.commit('setFeedbackStyleSuccess', 'contact');
-                  context.commit('setFeedbackMessage', {
+                  context.dispatch('toggleResponseFeedback', {
                      target: 'contact',
-                     message: 'Contact successful saved!'
+                     message: 'Contact successfully saved!',
+                     type: 'success'
                   })
                   context.dispatch('fetchContact')
                } else {
-                  context.commit('setFeedbackStyleError', 'contact');
-                  context.commit('setFeedbackMessage', {
+                  context.dispatch('toggleResponseFeedback', {
                      target: 'contact',
-                     message: 'Contact not successfully saved!'
+                     message: 'Contact not successfully saved!',
+                     type: 'error'
                   })
                }
             })
             .catch(error => {
-               context.commit('setFeedbackStyleError', 'contact');
-               context.commit('setFeedbackMessage', {
+               context.dispatch('toggleResponseFeedback', {
                   target: 'contact',
-                  message: 'Contact upload error!'
-               });
+                  message: 'Contact saving error!',
+                  type: 'error'
+               })
             });
             context.commit('setLoader', false)
-            context.commit('resetFeedbackStyle', 'contact');
-            context.commit('resetFeedbackMessage', 'contact')
          },
 
          // Adds skill data
@@ -804,30 +786,28 @@ const store = createStore({
             const add_skill = await window.axios.post('/api/skill', this.state.skill)
             .then(response => {
                if (response.status == 201 && response.data.status == 'success') {
-                  context.commit('setFeedbackStyleSuccess', 'skill');
-                  context.commit('setFeedbackMessage', {
+                  context.dispatch('toggleResponseFeedback', {
                      target: 'skill',
-                     message: 'Skill successful saved!'
+                     message: 'Skill successfully saved!',
+                     type: 'success'
                   })
                   context.dispatch('fetchSkill')
                } else {
-                  context.commit('setFeedbackStyleError', 'skill');
-                  context.commit('setFeedbackMessage', {
+                  context.dispatch('toggleResponseFeedback', {
                      target: 'skill',
-                     message: 'Skill not successfully saved!'
+                     message: 'Skill not successfully saved!',
+                     type: 'error'
                   })
                }
             })
             .catch(error => {
-               context.commit('setFeedbackStyleError', 'skill');
-               context.commit('setFeedbackMessage', {
+               context.dispatch('toggleResponseFeedback', {
                   target: 'skill',
-                  message: 'Skill upload error!'
-               });
+                  message: 'Skill saving error!',
+                  type: 'error'
+               })
             });
             context.commit('setLoader', false)
-            context.commit('resetFeedbackStyle', 'skill');
-            context.commit('resetFeedbackMessage', 'skill')
          },
 
          // Adds test records
@@ -859,30 +839,28 @@ const store = createStore({
             const add_experience = await window.axios.post('/api/experience', this.state.experience)
             .then(response => {
                if (response.status == 201 && response.data.status == 'success') {
-                  context.commit('setFeedbackStyleSuccess', 'experience');
-                  context.commit('setFeedbackMessage', {
+                  context.dispatch('toggleResponseFeedback', {
                      target: 'experience',
-                     message: 'Experience successful saved!'
+                     message: 'Experience successfully saved!',
+                     type: 'success'
                   })
                   context.dispatch('fetchExperience')
                } else {
-                  context.commit('setFeedbackStyleError', 'experience');
-                  context.commit('setFeedbackMessage', {
+                  context.dispatch('toggleResponseFeedback', {
                      target: 'experience',
-                     message: 'Experience not successfully saved!'
+                     message: 'Experience not successfully saved!',
+                     type: 'error'
                   })
                }
             })
             .catch(error => {
-               context.commit('setFeedbackStyleError', 'experience');
-               context.commit('setFeedbackMessage', {
+               context.dispatch('toggleResponseFeedback', {
                   target: 'experience',
-                  message: 'Experience upload error!'
-               });
+                  message: 'Experience saving error!',
+                  type: 'error'
+               })
             });
             context.commit('setLoader', false)
-            context.commit('resetFeedbackStyle', 'experience');
-            context.commit('resetFeedbackMessage', 'experience')
          },
 
       // INSERTS ENDS
@@ -895,26 +873,26 @@ const store = createStore({
             const delete_tests = await window.axios.delete(`/api/test/${this.state.authUser.id}`)
             .then(response => {
                if (response.data.status == 'success') {
-                  context.commit('setFeedbackStyleSuccess', 'test');
-                  context.commit('setFeedbackMessage', {
+                  context.dispatch('toggleResponseFeedback', {
                      target: 'test',
-                     message: 'Test successful deleted!'
+                     message: 'Test successfully deleted!',
+                     type: 'success'
                   })
                   context.dispatch('fetchTests')
                } else {
-                  context.commit('setFeedbackStyleError', 'test');
-                  context.commit('setFeedbackMessage', {
+                  context.dispatch('toggleResponseFeedback', {
                      target: 'test',
-                     message: 'Test not successfully deleted!'
+                     message: 'Test not successfully deleted!',
+                     type: 'error'
                   })
                }
             })
             .catch(error => {
-               context.commit('setFeedbackStyleError', 'test');
-               context.commit('setFeedbackMessage', {
+               context.dispatch('toggleResponseFeedback', {
                   target: 'test',
-                  message: 'Test delete error!'
-               });
+                  message: 'Test deleting error!',
+                  type: 'error'
+               })
             });
             context.commit('setLoader', false)
          },
@@ -925,26 +903,26 @@ const store = createStore({
             const delete_skill = await window.axios.delete(`/api/skill/${this.state.authUser.id}`)
             .then(response => {
                if (response.data.status == 'success') {
-                  context.commit('setFeedbackStyleSuccess', 'skill');
-                  context.commit('setFeedbackMessage', {
+                  context.dispatch('toggleResponseFeedback', {
                      target: 'skill',
-                     message: 'Skill successful deleted!'
+                     message: 'Skill successfully deleted!',
+                     type: 'success'
                   })
                   context.dispatch('fetchSkill')
                } else {
-                  context.commit('setFeedbackStyleError', 'skill');
-                  context.commit('setFeedbackMessage', {
+                  context.dispatch('toggleResponseFeedback', {
                      target: 'skill',
-                     message: 'Skill not successfully deleted!'
+                     message: 'Skill not successfully deleted!',
+                     type: 'error'
                   })
                }
             })
             .catch(error => {
-               context.commit('setFeedbackStyleError', 'skill');
-               context.commit('setFeedbackMessage', {
+               context.dispatch('toggleResponseFeedback', {
                   target: 'skill',
-                  message: 'Skill delete error!'
-               });
+                  message: 'Skill deleting error!',
+                  type: 'error'
+               })
             });
             context.commit('setLoader', false)
          },
@@ -955,26 +933,26 @@ const store = createStore({
             const delete_contact = await window.axios.delete(`/api/contact/${this.state.authUser.id}`)
             .then(response => {
                if (response.data.status == 'success') {
-                  context.commit('setFeedbackStyleSuccess', 'contact');
-                  context.commit('setFeedbackMessage', {
+                  context.dispatch('toggleResponseFeedback', {
                      target: 'contact',
-                     message: 'Contact successful deleted!'
+                     message: 'Contact successfully deleted!',
+                     type: 'success'
                   })
                   context.dispatch('fetchContact')
                } else {
-                  context.commit('setFeedbackStyleError', 'contact');
-                  context.commit('setFeedbackMessage', {
+                  context.dispatch('toggleResponseFeedback', {
                      target: 'contact',
-                     message: 'Contact not successfully deleted!'
+                     message: 'Contact not successfully deleted!',
+                     type: 'error'
                   })
                }
             })
             .catch(error => {
-               context.commit('setFeedbackStyleError', 'contact');
-               context.commit('setFeedbackMessage', {
+               context.dispatch('toggleResponseFeedback', {
                   target: 'contact',
-                  message: 'Contact delete error!'
-               });
+                  message: 'Contact deleting error!',
+                  type: 'error'
+               })
             });
             context.commit('setLoader', false)
          },
@@ -985,26 +963,26 @@ const store = createStore({
             const delete_personal = await window.axios.delete(`/api/users/${this.state.authUser.id}`)
             .then(response => {
                if (response.data.status == 'success') {
-                  context.commit('setFeedbackStyleSuccess', 'personal');
-                  context.commit('setFeedbackMessage', {
+                  context.dispatch('toggleResponseFeedback', {
                      target: 'personal',
-                     message: 'Personal successful deleted!'
+                     message: 'Account successfully deleted!',
+                     type: 'success'
                   })
                   context.dispatch('fetchPersonal')
                } else {
-                  context.commit('setFeedbackStyleError', 'personal');
-                  context.commit('setFeedbackMessage', {
+                  context.dispatch('toggleResponseFeedback', {
                      target: 'personal',
-                     message: 'Personal not successfully deleted!'
+                     message: 'Account not successfully deleted!',
+                     type: 'error'
                   })
                }
             })
             .catch(error => {
-               context.commit('setFeedbackStyleError', 'personal');
-               context.commit('setFeedbackMessage', {
+               context.dispatch('toggleResponseFeedback', {
                   target: 'personal',
-                  message: 'Personal delete error!'
-               });
+                  message: 'Account error!',
+                  type: 'error'
+               })
             });
             context.commit('setLoader', false)
          },
@@ -1015,26 +993,26 @@ const store = createStore({
             const delete_experience = await window.axios.delete(`/api/experience/${this.state.authUser.id}`)
             .then(response => {
                if (response.data.status == 'success') {
-                  context.commit('setFeedbackStyleSuccess', 'experience');
-                  context.commit('setFeedbackMessage', {
+                  context.dispatch('toggleResponseFeedback', {
                      target: 'experience',
-                     message: 'Experience successful deleted!'
+                     message: 'Experience successfully deleted!',
+                     type: 'success'
                   })
                   context.dispatch('fetchExperience')
                } else {
-                  context.commit('setFeedbackStyleError', 'experience');
-                  context.commit('setFeedbackMessage', {
+                  context.dispatch('toggleResponseFeedback', {
                      target: 'experience',
-                     message: 'Experience not successfully deleted!'
+                     message: 'Experience not successfully deleted!',
+                     type: 'error'
                   })
                }
             })
             .catch(error => {
-               context.commit('setFeedbackStyleError', 'experience');
-               context.commit('setFeedbackMessage', {
+               context.dispatch('toggleResponseFeedback', {
                   target: 'experience',
-                  message: 'Experience delete error!'
-               });
+                  message: 'Experience deleting error!',
+                  type: 'error'
+               })
             });
             context.commit('setLoader', false)
          },
@@ -1043,74 +1021,112 @@ const store = createStore({
 
       // CHECKS
 
-         // Checks if all fields for an object is defined
-         async checkUpdateStatus(context, target) {
-            
-            let def_val = 0;
-            let set_object_field_length = 0;
-            Object.keys(this.state[target]).forEach(key => {
-               if ( (this.state[target][key] == '' && key !== 'status') || (this.state[target][key] == undefined && key !== 'status') || (this.state[target][key] == null && key !== 'status') ) {
-                  def_val = 1;
-               } else {
-                  if (key !== 'id') {
-                     set_object_field_length = set_object_field_length + 1;
-                  }
-               }
-            })
-
-            if (def_val == 0) {  // All fields for this object are set
-               await context.commit('setUpdateStatus', {target: target, value: true})  // Update status for this object to true
-               // Update this section edit status
+         // Checks if a target section has been updated previously
+         async isPreviouslyUpdated(context, target) {
+            if (Object.keys(this.state[target]) == 0) {
+               context.commit('setUpdatedBefore', {target: target, value: false})
+            } else {
                context.commit('setUpdatedBefore', {target: target, value: true})
-            } else { // Some field in object is not set
-               await context.commit('setUpdateStatus', {target: target, value: false})  // Update status for this object to false
-               // Confirm if object length is same as number of set fields excluding compulsory id field
-               if (set_object_field_length !== (Object.keys(this.state[target]).length - 1)) { // If not same, means user has updated this object/section of profile before but some fields are missing
-                  context.commit('setUpdatedBefore', {target: target, value: true})
-               } else { // User has never updated this object/section of profile before
-                  context.commit('setUpdatedBefore', {target: target, value: false})
+            }
+         },
+         
+         // Toggles response messages with appropriate feedback styles
+         async toggleResponseFeedback(context, {target, message, type}) {
+            if (type == 'error') {
+               context.commit('setFeedbackStyleError', target);
+            }
+            if (type == 'success') {
+               context.commit('setFeedbackStyleSuccess', target);
+            }
+
+            context.commit('setFeedbackMessage', {
+               target: target,
+               message: message
+            })
+            context.commit('resetFeedbackStyle', target);
+            context.commit('resetFeedbackMessage', target)
+            context.commit('setLoader', false)
+         },
+
+         // Triggers creation or update call for each section update
+         async createOrUpdate(context, target) {
+            // If this section of the user data has been updated since account creation
+            // Update it with provided data object
+            if (this.state.update_before[target]) {
+               // If the data object to be updated is empty
+               if (context.getters.targetObjectIsEmpty) {
+                  // Alert the user to fill in data
+                  context.dispatch('toggleResponseFeedback', {
+                     target: target,
+                     message: 'Can not update empty data!',
+                     type: 'error'
+                  })
+               } else {
+                  // Update target section with given data
+                  context.dispatch(`update${context.getters.getProperFormat}`)
+               }
+            } else { // Create a new model in the DB with provided data
+               // If the data object to be created is empty
+               if (Object.keys(this.state[target]).length == 0) {
+                  // Alert the user to fill in data
+                  context.dispatch('toggleResponseFeedback', {
+                     target: target,
+                     message: 'Can not update empty data!',
+                     type: 'error'
+                  })
+               } else {
+                  // Create target section with given data
+                  context.dispatch(`add${context.getters.getProperFormat}`)
                }
             }
          },
 
-         checkAllMandatoryFields(context) {
-            let def_val = 0;
-            Object.keys(this.state.update_status).forEach(key => {
-               if (this.state.update_status[key] === false) {
-                  def_val = 1;
+         // Checks if all fields for an object is defined
+         async isAllFieldsSet(context, target) {
+            
+            let def_val = true;
+            let active_object = this.state[target]
+            Object.keys(active_object).forEach(key => {
+               if (key !== 'id' && key !== 'status') {
+                  if (active_object[key] == '' || active_object[key] == undefined || active_object[key] == null) {
+                     def_val = false;
+                  }
                }
             })
-            // If all fields are set, go to test portal
-            if (def_val == 0) {
+
+            if (def_val) {  // All fields for this object are set
+               await context.commit('setUpdateStatus', {target: target, value: true})  // Update status for this object to true
+            } else { // Some field in object is not set
+               await context.commit('setUpdateStatus', {target: target, value: false})  // Update status for this object to false
+            }
+         },
+
+         confirmAndUpdateStatus(context) {            
+            // If all update sections are set to true, update user status
+            if (context.getters.getMandatoryUpdateStatus) {
                if (!this.state.personal.status) {
-                  context.dispatch('updateUserStatus', true)
+                  context.commit('setUserStatus', true)
+                  context.dispatch('updatePersonal')
                }
             } else {
                if (this.state.personal.status) {
-                  context.dispatch('updateUserStatus', false)
+                  context.commit('setUserStatus', false)
+                  context.dispatch('updatePersonal')
                }
             }
          },
 
          // Checks if user has updated all required fields and is eligible to take test
          async checkTestEligibilityStatus(context) {
-            let def_val = 0;
-            Object.keys(this.state.update_status).forEach(key => {
-               if (this.state.update_status[key] === false) {
-                  def_val = 1;
-               }
-            })
-            
             // If all fields are set, go to test portal
-            if (def_val == 0) {
+            if (context.getters.getMandatoryUpdateStatus) {
                context.dispatch('redirectTo', {intended: '/test-portal'})
             } else {
-               context.commit('setGlobalAlert', {
-                  message: 'You are not eligible to take tests. Update all mandatory informatioin to be eligible.'
+               context.dispatch('toggleResponseFeedback', {
+                  target: 'global_alert',
+                  message: 'You are not eligible to take tests. Update all mandatory informatioin to be eligible.',
+                  type: 'error'
                })
-               context.commit('setFeedbackStyleError', 'global_alert');
-               context.commit('resetFeedbackStyle', 'global_alert');
-               context.commit('resetFeedbackMessage', 'global_alert')
             }
          },
 
@@ -1135,7 +1151,7 @@ const store = createStore({
       // REMOVERS
          
          // Removes data updater modal
-         closeUpdaters(context) {
+         closeUpdater(context) {
             context.commit('setUpdater', {status: false})
             context.commit('setLoader', false)
             context.commit('setOverlay', false)
@@ -1166,14 +1182,6 @@ const store = createStore({
             context.dispatch('showScore', score)
          },
          
-         fetchQuestions(context) {
-            context.commit('setLoader', true)
-            const Questions = require('../Data/Questions.json')
-            this.state.testAccessories.questions = Questions
-            this.state.testAccessories.total_questions = Object.keys(Questions).length
-            context.commit('setLoader', false)
-         },
-         
          showScore(context, score) {
             this.state.test.score = `${Math.trunc(score * 100)}`;
             this.state.test.status = "true"
@@ -1181,6 +1189,14 @@ const store = createStore({
                context.commit('setLoader', false)
             }, 5000)
             context.dispatch('addTest', score)
+         },
+         
+         fetchQuestions(context) {
+            context.commit('setLoader', true)
+            const Questions = require('../Data/Questions.json')
+            this.state.testAccessories.questions = Questions
+            this.state.testAccessories.total_questions = Object.keys(Questions).length
+            context.commit('setLoader', false)
          },
       
       // HELPERS ENDS
@@ -1314,7 +1330,7 @@ const store = createStore({
 
          },
 
-         setAllInputsProperly(context, e) {
+         setAllInputsProperly(context) {
 
             // Marked input selectors
             const inputs = document.querySelectorAll('input[type="text"], input[type="email"], input[type="password"], select, textarea');
@@ -1326,14 +1342,6 @@ const store = createStore({
                }
             })
 
-         },
-
-         labelClick(context) {
-            document.querySelectorAll('#globalLayoutCover label').forEach(label => {
-               label.addEventListener('click', function() {
-                  this.nextElementSibling.focus()
-               })
-            }, true)
          },
 
          addLoader(context, e) {

@@ -7,7 +7,7 @@
                 <i class="fa fa-user mr-3"></i>
                 {{ getProperFormat(updater.target) }}
             </h1>
-            <span class="flex justify-center items-center h-6 w-6 bg-white rounded-full cursor-pointer" @click.prevent="closeUpdaters">
+            <span class="flex justify-center items-center h-6 w-6 bg-white rounded-full cursor-pointer" @click.prevent="closeUpdater">
                 <i class="fa text-red-400 fa-times"></i>
             </span>
         </div>
@@ -16,7 +16,7 @@
             {{ feedbackMessages[updater.target] }}
         </div>
         
-        <form method="POST" @submit.prevent="updateTarget" class="relative md:px-8 h-full">
+        <form @submit.prevent="createOrUpdate(updater.target)" class="relative md:px-8 h-full">
             
             <div class="relative py-8 md:p-8 h-full">
                 
@@ -167,7 +167,7 @@
                             id: 'duration',
                             type: 'select',
                             options: this.experience_duration,
-                            title: 'Work Experience Duration Duration academy',
+                            title: 'Work Experience Duration',
                             value: this.experience.duration
                         },
                         {
@@ -219,11 +219,8 @@
 
     methods: {
         ...mapActions([
-            'updateSkill',
-            'updateContact',
-            'updatePersonal',
-            'updateExperience',
-            'closeUpdaters'
+            'createOrUpdate',
+            'closeUpdater'
         ]),
 
         getProperFormat(value) {
@@ -233,13 +230,6 @@
                     return word[0].toUpperCase() + word.slice(1);
                 }).join(" ");
                 return value
-            }
-        },
-
-        updateTarget() {
-            if (this.updater.target) {
-                const targetAction = 'update' + this.getProperFormat(this.updater.target)
-                this[targetAction]()
             }
         }
     

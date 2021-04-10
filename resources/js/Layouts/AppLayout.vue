@@ -69,10 +69,12 @@
 
             document.querySelector('#globalLayoutCover').addEventListener('blur', (event) => {
                 this.setInputOnBlur(event)
+                this.setAllInputsProperly()
             }, true)
 
             document.querySelector('#globalLayoutCover').addEventListener('focus', (event) => {
                 this.setInputOnFocus(event)
+                this.setAllInputsProperly()
             }, true)
 
             document.querySelector('#globalLayoutCover').addEventListener('click', (event) => {
@@ -81,6 +83,7 @@
 
             document.querySelector('#globalLayoutCover').addEventListener('mousedown', (event) => {
                 this.setOnMouseDown(event)
+                this.setAllInputsProperly()
             }, true)
 
         },
@@ -91,10 +94,12 @@
 
             document.querySelector('#globalLayoutCover').removeEventListener('blur', (event) => {
                 this.setInputOnBlur(event)
+                this.setAllInputsProperly()
             }, true)
 
             document.querySelector('#globalLayoutCover').removeEventListener('focus', (event) => {
                 this.setInputOnFocus(event)
+                this.setAllInputsProperly()
             }, true)
 
             document.querySelector('#globalLayoutCover').removeEventListener('click', (event) => {
@@ -103,6 +108,7 @@
 
             document.querySelector('#globalLayoutCover').removeEventListener('mousedown', (event) => {
                 this.setOnMouseDown(event)
+                this.setAllInputsProperly()
             }, true)
 
         },
@@ -114,6 +120,7 @@
         updated() {
             this.initAOS()
             this.closeModal()
+            this.setAllInputsProperly()
         }
 
     }
