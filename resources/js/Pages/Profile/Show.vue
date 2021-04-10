@@ -142,7 +142,7 @@
                                                 </span>
                                             </span>
                                             
-                                            <div v-if="Object.keys(test).length" class="grid grid-flow-col grid-rows-4 w-full invisible-scrollbar overflow-x-auto justify-start items-start mt-2 md:mt-0 rounded-lg transition-all duration-700 ease-in-out">
+                                            <div v-if="Object.keys(test).length !== 0" class="grid grid-flow-col grid-rows-4 w-full invisible-scrollbar overflow-x-auto justify-start items-start mt-2 md:mt-0 rounded-lg transition-all duration-700 ease-in-out">
 
                                                 <div v-for="value in test" :key="value.started_at" class="cursor-pointer flex mb-1 mr-1">
                                                     <span v-if="value.score > 75" class="bg-blue-300 w-2 h-2 rounded-full"></span>
@@ -512,8 +512,6 @@
 
     data() {
         return {
-            testsScores: null,
-            score_counts: null,
             lToggler: false,
             rToggler: false,
         }
