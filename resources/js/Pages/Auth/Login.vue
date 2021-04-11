@@ -11,7 +11,7 @@
                     <!-- Login Form -->
                     <form @submit.prevent="loginUser({login: Input.login})" :class="loginFormSelector" class="bg-white absolute w-full md:w-2/5 h-full py-6 px-8 transition-all duration-700" method="POST">
                         
-                        <h1 data-aos="fade-down" data-aos-duration="800" class="text-lg text-gray-600 font-medium">
+                        <h1 class="text-lg text-gray-600 font-medium">
                             Login to gain Access
                         </h1>
                         
@@ -29,9 +29,9 @@
                             <input v-model="Input.login.password" class="p-3 text-blue-500 focus:ring-blue-300 w-full rounded-full outline-none border-0 focus: shadow-xl bg-transparent" required type="password" placeholder="password" autocomplete="new-password" id="login-pass" name="login-pass">
                         </div>
                         
-                        <a class="text-blue-400" href="fpass.php">Forgot Password?</a>
+                        <a class="mt-6 inline-block text-blue-400" href="fpass.php">Forgot Password?</a>
                         
-                        <div data-aos="fade-in" data-aos-delay="350" class="mt-4">                        
+                        <div class="mt-4">
                             <button type="submit" class="bg-white w-full lg:w-auto text-gray-600 px-5 py-2 text-xl rounded-md border-white shadow">
                                 <i id="login_loader" class="fa fa-spinner mr-4 hidden animate-spin"></i>
                                 <span class="">Log In</span>
@@ -87,19 +87,19 @@
                         <div class="absolute top-0 right-0 w-auto md:w-full h-full bg-white bg-opacity-75">
 
                             <div :class="formBGColor" class="absolute md:bg-white md:relative top-0 text-pink-800 right-0 h-full md:h-auto w-auto md:w-full flex flex-col md:flex-row justify-center md:justify-between px-2 md:px-6 md:py-5 text-2xl">
-                                <inertia-link data-aos="fade-down" data-aos-duration="300" href="/" title="Home" class="flex mb-4 md:mb-0 justify-center items-center">
+                                <inertia-link href="/" title="Home" class="flex mb-4 md:mb-0 justify-center items-center">
                                     <i class="fa text-white md:text-pink-800 fa-globe"></i>
                                 </inertia-link>
-                                <inertia-link data-aos="fade-down" data-aos-duration="350" href="/" title="Home" class="flex mb-4 md:mb-0 justify-center items-center">
+                                <inertia-link href="/" title="Home" class="flex mb-4 md:mb-0 justify-center items-center">
                                     <i class="fab fa-facebook-f text-white md:text-blue-500"></i>
                                 </inertia-link>
-                                <inertia-link data-aos="fade-down" data-aos-duration="400" href="/" title="Home" class="flex mb-4 md:mb-0 justify-center items-center">
+                                <inertia-link href="/" title="Home" class="flex mb-4 md:mb-0 justify-center items-center">
                                     <i class="fab fa-medium-m text-white md:text-black"></i>
                                 </inertia-link>
-                                <inertia-link data-aos="fade-down" data-aos-duration="450" href="/" title="Home" class="flex mb-4 md:mb-0 justify-center items-center">
+                                <inertia-link href="/" title="Home" class="flex mb-4 md:mb-0 justify-center items-center">
                                     <i class="fab fa-linkedin text-white md:text-blue-900"></i>
                                 </inertia-link>
-                                <inertia-link data-aos="fade-down" data-aos-duration="500" href="/" title="Home" class="flex mb-4 md:mb-0 justify-center items-center">
+                                <inertia-link href="/" title="Home" class="flex mb-4 md:mb-0 justify-center items-center">
                                     <i class="fab fa-github text-white md:text-black"></i>
                                 </inertia-link>
                                 <span @click="toggleForm" class="md:hidden flex mb-4 md:mb-0 justify-center items-center">
@@ -111,7 +111,7 @@
                                 <div :class="formTextColor" class="text-2xl uppercase font-bold pt-16 p-4">
                                     Welcome to Career Strive
                                 </div>
-                                <div data-aos="fade-up" data-aos-duration="700" class="text-xl p-8">
+                                <div class="text-xl p-8">
                                     Submit your login credentials to gain access to future opportunities
                                 </div>
                                 <button @click="toggleForm" :class="formBGColor" class="relative inline-block text-white shadow text-xl px-8 py-3 rounded-xl">
